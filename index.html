@@ -8,7 +8,6 @@
 </head>
 <body>
 
-  <!-- Floating Background Icons -->
   <div class="kpop-bg-icon" style="top:10%; left:5%;">🌸</div>
   <div class="kpop-bg-icon" style="top:25%; right:8%; animation-delay: 2s;">🎤</div>
   <div class="kpop-bg-icon" style="top:50%; left:8%; animation-delay: 4s;">🪄</div>
@@ -30,14 +29,14 @@
 
     <main id="shop-flow">
 
-      <!-- STEP 1: Enter Customer Name -->
+      <!-- STEP 1 -->
       <section id="page-step-name" class="view-card">
         <h2 style="font-size:1.1rem; margin-bottom:12px; font-weight:800;">✨ မင်္ဂလာပါ၊ နာမည်လေး ရိုက်ထည့်ပေးပါ</h2>
         <input type="text" id="cust-name-input" class="input-modern" placeholder="လူကြီးမင်း နာမည်..." required>
         <button id="btn-to-catalog" class="btn-primary">ဈေးဝယ်ရန် ရှေ့ဆက်မည် ➔</button>
       </section>
 
-      <!-- STEP 2: Product Catalog -->
+      <!-- STEP 2 -->
       <section id="page-catalog" class="view-card hidden">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
           <p style="font-size:0.9rem; color:var(--text-sub);">မင်္ဂလာပါ <b id="display-cust-name" style="color:var(--purple-dark);"></b> 👋</p>
@@ -47,7 +46,7 @@
         <div id="product-grid" class="product-grid"></div>
       </section>
 
-      <!-- STEP 3: Product Detail -->
+      <!-- STEP 3 -->
       <section id="page-detail" class="view-card hidden">
         <button id="btn-back-to-catalog" class="btn-secondary" style="margin-bottom:15px;">⬅️ ပစ္စည်းစာရင်းသို့ ပြန်သွားမည်</button>
         <div id="detail-images"></div>
@@ -62,7 +61,7 @@
         <button id="btn-to-checkout" class="btn-primary">ဝယ်ယူရန် Checkout သို့သွားမည် ➔</button>
       </section>
 
-      <!-- STEP 4: Checkout -->
+      <!-- STEP 4 -->
       <section id="page-checkout" class="view-card hidden">
         <button id="btn-back-to-detail" class="btn-secondary" style="margin-bottom:15px;">⬅️ နောက်သို့</button>
         <h2 style="font-size:1.2rem; font-weight:800; margin-bottom:15px;">💳 Order အချက်အလက်နှင့် ငွေရှင်းရန်</h2>
@@ -108,7 +107,7 @@
         <button id="btn-confirm-order" class="btn-primary">✨ Order အတည်ပြုမည်</button>
       </section>
 
-      <!-- STEP 5: Success Page -->
+      <!-- STEP 5 -->
       <section id="page-success" class="view-card hidden" style="text-align:center;">
         <div style="font-size:3rem; margin-bottom:10px;">🎉</div>
         <h2 style="font-size:1.3rem; font-weight:800; color:var(--purple-dark); margin-bottom:8px;">Order တင်ခြင်း အောင်မြင်ပါသည်။</h2>
@@ -127,7 +126,7 @@
 
     </main>
 
-    <!-- Checker Page -->
+    <!-- Checker -->
     <section id="page-checker" class="view-card hidden">
       <h2 style="font-size:1.1rem; font-weight:800; margin-bottom:12px;">🔍 Order Code စစ်ဆေးရန်</h2>
       <input type="text" id="checker-code-input" class="input-modern" placeholder="Order Code (ဥပမာ- ORD-8921)">
@@ -157,9 +156,6 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-
-    const TELEGRAM_BOT_TOKEN = "8997594636:AAGGXMgiTnbufcUozWn2yBW7XdfLnbLP4R8";
-    const TELEGRAM_USER_ID = "5050699658";
 
     let currentCustomerName = "";
     let selectedProduct = null;
