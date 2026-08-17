@@ -1,0 +1,512 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCkT8J7ttr9w-ZJJmbyu6aT9qLCUmauXcA",
+  authDomain: "my-k-pop-shop.firebaseapp.com",
+  projectId: "my-k-pop-shop",
+  storageBucket: "my-k-pop-shop.firebasestorage.app",
+  messagingSenderId: "697172084426",
+  appId: "1:697172084426:web:6fb0b4cf2cc1f57e291633"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const TELEGRAM_BOT_TOKEN = "8997594636:AAGGXMgiTnbufcUozWn2yBW7XdfLnbLP4R8";
+const TELEGRAM_USER_ID = "5050699658";
+
+let currentCustomerName = "";
+let selectedProduct = null;
+
+function getStatusBadgeClass(status) {
+  switch (status) {
+    case "order စစ်ဆေးနေဆဲ": return "status-yellow";
+    case "order လုပ်ဆောင်နေပါသည်": return "status-purple";
+    case "order rejected": return "status-red";
+    case "order completed": return "status-green";
+    case "order ပို့ဆောင်နေပါသည်": return "status-blue";
+    default: return "status-yellow";
+  }
+}
+
+async function sendTelegramNotification(order) {
+  const msg = `
+🔔 *Order အသစ်ရောက်ရှိပါသည်*
+
+🆔 *Order Code:* \`${order.orderCode}\`
+👤 *အမည်:* ${order.customerName}
+📞 *ဖုန်း:* ${order.phone || 'N/A'}
+🚚 *ပို့ဆောင်ရေး:* ${order.deliveryType === 'pickup' ? 'ကိုယ်တိုင် Pick-up လာယူမည်' : order.address}
+💳 *ငွေရှင်းစနစ်:* ${order.paymentType.toUpperCase()}
+💰 *ကျသင့်ငွေ:* ${order.totalAmount} Ks (Discount: ${order.discount} Ks)
+📝 *Note:* ${order.note || 'မရှိပါ'}
+📌 *Status:* ${order.status}
+  `;
+
+  try {
+    await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id: TELEGRAM_USER_ID, text: msg, parse_mode: "Markdown" })
+    });
+  } catch (e) {
+    console.error("Telegram error:", e);
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+
+  // Navigation Tabs (Shop Side)
+  const navShop = document.getElementById("nav-shop");
+  const navChecker = document.getElementById("nav-checker");
+  const shopFlow = document.getElementById("shop-flow");
+  const pageChecker = document.getElementById("page-checker");
+
+  if(navShop) {
+    navShop.onclick = () => {
+      navShop.classList.add("active");
+      navChecker.classList.remove("active");
+      shopFlow.classList.remove("hidden");
+      pageChecker.classList.add("hidden");
+    };
+    navChecker.onclick = () => {
+      navChecker.classList.add("active");
+      navShop.classList.remove("active");
+      pageChecker.classList.remove("hidden");
+      shopFlow.classList.add("hidden");
+    };
+  }
+
+  function showPage(pageId) {
+    ["page-step-name", "page-catalog", "page-detail", "page-checkout", "page-success"].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.classList.add("hidden");
+    });
+    const target = document.getElementById(pageId);
+    if(target) target.classList.remove("hidden");
+  }
+
+  // Step 1 -> Catalog
+  const btnToCatalog = document.getElementById("btn-to-catalog");
+  if(btnToCatalog) {
+    btnToCatalog.onclick = () => {
+      const name = document.getElementById("cust-name-input").value.trim();
+      if(!name) return alert("နာမည် ရိုက်ထည့်ပေးပါ။");
+      currentCustomerName = name;
+      document.getElementById("display-cust-name").innerText = currentCustomerName;
+      showPage("page-catalog");
+      loadProducts();
+    };
+  }
+
+  const btnChangeName = document.getElementById("btn-change-name");
+  if(btnChangeName) btnChangeName.onclick = () => showPage("page-step-name");
+
+  // Load Products Grid
+  async function loadProducts() {
+    const grid = document.getElementById("product-grid");
+    if(!grid) return;
+    grid.innerHTML = "Loading...";
+    const snapshot = await getDocs(collection(db, "products"));
+    grid.innerHTML = "";
+    
+    if(snapshot.empty) {
+      grid.innerHTML = "<p style='grid-column: span 2; text-align:center; color:var(--text-sub);'>ပစ္စည်းများ မရှိသေးပါ။</p>";
+      return;
+    }
+
+    snapshot.forEach(docSnap => {
+      const p = docSnap.data();
+      const item = document.createElement("div");
+      item.className = "product-card";
+      item.innerHTML = `
+        <img src="${p.showPhoto}" class="product-img" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
+        <div class="product-title">${p.name}</div>
+        <div class="product-price">${p.price} Ks</div>
+      `;
+      item.onclick = () => openDetailPage(p);
+      grid.appendChild(item);
+    });
+  }
+
+  // Open Detail Page
+  function openDetailPage(p) {
+    selectedProduct = p;
+    document.getElementById("detail-title").innerText = p.name;
+    document.getElementById("detail-price").innerText = `${p.price} Ks`;
+    
+    const imgsDiv = document.getElementById("detail-images");
+    imgsDiv.innerHTML = `<img src="${p.showPhoto}" style="width:100%; height:220px; object-fit:cover; border-radius:18px;">`;
+    if(p.detailPhotos && p.detailPhotos.length > 0) {
+      p.detailPhotos.forEach(url => {
+        if(url.trim()) imgsDiv.innerHTML += `<img src="${url.trim()}" style="width:100%; height:220px; object-fit:cover; border-radius:18px; margin-top:8px;">`;
+      });
+    }
+
+    showPage("page-detail");
+  }
+
+  const btnBackToCatalog = document.getElementById("btn-back-to-catalog");
+  if(btnBackToCatalog) btnBackToCatalog.onclick = () => showPage("page-catalog");
+
+  // Detail -> Checkout Page
+  const btnToCheckout = document.getElementById("btn-to-checkout");
+  if(btnToCheckout) {
+    btnToCheckout.onclick = () => {
+      showPage("page-checkout");
+      updateInvoiceSummary();
+    };
+  }
+
+  const btnBackToDetail = document.getElementById("btn-back-to-detail");
+  if(btnBackToDetail) btnBackToDetail.onclick = () => showPage("page-detail");
+
+  // Select Listeners
+  const selectDel = document.getElementById("select-delivery");
+  const selectPay = document.getElementById("select-payment");
+  
+  if(selectDel) {
+    selectDel.onchange = () => {
+      if(selectDel.value === "delivery") document.getElementById("delivery-info-box").classList.remove("hidden");
+      else document.getElementById("delivery-info-box").classList.add("hidden");
+    };
+  }
+
+  if(selectPay) {
+    selectPay.onchange = () => {
+      if(selectPay.value === "online") document.getElementById("online-pay-info").classList.remove("hidden");
+      else document.getElementById("online-pay-info").classList.add("hidden");
+    };
+  }
+
+  function updateInvoiceSummary() {
+    const qty = Number(document.getElementById("detail-qty").value) || 1;
+    const subtotal = selectedProduct.price * qty;
+    let discount = 0;
+    if(subtotal >= 10000) discount = Math.floor(subtotal / 10000) * 500;
+    const total = subtotal - discount;
+
+    document.getElementById("sum-subtotal").innerText = `${subtotal} Ks`;
+    document.getElementById("sum-discount").innerText = `-${discount} Ks`;
+    document.getElementById("sum-total").innerText = `${total} Ks`;
+  }
+
+  // Confirm Order
+  const btnConfirmOrder = document.getElementById("btn-confirm-order");
+  if(btnConfirmOrder) {
+    btnConfirmOrder.onclick = async () => {
+      const delType = selectDel.value;
+      const payType = selectPay.value;
+      const address = document.getElementById("del-address").value;
+      const phone = document.getElementById("del-phone").value;
+      const payLink = document.getElementById("pay-screenshot-link").value;
+      const note = document.getElementById("order-note-input").value;
+
+      if(delType === "delivery" && (!address || !phone)) {
+        return alert("Delivery ပို့ရန် လိပ်စာ နှင့် ဖုန်းနံပါတ် ဖြည့်ပေးပါ။");
+      }
+
+      const qty = Number(document.getElementById("detail-qty").value) || 1;
+      const subtotal = selectedProduct.price * qty;
+      let discount = 0;
+      if(subtotal >= 10000) discount = Math.floor(subtotal / 10000) * 500;
+      const totalAmount = subtotal - discount;
+      const orderCode = "ORD-" + Math.floor(1000 + Math.random() * 9000);
+
+      const newOrder = {
+        orderCode,
+        customerName: currentCustomerName,
+        item: selectedProduct.name,
+        qty,
+        subtotal,
+        discount,
+        totalAmount,
+        deliveryType: delType,
+        address: delType === "delivery" ? address : "Pick-up လာယူမည်",
+        phone: delType === "delivery" ? phone : "N/A",
+        paymentType: payType,
+        paymentScreenshot: payLink || "N/A",
+        note: note || "မရှိပါ",
+        status: "order စစ်ဆေးနေဆဲ",
+        createdAt: new Date()
+      };
+
+      await addDoc(collection(db, "orders"), newOrder);
+      await sendTelegramNotification(newOrder);
+
+      // Render Order Success Full-page
+      document.getElementById("suc-code").innerText = orderCode;
+      document.getElementById("suc-name").innerText = currentCustomerName;
+      document.getElementById("suc-item").innerText = `${selectedProduct.name} (${qty} ခု)`;
+      document.getElementById("suc-total").innerText = totalAmount;
+      document.getElementById("suc-note-container").innerHTML = note ? `<b>Note:</b> ${note}` : '';
+
+      showPage("page-success");
+    };
+  }
+
+  const btnSuccessDone = document.getElementById("btn-success-done");
+  if(btnSuccessDone) btnSuccessDone.onclick = () => showPage("page-catalog");
+
+  // Checker
+  const btnCheckStatus = document.getElementById("btn-check-status");
+  if(btnCheckStatus) {
+    btnCheckStatus.onclick = async () => {
+      const code = document.getElementById("checker-code-input").value.trim();
+      if(!code) return alert("Order Code ရိုက်ထည့်ပါ");
+
+      const q = query(collection(db, "orders"), where("orderCode", "==", code));
+      const snapshot = await getDocs(q);
+
+      if(snapshot.empty) return alert("Order Code မတွေ့ရှိပါ။");
+
+      snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        document.getElementById("checker-result").classList.remove("hidden");
+        document.getElementById("res-code").innerText = data.orderCode;
+        
+        const badge = document.getElementById("res-status-badge");
+        badge.innerText = data.status;
+        badge.className = `badge ${getStatusBadgeClass(data.status)}`;
+
+        document.getElementById("res-details").innerHTML = `
+          <p style="margin-bottom:4px;"><b>ဝယ်ယူသည့် ပစ္စည်း:</b> ${data.item} (${data.qty} ခု)</p>
+          <p style="margin-bottom:4px;"><b>ကျသင့်ငွေ:</b> ${data.totalAmount} Ks</p>
+          <p><b>Note:</b> ${data.note || 'မရှိပါ'}</p>
+        `;
+      });
+    };
+  }
+
+  // ================= ADMIN PANEL LOGIC ================= //
+  
+  const btnAdminLogin = document.getElementById("btn-admin-login");
+  if(btnAdminLogin) {
+    btnAdminLogin.onclick = () => {
+      const pass = document.getElementById("admin-passcode-input").value.trim();
+      if(pass === "254007") {
+        document.getElementById("admin-login-sec").classList.add("hidden");
+        document.getElementById("admin-dashboard-sec").classList.remove("hidden");
+        loadAdminOrders();
+        loadAdminProducts();
+      } else {
+        alert("Passcode မှားယွင်းနေပါသည်။ (Password: 254007)");
+      }
+    };
+  }
+
+  // Admin Tabs
+  const tabBtnOrders = document.getElementById("tab-btn-orders");
+  const tabBtnStock = document.getElementById("tab-btn-stock");
+  const tabSecOrders = document.getElementById("tab-sec-orders");
+  const tabSecStock = document.getElementById("tab-sec-stock");
+
+  if(tabBtnOrders && tabBtnStock) {
+    tabBtnOrders.onclick = () => {
+      tabBtnOrders.classList.add("active");
+      tabBtnStock.classList.remove("active");
+      tabSecOrders.classList.remove("hidden");
+      tabSecStock.classList.add("hidden");
+    };
+    tabBtnStock.onclick = () => {
+      tabBtnStock.classList.add("active");
+      tabBtnOrders.classList.remove("active");
+      tabSecStock.classList.remove("hidden");
+      tabSecOrders.classList.add("hidden");
+    };
+  }
+
+  // Admin Orders Management
+  async function loadAdminOrders() {
+    const container = document.getElementById("admin-orders-list");
+    if(!container) return;
+    container.innerHTML = "Loading...";
+    const snapshot = await getDocs(collection(db, "orders"));
+    container.innerHTML = "";
+
+    if(snapshot.empty) {
+      container.innerHTML = "<p style='color:var(--text-sub); text-align:center;'>Order မရှိသေးပါ။</p>";
+      return;
+    }
+
+    snapshot.forEach(docSnap => {
+      const order = docSnap.data();
+      const docId = docSnap.id;
+
+      const card = document.createElement("div");
+      card.style.background = "#faf5ff";
+      card.style.padding = "14px";
+      card.style.borderRadius = "16px";
+      card.style.marginBottom = "12px";
+      card.style.border = "1px solid #e9d5ff";
+      
+      card.innerHTML = `
+        <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+          <b style="color:var(--purple-primary);">${order.orderCode}</b>
+          <button class="btn-danger" onclick="deleteOrder('${docId}')">🗑️ ဖျက်မည်</button>
+        </div>
+        <p style="font-size:0.85rem;"><b>အမည်:</b> ${order.customerName} | <b>ဖုန်း:</b> ${order.phone || 'N/A'}</p>
+        <p style="font-size:0.85rem;"><b>ပစ္စည်း:</b> ${order.item} (${order.qty}ခု) | <b>ကျသင့်ငွေ:</b> ${order.totalAmount} Ks</p>
+        <p style="font-size:0.85rem;"><b>Note:</b> ${order.note || 'မရှိပါ'}</p>
+        <p style="font-size:0.85rem; margin-bottom:8px;"><b>Pay Slip:</b> ${order.paymentScreenshot !== 'N/A' ? `<a href="${order.paymentScreenshot}" target="_blank">ကြည့်ရန်</a>` : 'မရှိပါ'}</p>
+        
+        <select id="status-sel-${docId}" class="input-modern" style="padding:8px; font-size:0.85rem; margin-bottom:6px;">
+          <option value="order စစ်ဆေးနေဆဲ" ${order.status === "order စစ်ဆေးနေဆဲ" ? "selected" : ""}>order စစ်ဆေးနေဆဲ</option>
+          <option value="order လုပ်ဆောင်နေပါသည်" ${order.status === "order လုပ်ဆောင်နေပါသည်" ? "selected" : ""}>order လုပ်ဆောင်နေပါသည်</option>
+          <option value="order rejected" ${order.status === "order rejected" ? "selected" : ""}>order rejected</option>
+          <option value="order completed" ${order.status === "order completed" ? "selected" : ""}>order completed</option>
+          <option value="order ပို့ဆောင်နေပါသည်" ${order.status === "order ပို့ဆောင်နေပါသည်" ? "selected" : ""}>order ပို့ဆောင်နေပါသည်</option>
+        </select>
+        <button class="btn-primary" style="padding:10px; font-size:0.85rem;" onclick="updateOrderStatus('${docId}')">Status ပြင်ဆင်ချက် သိမ်းမည်</button>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  window.updateOrderStatus = async (docId) => {
+    const selValue = document.getElementById(`status-sel-${docId}`).value;
+    await updateDoc(doc(db, "orders", docId), { status: selValue });
+    alert("Status ပြင်ဆင်ပြီးပါပြီ!");
+  };
+
+  window.deleteOrder = async (docId) => {
+    if(confirm("ဤ Order ကို ဖျက်ရန် သေချာပါသလား?")) {
+      await deleteDoc(doc(db, "orders", docId));
+      alert("Order ဖျက်ပြီးပါပြီ!");
+      loadAdminOrders();
+    }
+  };
+
+  const btnResetOrders = document.getElementById("btn-reset-all-orders");
+  if(btnResetOrders) {
+    btnResetOrders.onclick = async () => {
+      if(confirm("⚠️ Order များ အားလုံးကို အပြီးတိုင် ဖျက်ပစ်ပါမည်။ သေချာပါသလား?")) {
+        const snapshot = await getDocs(collection(db, "orders"));
+        snapshot.forEach(async (docSnap) => {
+          await deleteDoc(doc(db, "orders", docSnap.id));
+        });
+        alert("Order များ အားလုံး Reset ချပြီးပါပြီ!");
+        loadAdminOrders();
+      }
+    };
+  }
+
+  // Admin Stock Management
+  async function loadAdminProducts() {
+    const container = document.getElementById("admin-products-list");
+    if(!container) return;
+    container.innerHTML = "Loading...";
+    const snapshot = await getDocs(collection(db, "products"));
+    container.innerHTML = "";
+
+    if(snapshot.empty) {
+      container.innerHTML = "<p style='color:var(--text-sub); text-align:center;'>Stock မရှိသေးပါ။</p>";
+      return;
+    }
+
+    snapshot.forEach(docSnap => {
+      const p = docSnap.data();
+      const docId = docSnap.id;
+
+      const card = document.createElement("div");
+      card.style.display = "flex";
+      card.style.alignItems = "center";
+      card.style.justifyContent = "space-between";
+      card.style.background = "#faf5ff";
+      card.style.padding = "10px 14px";
+      card.style.borderRadius = "16px";
+      card.style.marginBottom = "10px";
+      card.style.border = "1px solid #e9d5ff";
+
+      card.innerHTML = `
+        <div style="display:flex; align-items:center; gap:10px;">
+          <img src="${p.showPhoto}" style="width:45px; height:45px; border-radius:10px; object-fit:cover;">
+          <div>
+            <b style="font-size:0.9rem;">${p.name}</b>
+            <p style="font-size:0.8rem; color:var(--purple-primary); font-weight:700;">${p.price} Ks</p>
+          </div>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button class="btn-warning" onclick="editProduct('${docId}', '${p.name}', ${p.price}, '${p.showPhoto}', '${(p.detailPhotos||[]).join(',')}')">✏️ Edit</button>
+          <button class="btn-danger" onclick="deleteProduct('${docId}')">🗑️ ဖျက်မည်</button>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+  }
+
+  const btnSaveProduct = document.getElementById("btn-save-product");
+  const btnCancelEdit = document.getElementById("btn-cancel-edit");
+
+  if(btnSaveProduct) {
+    btnSaveProduct.onclick = async () => {
+      const editId = document.getElementById("p-edit-id").value;
+      const name = document.getElementById("p-name").value;
+      const price = Number(document.getElementById("p-price").value);
+      const showPhoto = document.getElementById("p-show-img").value;
+      const detailPhotos = document.getElementById("p-detail-imgs").value.split(",");
+
+      if(!name || !price || !showPhoto) return alert("အချက်အလက် အပြည့်အစုံ ဖြည့်ပါ။");
+
+      if(editId) {
+        // Update Existing Product
+        await updateDoc(doc(db, "products", editId), { name, price, showPhoto, detailPhotos });
+        alert("ပစ္စည်း ပြင်ဆင်ပြီးပါပြီ!");
+      } else {
+        // Add New Product
+        await addDoc(collection(db, "products"), { name, price, showPhoto, detailPhotos });
+        alert("ပစ္စည်းအသစ် တင်ပြီးပါပြီ!");
+      }
+
+      resetProductForm();
+      loadAdminProducts();
+    };
+  }
+
+  function resetProductForm() {
+    document.getElementById("p-edit-id").value = "";
+    document.getElementById("p-name").value = "";
+    document.getElementById("p-price").value = "";
+    document.getElementById("p-show-img").value = "";
+    document.getElementById("p-detail-imgs").value = "";
+    document.getElementById("btn-save-product").innerText = "ပစ္စည်း တင်မည် / သိမ်းဆည်းမည် ➔";
+    btnCancelEdit.classList.add("hidden");
+  }
+
+  if(btnCancelEdit) btnCancelEdit.onclick = resetProductForm;
+
+  window.editProduct = (docId, name, price, showPhoto, detailPhotos) => {
+    document.getElementById("p-edit-id").value = docId;
+    document.getElementById("p-name").value = name;
+    document.getElementById("p-price").value = price;
+    document.getElementById("p-show-img").value = showPhoto;
+    document.getElementById("p-detail-imgs").value = detailPhotos;
+    document.getElementById("btn-save-product").innerText = "✨ ပြင်ဆင်ချက်အား သိမ်းမည် ➔";
+    btnCancelEdit.classList.remove("hidden");
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  window.deleteProduct = async (docId) => {
+    if(confirm("ဤ ပစ္စည်းကို Stock ထဲမှ ဖျက်ရန် သေချာပါသလား?")) {
+      await deleteDoc(doc(db, "products", docId));
+      alert("ပစ္စည်း ဖျက်ပြီးပါပြီ!");
+      loadAdminProducts();
+    }
+  };
+
+  const btnResetStock = document.getElementById("btn-reset-all-stock");
+  if(btnResetStock) {
+    btnResetStock.onclick = async () => {
+      if(confirm("⚠️ Stock ထဲမှ ပစ္စည်းများ အားလုံးကို အပြီးတိုင် ဖျက်ပစ်ပါမည်။ သေချာပါသလား?")) {
+        const snapshot = await getDocs(collection(db, "products"));
+        snapshot.forEach(async (docSnap) => {
+          await deleteDoc(doc(db, "products", docSnap.id));
+        });
+        alert("Stock အားလုံး Reset ချပြီးပါပြီ!");
+        loadAdminProducts();
+      }
+    };
+  }
+
+});
