@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - Phoo Shop</title>
+  <link rel="stylesheet" href="style.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+
+  <!-- Floating Decorative Background Icons -->
+  <div class="kpop-bg-icon" style="top:10%; left:5%;">🌸</div>
+  <div class="kpop-bg-icon" style="top:30%; right:8%;">⚙️</div>
+
+  <div class="app-container">
+    
+    <header class="site-header">
+      <h1 class="shop-title">⚙️ Admin Control Panel</h1>
+      <p class="address">Phoo K-pop & Thai-pop Shop</p>
+    </header>
+
+    <!-- PASSCODE LOGIN SCREEN -->
+    <section id="admin-login-sec" class="view-card">
+      <h2 style="font-size:1.1rem; font-weight:800; margin-bottom:10px; text-align:center;">🔐 Admin Passcode ထည့်ပါ</h2>
+      <input type="password" id="admin-passcode-input" class="input-modern" placeholder="Passcode ရိုက်ထည့်ပါ..." style="text-align:center; font-size:1.2rem;">
+      <button id="btn-admin-login" class="btn-primary">Dashboard သို့ဝင်မည် ➔</button>
+    </section>
+
+    <!-- ADMIN DASHBOARD MAIN CONTENT -->
+    <main id="admin-dashboard-sec" class="hidden">
+
+      <!-- Navigation Tabs for Admin -->
+      <div class="admin-tab-bar">
+        <button id="tab-btn-orders" class="admin-tab-btn active">📦 Order Code Editing</button>
+        <button id="tab-btn-stock" class="admin-tab-btn">🏷️ Stock Editing</button>
+      </div>
+
+      <!-- TAB 1: ORDER CODE EDITING SECTION -->
+      <section id="tab-sec-orders" class="view-card">
+        <div style="display:flex; justify-style:space-between; align-items:center; margin-bottom:15px;">
+          <h2 style="font-size:1rem; font-weight:800;">📦 Orders စာရင်း & Status ပြင်ရန်</h2>
+          <button id="btn-reset-all-orders" class="btn-danger">⚠️ Reset All Orders</button>
+        </div>
+        <div id="admin-orders-list">Loading...</div>
+      </section>
+
+      <!-- TAB 2: STOCK EDITING SECTION -->
+      <section id="tab-sec-stock" class="view-card hidden">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+          <h2 style="font-size:1rem; font-weight:800;">➕ ပစ္စည်းအသစ် တင်ရန် / Edit လုပ်ရန်</h2>
+          <button id="btn-reset-all-stock" class="btn-danger">⚠️ Reset All Stock</button>
+        </div>
+
+        <input type="hidden" id="p-edit-id">
+        <input type="text" id="p-name" class="input-modern" placeholder="ပစ္စည်းအမည်">
+        <input type="number" id="p-price" class="input-modern" placeholder="ဈေးနှုန်း (Ks)">
+        <input type="text" id="p-show-img" class="input-modern" placeholder="Show Photo Direct URL (.jpg / .png)">
+        <input type="text" id="p-detail-imgs" class="input-modern" placeholder="Detail Photo Links (ကော်မာ ၊ ခြားရေးပါ)">
+        
+        <button id="btn-save-product" class="btn-primary">ပစ္စည်း တင်မည် / သိမ်းဆည်းမည် ➔</button>
+        <button id="btn-cancel-edit" class="btn-secondary hidden">Cancel Edit</button>
+
+        <h3 style="font-size:1rem; font-weight:800; margin:20px 0 10px 0;">🏷️ လက်ရှိ တင်ထားသော ပစ္စည်းများ</h3>
+        <div id="admin-products-list">Loading...</div>
+      </section>
+
+    </main>
+
+  </div>
+</body>
+</html>
