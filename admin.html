@@ -5,47 +5,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Panel - Phoo Shop</title>
   <link rel="stylesheet" href="style.css">
-  <script type="module" src="app.js"></script>
 </head>
 <body>
 
-  <!-- Floating Decorative Background Icons -->
-  <div class="kpop-bg-icon" style="top:10%; left:5%;">🌸</div>
-  <div class="kpop-bg-icon" style="top:30%; right:8%;">⚙️</div>
-
   <div class="app-container">
-    
     <header class="site-header">
       <h1 class="shop-title">⚙️ Admin Control Panel</h1>
       <p class="address">Phoo K-pop & Thai-pop Shop</p>
     </header>
 
-    <!-- PASSCODE LOGIN SCREEN -->
+    <!-- Passcode Login Section -->
     <section id="admin-login-sec" class="view-card">
       <h2 style="font-size:1.1rem; font-weight:800; margin-bottom:10px; text-align:center;">🔐 Admin Passcode ထည့်ပါ</h2>
       <input type="password" id="admin-passcode-input" class="input-modern" placeholder="Passcode ရိုက်ထည့်ပါ..." style="text-align:center; font-size:1.2rem;">
       <button id="btn-admin-login" class="btn-primary">Dashboard သို့ဝင်မည် ➔</button>
     </section>
 
-    <!-- ADMIN DASHBOARD MAIN CONTENT -->
+    <!-- Main Dashboard -->
     <main id="admin-dashboard-sec" class="hidden">
-
-      <!-- Navigation Tabs for Admin -->
       <div class="admin-tab-bar">
         <button id="tab-btn-orders" class="admin-tab-btn active">📦 Order Code Editing</button>
         <button id="tab-btn-stock" class="admin-tab-btn">🏷️ Stock Editing</button>
       </div>
 
-      <!-- TAB 1: ORDER CODE EDITING SECTION -->
+      <!-- Tab 1: Order Editing -->
       <section id="tab-sec-orders" class="view-card">
-        <div style="display:flex; justify-style:space-between; align-items:center; margin-bottom:15px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
           <h2 style="font-size:1rem; font-weight:800;">📦 Orders စာရင်း & Status ပြင်ရန်</h2>
           <button id="btn-reset-all-orders" class="btn-danger">⚠️ Reset All Orders</button>
         </div>
         <div id="admin-orders-list">Loading...</div>
       </section>
 
-      <!-- TAB 2: STOCK EDITING SECTION -->
+      <!-- Tab 2: Stock Editing -->
       <section id="tab-sec-stock" class="view-card hidden">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
           <h2 style="font-size:1rem; font-weight:800;">➕ ပစ္စည်းအသစ် တင်ရန် / Edit လုပ်ရန်</h2>
@@ -55,7 +47,7 @@
         <input type="hidden" id="p-edit-id">
         <input type="text" id="p-name" class="input-modern" placeholder="ပစ္စည်းအမည်">
         <input type="number" id="p-price" class="input-modern" placeholder="ဈေးနှုန်း (Ks)">
-        <input type="text" id="p-show-img" class="input-modern" placeholder="Show Photo Direct URL (.jpg / .png)">
+        <input type="text" id="p-show-img" class="input-modern" placeholder="Show Photo Direct URL">
         <input type="text" id="p-detail-imgs" class="input-modern" placeholder="Detail Photo Links (ကော်မာ ၊ ခြားရေးပါ)">
         
         <button id="btn-save-product" class="btn-primary">ပစ္စည်း တင်မည် / သိမ်းဆည်းမည် ➔</button>
@@ -64,9 +56,225 @@
         <h3 style="font-size:1rem; font-weight:800; margin:20px 0 10px 0;">🏷️ လက်ရှိ တင်ထားသော ပစ္စည်းများ</h3>
         <div id="admin-products-list">Loading...</div>
       </section>
-
     </main>
-
   </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCkT8J7ttr9w-ZJJmbyu6aT9qLCUmauXcA",
+      authDomain: "my-k-pop-shop.firebaseapp.com",
+      projectId: "my-k-pop-shop",
+      storageBucket: "my-k-pop-shop.firebasestorage.app",
+      messagingSenderId: "697172084426",
+      appId: "1:697172084426:web:6fb0b4cf2cc1f57e291633"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    document.getElementById("btn-admin-login").onclick = () => {
+      const pass = document.getElementById("admin-passcode-input").value.trim();
+      if(pass === "254007") {
+        document.getElementById("admin-login-sec").classList.add("hidden");
+        document.getElementById("admin-dashboard-sec").classList.remove("hidden");
+        loadAdminOrders();
+        loadAdminProducts();
+      } else {
+        alert("Passcode မှားယွင်းနေပါသည်။ (Password: 254007)");
+      }
+    };
+
+    document.getElementById("tab-btn-orders").onclick = () => {
+      document.getElementById("tab-btn-orders").classList.add("active");
+      document.getElementById("tab-btn-stock").classList.remove("active");
+      document.getElementById("tab-sec-orders").classList.remove("hidden");
+      document.getElementById("tab-sec-stock").classList.add("hidden");
+    };
+
+    document.getElementById("tab-btn-stock").onclick = () => {
+      document.getElementById("tab-btn-stock").classList.add("active");
+      document.getElementById("tab-btn-orders").classList.remove("active");
+      document.getElementById("tab-sec-stock").classList.remove("hidden");
+      document.getElementById("tab-sec-orders").classList.add("hidden");
+    };
+
+    async function loadAdminOrders() {
+      const container = document.getElementById("admin-orders-list");
+      container.innerHTML = "Loading...";
+      const snapshot = await getDocs(collection(db, "orders"));
+      container.innerHTML = "";
+
+      if(snapshot.empty) {
+        container.innerHTML = "<p style='color:var(--text-sub); text-align:center;'>Order မရှိသေးပါ။</p>";
+        return;
+      }
+
+      snapshot.forEach(docSnap => {
+        const order = docSnap.data();
+        const docId = docSnap.id;
+
+        const card = document.createElement("div");
+        card.style.background = "#faf5ff";
+        card.style.padding = "14px";
+        card.style.borderRadius = "16px";
+        card.style.marginBottom = "12px";
+        card.style.border = "1px solid #e9d5ff";
+        
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+            <b style="color:var(--purple-primary);">${order.orderCode}</b>
+            <button class="btn-danger" id="del-ord-${docId}">🗑️ ဖျက်မည်</button>
+          </div>
+          <p style="font-size:0.85rem;"><b>အမည်:</b> ${order.customerName} | <b>ဖုန်း:</b> ${order.phone || 'N/A'}</p>
+          <p style="font-size:0.85rem;"><b>ပစ္စည်း:</b> ${order.item} (${order.qty}ခု) | <b>ကျသင့်ငွေ:</b> ${order.totalAmount} Ks</p>
+          <p style="font-size:0.85rem;"><b>Note:</b> ${order.note || 'မရှိပါ'}</p>
+          <p style="font-size:0.85rem; margin-bottom:8px;"><b>Pay Slip:</b> ${order.paymentScreenshot !== 'N/A' ? `<a href="${order.paymentScreenshot}" target="_blank">ကြည့်ရန်</a>` : 'မရှိပါ'}</p>
+          
+          <select id="status-sel-${docId}" class="input-modern" style="padding:8px; font-size:0.85rem; margin-bottom:6px;">
+            <option value="order စစ်ဆေးနေဆဲ" ${order.status === "order စစ်ဆေးနေဆဲ" ? "selected" : ""}>order စစ်ဆေးနေဆဲ</option>
+            <option value="order လုပ်ဆောင်နေပါသည်" ${order.status === "order လုပ်ဆောင်နေပါသည်" ? "selected" : ""}>order လုပ်ဆောင်နေပါသည်</option>
+            <option value="order rejected" ${order.status === "order rejected" ? "selected" : ""}>order rejected</option>
+            <option value="order completed" ${order.status === "order completed" ? "selected" : ""}>order completed</option>
+            <option value="order ပို့ဆောင်နေပါသည်" ${order.status === "order ပို့ဆောင်နေပါသည်" ? "selected" : ""}>order ပို့ဆောင်နေပါသည်</option>
+          </select>
+          <button class="btn-primary" style="padding:10px; font-size:0.85rem;" id="save-ord-${docId}">Status ပြင်ဆင်ချက် သိမ်းမည်</button>
+        `;
+        container.appendChild(card);
+
+        document.getElementById(`save-ord-${docId}`).onclick = async () => {
+          const selValue = document.getElementById(`status-sel-${docId}`).value;
+          await updateDoc(doc(db, "orders", docId), { status: selValue });
+          alert("Status ပြင်ဆင်ပြီးပါပြီ!");
+        };
+
+        document.getElementById(`del-ord-${docId}`).onclick = async () => {
+          if(confirm("ဤ Order ကို ဖျက်ရန် သေချာပါသလား?")) {
+            await deleteDoc(doc(db, "orders", docId));
+            alert("Order ဖျက်ပြီးပါပြီ!");
+            loadAdminOrders();
+          }
+        };
+      });
+    }
+
+    document.getElementById("btn-reset-all-orders").onclick = async () => {
+      if(confirm("⚠️ Order များ အားလုံးကို အပြီးတိုင် ဖျက်ပစ်ပါမည်။ သေချာပါသလား?")) {
+        const snapshot = await getDocs(collection(db, "orders"));
+        snapshot.forEach(async (docSnap) => {
+          await deleteDoc(doc(db, "orders", docSnap.id));
+        });
+        alert("Order များ အားလုံး Reset ချပြီးပါပြီ!");
+        loadAdminOrders();
+      }
+    };
+
+    async function loadAdminProducts() {
+      const container = document.getElementById("admin-products-list");
+      container.innerHTML = "Loading...";
+      const snapshot = await getDocs(collection(db, "products"));
+      container.innerHTML = "";
+
+      if(snapshot.empty) {
+        container.innerHTML = "<p style='color:var(--text-sub); text-align:center;'>Stock မရှိသေးပါ။</p>";
+        return;
+      }
+
+      snapshot.forEach(docSnap => {
+        const p = docSnap.data();
+        const docId = docSnap.id;
+
+        const card = document.createElement("div");
+        card.style.display = "flex";
+        card.style.alignItems = "center";
+        card.style.justifyContent = "space-between";
+        card.style.background = "#faf5ff";
+        card.style.padding = "10px 14px";
+        card.style.borderRadius = "16px";
+        card.style.marginBottom = "10px";
+        card.style.border = "1px solid #e9d5ff";
+
+        card.innerHTML = `
+          <div style="display:flex; align-items:center; gap:10px;">
+            <img src="${p.showPhoto}" style="width:45px; height:45px; border-radius:10px; object-fit:cover;">
+            <div>
+              <b style="font-size:0.9rem;">${p.name}</b>
+              <p style="font-size:0.8rem; color:var(--purple-primary); font-weight:700;">${p.price} Ks</p>
+            </div>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button class="btn-warning" id="edit-prod-${docId}">✏️ Edit</button>
+            <button class="btn-danger" id="del-prod-${docId}">🗑️ ဖျက်မည်</button>
+          </div>
+        `;
+        container.appendChild(card);
+
+        document.getElementById(`edit-prod-${docId}`).onclick = () => {
+          document.getElementById("p-edit-id").value = docId;
+          document.getElementById("p-name").value = p.name;
+          document.getElementById("p-price").value = p.price;
+          document.getElementById("p-show-img").value = p.showPhoto;
+          document.getElementById("p-detail-imgs").value = (p.detailPhotos||[]).join(',');
+          document.getElementById("btn-save-product").innerText = "✨ ပြင်ဆင်ချက်အား သိမ်းမည် ➔";
+          document.getElementById("btn-cancel-edit").classList.remove("hidden");
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        document.getElementById(`del-prod-${docId}`).onclick = async () => {
+          if(confirm("ဤ ပစ္စည်းကို Stock ထဲမှ ဖျက်ရန် သေချာပါသလား?")) {
+            await deleteDoc(doc(db, "products", docId));
+            alert("ပစ္စည်း ဖျက်ပြီးပါပြီ!");
+            loadAdminProducts();
+          }
+        };
+      });
+    }
+
+    document.getElementById("btn-save-product").onclick = async () => {
+      const editId = document.getElementById("p-edit-id").value;
+      const name = document.getElementById("p-name").value;
+      const price = Number(document.getElementById("p-price").value);
+      const showPhoto = document.getElementById("p-show-img").value;
+      const detailPhotos = document.getElementById("p-detail-imgs").value.split(",");
+
+      if(!name || !price || !showPhoto) return alert("အချက်အလက် အပြည့်အစုံ ဖြည့်ပါ။");
+
+      if(editId) {
+        await updateDoc(doc(db, "products", editId), { name, price, showPhoto, detailPhotos });
+        alert("ပစ္စည်း ပြင်ဆင်ပြီးပါပြီ!");
+      } else {
+        await addDoc(collection(db, "products"), { name, price, showPhoto, detailPhotos });
+        alert("ပစ္စည်းအသစ် တင်ပြီးပါပြီ!");
+      }
+
+      resetProductForm();
+      loadAdminProducts();
+    };
+
+    function resetProductForm() {
+      document.getElementById("p-edit-id").value = "";
+      document.getElementById("p-name").value = "";
+      document.getElementById("p-price").value = "";
+      document.getElementById("p-show-img").value = "";
+      document.getElementById("p-detail-imgs").value = "";
+      document.getElementById("btn-save-product").innerText = "ပစ္စည်း တင်မည် / သိမ်းဆည်းမည် ➔";
+      document.getElementById("btn-cancel-edit").classList.add("hidden");
+    }
+
+    document.getElementById("btn-cancel-edit").onclick = resetProductForm;
+
+    document.getElementById("btn-reset-all-stock").onclick = async () => {
+      if(confirm("⚠️ Stock ထဲမှ ပစ္စည်းများ အားလုံးကို အပြီးတိုင် ဖျက်ပစ်ပါမည်။ သေချာပါသလား?")) {
+        const snapshot = await getDocs(collection(db, "products"));
+        snapshot.forEach(async (docSnap) => {
+          await deleteDoc(doc(db, "products", docSnap.id));
+        });
+        alert("Stock အားလုံး Reset ချပြီးပါပြီ!");
+        loadAdminProducts();
+      }
+    };
+  </script>
 </body>
 </html>
