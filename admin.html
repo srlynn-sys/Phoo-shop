@@ -9,142 +9,131 @@
       --primary: #d946ef;
       --primary-dark: #a21caf;
       --accent: #8b5cf6;
-      --card-bg: #ffffff;
-      --text-main: #2e1065;
-      --text-sub: #6b21a8;
-      --body-bg: linear-gradient(135deg, #fae8ff 0%, #f3e8ff 50%, #e9d5ff 100%);
+      --bg-color: #f3e8ff;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+    body { background: var(--bg-color); color: #2e1065; padding: 20px 10px; }
 
-    body {
-      background: var(--body-bg);
-      color: var(--text-main);
-      min-height: 100vh;
-      padding: 20px 15px 60px;
+    /* AUTH OVERLAY */
+    #auth-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: #2e1065; display: flex; justify-content: center; align-items: center;
+      z-index: 9999; padding: 20px;
+    }
+    .login-box {
+      background: white; padding: 30px; border-radius: 20px; max-width: 380px; width: 100%;
+      text-align: center; border: 3px solid #f0abfc; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
     }
 
-    .admin-card {
-      max-width: 500px;
-      margin: 0 auto;
-      background: var(--card-bg);
-      padding: 25px;
-      border-radius: 20px;
-      border: 3px solid #f0abfc;
-      box-shadow: 0 10px 25px rgba(217, 70, 239, 0.2);
+    .main-container { max-width: 600px; margin: 0 auto; display: none; }
+
+    /* TAB BUTTONS */
+    .tab-menu { display: flex; gap: 8px; margin-bottom: 20px; }
+    .tab-btn {
+      flex: 1; padding: 12px 5px; border: none; background: #e9d5ff; color: #5b21b6;
+      font-weight: 800; border-radius: 12px; cursor: pointer; font-size: 0.85rem;
+      transition: 0.3s;
     }
+    .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(217, 70, 239, 0.4); }
 
-    h2 { color: var(--primary-dark); text-align: center; margin-bottom: 20px; font-weight: 900; }
-    
-    label { font-weight: 800; font-size: 0.85rem; color: var(--text-sub); display: block; margin-top: 12px; }
+    .tab-content { display: none; background: white; padding: 20px; border-radius: 20px; border: 2px solid #f0abfc; }
+    .tab-content.active { display: block; }
 
+    label { font-weight: 800; font-size: 0.85rem; color: #6b21a8; display: block; margin-top: 12px; }
     .input-field {
-      width: 100%; padding: 10px 12px; border-radius: 12px; border: 2px solid #e9d5ff;
-      margin-top: 5px; outline: none; background: #faf5ff; font-size: 0.9rem; color: var(--text-main);
+      width: 100%; padding: 10px; border-radius: 10px; border: 2px solid #e9d5ff;
+      margin-top: 5px; outline: none; background: #faf5ff; font-size: 0.9rem;
     }
-    .input-field:focus { border-color: var(--primary); background: #fff; }
-
     .btn-submit {
       width: 100%; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white;
-      border: none; padding: 12px; border-radius: 14px; font-weight: 800;
-      margin-top: 20px; cursor: pointer; box-shadow: 0 4px 15px rgba(217, 70, 239, 0.4); font-size: 0.95rem;
+      border: none; padding: 12px; border-radius: 12px; font-weight: 800; margin-top: 18px; cursor: pointer;
     }
-    .btn-submit:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
-
-    .btn-drive-tool {
-      width: 100%; background: linear-gradient(135deg, #059669, #10b981); color: white;
-      border: none; padding: 10px; border-radius: 12px; font-weight: 800;
-      margin-top: 15px; cursor: pointer; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    }
-
-    .status-msg { text-align: center; margin-top: 15px; font-weight: bold; font-size: 0.9rem; }
-
-    /* GOOGLE DRIVE CHANGER MODAL STYLING */
-    .modal-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(46, 16, 101, 0.7); backdrop-filter: blur(5px);
-      display: none; justify-content: center; align-items: center; z-index: 500;
-      padding: 15px;
-    }
-    .modal-overlay.active { display: flex; }
-
-    .drive-modal-box {
-      background: #fff; max-width: 480px; width: 100%; border-radius: 20px;
-      padding: 20px; border: 3px solid #10b981; box-shadow: 0 15px 30px rgba(0,0,0,0.25);
-      position: relative; max-height: 90vh; overflow-y: auto;
-    }
-
     .btn-copy {
       background: #8b5cf6; color: white; border: none; padding: 8px 12px;
-      border-radius: 8px; font-size: 0.8rem; font-weight: 800; cursor: pointer;
-      margin-top: 6px; width: 100%; display: block;
-    }
-    .btn-copy-comma { background: #059669; }
-
-    .close-btn {
-      position: absolute; right: 15px; top: 15px; background: none; border: none;
-      font-size: 1.2rem; cursor: pointer; color: #666;
+      border-radius: 8px; font-size: 0.8rem; font-weight: 800; cursor: pointer; margin-top: 6px; width: 100%;
     }
   </style>
 </head>
 <body>
 
-  <div class="admin-card">
-    <h2>🛠️ Phoo Shop Admin Panel</h2>
-    
-    <button class="btn-drive-tool" onclick="openDriveChanger()">🔄 Google Drive Changer သို့သွားရန်</button>
-    <hr style="margin-top:15px; border:0; border-top:1px dashed #f0abfc;">
-
-    <label>Admin Password ရိုက်ထည့်ပါ:</label>
-    <input type="password" id="admin-pass" class="input-field" placeholder="🔑 Admin Password">
-
-    <label>ပစ္စည်းအမည်:</label>
-    <input type="text" id="p-name" class="input-field" placeholder="ဥပမာ - Album / Lightstick">
-
-    <label>စျေးနှုန်း (ကျပ်):</label>
-    <input type="number" id="p-price" class="input-field" placeholder="ဥပမာ - 15000">
-
-    <label>🖼️ ပင်မပုံ (Show Photo) တိုက်ရိုက်တင်ရန်:</label>
-    <input type="file" id="p-show-file" class="input-field" accept="image/*">
-
-    <label>📸 အသေးစိတ်ပုံများ (Detail Photos) တိုက်ရိုက်တင်ရန်:</label>
-    <input type="file" id="p-detail-files" class="input-field" accept="image/*" multiple>
-
-    <button id="btn-save" class="btn-submit" onclick="uploadAndSaveProduct()">✨ ပစ္စည်းသိမ်းဆည်းမည်</button>
-    
-    <div id="status" class="status-msg"></div>
+  <!-- PAGE ဝင်ဝင်ချင်း PASSWORD တောင်းသည့် POPUP -->
+  <div id="auth-overlay">
+    <div class="login-box">
+      <h2 style="color: #a21caf; margin-bottom: 15px;">🔒 Admin Verification</h2>
+      <p style="font-size: 0.85rem; margin-bottom: 15px; color: #666;">Admin Panel သို့ ဝင်ရောက်ရန် Password ရိုက်ထည့်ပါ</p>
+      <input type="password" id="login-pass" class="input-field" placeholder="Password ရိုက်ပါ..." style="text-align: center;">
+      <button class="btn-submit" onclick="checkPassword()">ဝင်ရောက်မည်</button>
+    </div>
   </div>
 
-  <!-- GOOGLE DRIVE CHANGER MODAL -->
-  <div id="drive-modal" class="modal-overlay">
-    <div class="drive-modal-box">
-      <button class="close-btn" onclick="closeDriveChanger()">❌</button>
-      <h3 style="color:#059669; text-align:center; font-weight:900; margin-bottom:15px;">🔄 Google Drive Changer</h3>
+  <!-- MAIN ADMIN PANEL (PASSWORD မှန်မှ ပေါ်မည်) -->
+  <div id="main-panel" class="main-container">
 
-      <label>1. Show Photo Drive Link ထည့်ရန်:</label>
-      <input type="text" id="drive-show-input" class="input-field" placeholder="Google Drive Link ကူးထည့်ပါ...">
+    <!-- NAVIGATION TABS -->
+    <div class="tab-menu">
+      <button class="tab-btn active" onclick="switchTab('tab-orders', this)">1️⃣ Orders Edit</button>
+      <button class="tab-btn" onclick="switchTab('tab-stock', this)">2️⃣ Stock Post တင်ရန်</button>
+      <button class="tab-btn" onclick="switchTab('tab-drive', this)">3️⃣ Drive Link Changer</button>
+    </div>
 
-      <label>2. Detail Photo 1 Drive Link:</label>
-      <input type="text" id="drive-detail-1" class="input-field" placeholder="Google Drive Link ကူးထည့်ပါ...">
-
-      <label>3. Detail Photo 2 Drive Link:</label>
-      <input type="text" id="drive-detail-2" class="input-field" placeholder="Google Drive Link ကူးထည့်ပါ...">
-
-      <label>4. Detail Photo 3 Drive Link:</label>
-      <input type="text" id="drive-detail-3" class="input-field" placeholder="Google Drive Link ကူးထည့်ပါ...">
-
-      <button class="btn-submit" style="background:linear-gradient(135deg, #059669, #10b981);" onclick="generateDriveLinks()">⚙️ Generate Links</button>
-
-      <div id="drive-output-section" style="display:none; margin-top:15px; background:#f0fdf4; padding:12px; border-radius:12px; border:1px solid #a7f3d0;">
-        <label style="color:#065f46;">Direct Show Photo Link:</label>
-        <input type="text" id="out-show-link" class="input-field" readonly>
-        <button class="btn-copy" onclick="copyToClipboard('out-show-link')">📋 Show Photo Link Copy ရယူရန်</button>
-
-        <label style="color:#065f46; margin-top:10px;">Direct Detail Photos (Comma ခံထားသည်):</label>
-        <textarea id="out-detail-links" class="input-field" style="height:60px; resize:none;" readonly></textarea>
-        <button class="btn-copy btn-copy-comma" onclick="copyToClipboard('out-detail-links')">📋 Detail Links (Comma ခံလျက်) Copy ရယူရန်</button>
+    <!-- OPTION 1: ORDERS EDIT -->
+    <div id="tab-orders" class="tab-content active">
+      <h3 style="color: var(--primary-dark);">📦 Orders များကို စီစစ်/Edit လုပ်ရန်</h3>
+      <p style="font-size: 0.85rem; color: #666; margin-top: 5px;">အော်ဒါများ စီစစ်ရန်နှင့် ပြင်ဆင်ရန် အပိုင်းဖြစ်ပါသည်။</p>
+      <div id="orders-list" style="margin-top: 15px;">
+        <p style="color: #888;">Order များ တင်ထားခြင်း မရှိသေးပါ။</p>
       </div>
     </div>
+
+    <!-- OPTION 2: STOCK POST (LINK များသာ ထည့်သည့် အဟောင်းအတိုင်း) -->
+    <div id="tab-stock" class="tab-content">
+      <h3 style="color: var(--primary-dark);">➕ Stock Post အသစ်တင်ရန်</h3>
+
+      <label>ပစ္စည်းအမည်:</label>
+      <input type="text" id="p-name" class="input-field" placeholder="ဥပမာ - Album / Lightstick">
+
+      <label>စျေးနှုန်း (ကျပ်):</label>
+      <input type="number" id="p-price" class="input-field" placeholder="ဥပမာ - 15000">
+
+      <label>🖼️ Show Photo Link (Direct Link):</label>
+      <input type="text" id="p-show-link" class="input-field" placeholder="https://...">
+
+      <label>📸 Detail Photo Links (Comma ခံ၍ ထည့်ရန်):</label>
+      <textarea id="p-detail-links" class="input-field" style="height: 70px; resize: none;" placeholder="link1, link2, link3"></textarea>
+
+      <button id="btn-save-stock" class="btn-submit" onclick="saveStockPost()">✨ Post တင်မည်</button>
+      <div id="stock-status" style="text-align:center; margin-top:10px; font-weight:bold;"></div>
+    </div>
+
+    <!-- OPTION 3: GOOGLE DRIVE LINK CHANGER -->
+    <div id="tab-drive" class="tab-content">
+      <h3 style="color: #059669;">🔄 Google Drive Link Changer</h3>
+
+      <label>1. Show Photo Drive Link:</label>
+      <input type="text" id="drive-show-input" class="input-field" placeholder="Drive Link ကူးထည့်ပါ...">
+
+      <label>2. Detail Photo 1 Drive Link:</label>
+      <input type="text" id="drive-detail-1" class="input-field" placeholder="Drive Link 1...">
+
+      <label>3. Detail Photo 2 Drive Link:</label>
+      <input type="text" id="drive-detail-2" class="input-field" placeholder="Drive Link 2...">
+
+      <label>4. Detail Photo 3 Drive Link:</label>
+      <input type="text" id="drive-detail-3" class="input-field" placeholder="Drive Link 3...">
+
+      <button class="btn-submit" style="background: linear-gradient(135deg, #059669, #10b981);" onclick="generateDriveLinks()">⚙️ Generate Direct Links</button>
+
+      <div id="drive-output-section" style="display:none; margin-top:15px; background:#f0fdf4; padding:12px; border-radius:12px; border:1px solid #a7f3d0;">
+        <label style="color:#065f46;">Show Photo Link:</label>
+        <input type="text" id="out-show-link" class="input-field" readonly>
+        <button class="btn-copy" onclick="copyToClipboard('out-show-link')">📋 Copy Show Photo Link</button>
+
+        <label style="color:#065f46; margin-top:10px;">Detail Photo Links (Comma ခံထားသည်):</label>
+        <textarea id="out-detail-links" class="input-field" style="height:60px; resize:none;" readonly></textarea>
+        <button class="btn-copy" style="background:#059669;" onclick="copyToClipboard('out-detail-links')">📋 Copy Detail Links (Comma)</button>
+      </div>
+    </div>
+
   </div>
 
   <script type="module">
@@ -162,90 +151,68 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
-    const IMGBB_API_KEY = "3b4f610a7b489ffca3387ebdbd6d332d";
 
-    const ADMIN_PASSWORD_HASH = "phoo1234";
+    // PASSWORD CHECK (254007)
+    window.checkPassword = function() {
+      const inputPass = document.getElementById("login-pass").value.trim();
+      if (inputPass === "254007") {
+        document.getElementById("auth-overlay").style.display = "none";
+        document.getElementById("main-panel").style.display = "block";
+      } else {
+        alert("❌ စကားဝှက် မှားယွင်းနေပါသည်။");
+      }
+    };
 
-    async function uploadToImgBB(file) {
-      const formData = new FormData();
-      formData.append("image", file);
-      const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
-        method: "POST",
-        body: formData
-      });
-      const data = await res.json();
-      return data.data.url;
-    }
+    // TAB SWITCHING
+    window.switchTab = function(tabId, btn) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      btn.classList.add('active');
+    };
 
-    window.uploadAndSaveProduct = async function() {
-      const pass = document.getElementById("admin-pass").value.trim();
+    // OPTION 2: SAVE STOCK POST (LINKS ONLY)
+    window.saveStockPost = async function() {
       const name = document.getElementById("p-name").value.trim();
       const price = document.getElementById("p-price").value.trim();
-      const showFileInput = document.getElementById("p-show-file");
-      const detailFilesInput = document.getElementById("p-detail-files");
-      const status = document.getElementById("status");
-      const btn = document.getElementById("btn-save");
+      const showLink = document.getElementById("p-show-link").value.trim();
+      const detailLinksRaw = document.getElementById("p-detail-links").value.trim();
+      const status = document.getElementById("stock-status");
 
-      // PASSWORD SECURITY FIX: Password မှားပါက Password ကြီး ပြန်မပြတော့ပါ
-      if (pass !== ADMIN_PASSWORD_HASH) {
-        return alert("❌ Admin စကားဝှက် မှားယွင်းနေပါသည်။");
+      if (!name || !price || !showLink) {
+        return alert("ကျေးဇူးပြု၍ အမည်၊ စျေးနှုန်း နှင့် Show Photo Link ထည့်ပေးပါ။");
       }
 
-      if (!name || !price || !showFileInput.files[0]) {
-        return alert("ကျေးဇူးပြု၍ အမည်၊ စျေးနှုန်း နှင့် ပင်မပုံ ရွေးချယ်ပေးပါ!");
-      }
+      const detailPhotoArray = detailLinksRaw ? detailLinksRaw.split(",").map(item => item.trim()) : [];
 
       try {
-        btn.disabled = true;
         status.style.color = "#8b5cf6";
-        status.innerText = "⏳ ပုံများကို Upload တင်နေပါသည်...";
-
-        const showPhotoUrl = await uploadToImgBB(showFileInput.files[0]);
-
-        const detailUrls = [];
-        const detailFiles = detailFilesInput.files;
-        for (let i = 0; i < detailFiles.length; i++) {
-          const url = await uploadToImgBB(detailFiles[i]);
-          detailUrls.push(url);
-        }
-
-        status.innerText = "⏳ Database သို့ အချက်အလက် သိမ်းဆည်းနေပါသည်...";
+        status.innerText = "⏳ သိမ်းဆည်းနေပါသည်...";
 
         await addDoc(collection(db, "products"), {
           name: name,
           price: parseInt(price),
-          showPhoto: showPhotoUrl,
-          detailPhotos: detailUrls,
+          showPhoto: showLink,
+          detailPhotos: detailPhotoArray,
           createdAt: new Date()
         });
 
         status.style.color = "green";
-        status.innerText = "✅ ပစ္စည်းသစ် အောင်မြင်စွာ ထည့်သွင်းပြီးပါပြီ!";
+        status.innerText = "✅ Stock Post အောင်မြင်စွာ တင်ပြီးပါပြီ!";
 
         document.getElementById("p-name").value = "";
         document.getElementById("p-price").value = "";
-        document.getElementById("admin-pass").value = "";
-        showFileInput.value = "";
-        detailFilesInput.value = "";
+        document.getElementById("p-show-link").value = "";
+        document.getElementById("p-detail-links").value = "";
 
       } catch (err) {
         console.error(err);
         status.style.color = "red";
-        status.innerText = "❌ Upload တင်ရာတွင် အမှားအယွင်း ရှိနေပါသည်။";
-      } finally {
-        btn.disabled = false;
+        status.innerText = "❌ အမှားအယွင်း ရှိနေပါသည်။";
       }
     };
 
-    // GOOGLE DRIVE CHANGER FUNCTIONS
-    window.openDriveChanger = function() {
-      document.getElementById("drive-modal").classList.add("active");
-    };
-
-    window.closeDriveChanger = function() {
-      document.getElementById("drive-modal").classList.remove("active");
-    };
-
+    // OPTION 3: GOOGLE DRIVE LINK CHANGER LOGIC
     function convertDriveLink(url) {
       if (!url) return "";
       const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
