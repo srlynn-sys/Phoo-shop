@@ -43,7 +43,6 @@
       position: relative;
     }
 
-    /* 🌸 FLOWER BOMB ANIMATION */
     .flower-particle {
       position: fixed;
       pointer-events: none;
@@ -114,7 +113,6 @@
     .page-view { display: none; }
     .page-view.active { display: block; }
 
-    /* SITE HEADER WITH FLOATING */
     .site-header {
       text-align: center;
       padding: 15px;
@@ -159,7 +157,6 @@
       75% { transform: scale(1.02) rotate(1deg); }
     }
 
-    /* MUSIC BUBBLE & SELECTOR PANEL */
     .music-bubble-fixed {
       position: fixed;
       bottom: 25px;
@@ -209,7 +206,6 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* MUSIC PLAYLIST POPUP BOX */
     .music-playlist-modal {
       position: fixed;
       bottom: 100px;
@@ -274,9 +270,6 @@
       gap: 15px;
       animation: cardWiggle 3.5s infinite ease-in-out;
     }
-    .option-card:nth-child(even) { animation-duration: 4s; animation-delay: 0.4s; }
-    .option-card:nth-child(odd) { animation-duration: 3.2s; animation-delay: 0.2s; }
-
     .option-card:hover {
       transform: translateY(-8px) scale(1.03) !important;
       border-color: var(--primary);
@@ -296,7 +289,6 @@
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      animation: buttonFloat 3s infinite ease-in-out;
     }
 
     .product-grid {
@@ -317,18 +309,7 @@
       border: 2px solid #f5d0fe;
       box-shadow: 0 8px 18px rgba(147, 51, 234, 0.12);
       text-align: center;
-      animation: cardWiggle 3.5s infinite ease-in-out;
     }
-
-    .product-card:nth-child(even) { animation-duration: 4s; animation-delay: 0.6s; }
-    .product-card:nth-child(odd) { animation-duration: 3s; animation-delay: 0.2s; }
-
-    @keyframes cardWiggle {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      25% { transform: translateY(-5px) rotate(-1deg); }
-      75% { transform: translateY(4px) rotate(1deg); }
-    }
-
     .product-card:hover {
       transform: translateY(-8px) scale(1.03) !important;
       box-shadow: 0 14px 28px rgba(217, 70, 239, 0.3);
@@ -382,11 +363,6 @@
       box-shadow: 0 10px 25px rgba(217, 70, 239, 0.5);
       cursor: pointer;
       z-index: 199;
-      animation: pulseCart 2s infinite ease-in-out;
-    }
-    @keyframes pulseCart {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
     }
     .cart-count-badge {
       position: absolute;
@@ -438,12 +414,6 @@
       cursor: pointer;
       border: 3px solid #f0abfc;
       box-shadow: 0 6px 15px rgba(217, 70, 239, 0.3);
-      animation: bubbleFloat 3s ease-in-out infinite alternate;
-    }
-    @keyframes bubbleFloat {
-      0% { transform: translateY(0px) scale(1); }
-      50% { transform: translateY(-7px) scale(1.05); box-shadow: 0 10px 20px rgba(217, 70, 239, 0.5); }
-      100% { transform: translateY(4px) scale(0.98); }
     }
 
     .fullscreen-modal {
@@ -567,9 +537,9 @@
   </div>
 
   <div class="bg-icon" style="top:10%; left:5%;">🌸</div>
-  <div class="bg-icon" style="top:30%; right:8%; animation-delay: 2s;">🎤</div>
-  <div class="bg-icon" style="top:60%; left:10%; animation-delay: 4s;">🪄</div>
-  <div class="bg-icon" style="top:85%; right:6%; animation-delay: 1s;">🎵</div>
+  <div class="bg-icon" style="top:30%; right:8%;">🎤</div>
+  <div class="bg-icon" style="top:60%; left:10%;">🪄</div>
+  <div class="bg-icon" style="top:85%; right:6%;">🎵</div>
 
   <audio id="bg-audio" preload="auto" crossorigin="anonymous"></audio>
 
@@ -748,7 +718,6 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-    import { initShopSongs } from './songs.js'; // သီချင်းများသီးသန့်ဖတ်ရန် module ဖိုင်ချိတ်ဆက်ခြင်း
 
     const firebaseConfig = {
       apiKey: "AIzaSyCkT8J7ttr9w-ZJJmbyu6aT9qLCUmauXcA",
@@ -824,6 +793,49 @@
       document.getElementById(pageId).classList.add('active');
       window.scrollTo(0,0);
     };
+
+    async function loadShopSongs() {
+      const container = document.getElementById("shop-playlist-container");
+      if (!container) return;
+
+      try {
+        const querySnapshot = await getDocs(collection(db, "songs"));
+        if (querySnapshot.empty) {
+          container.innerHTML = "<p style='text-align:center; font-size:0.8rem; color:var(--text-sub);'>သီချင်း မရှိသေးပါ။</p>";
+          return;
+        }
+
+        container.innerHTML = "";
+        querySnapshot.forEach((docSnap) => {
+          const song = docSnap.data();
+          const itemEl = document.createElement("div");
+          itemEl.className = "playlist-item";
+          itemEl.innerText = `🎵 ${song.name}`;
+          
+          itemEl.onclick = () => {
+            const audio = document.getElementById('bg-audio');
+            const bubble = document.getElementById('music-bubble');
+            const label = document.getElementById('music-status');
+
+            audio.src = song.url;
+            audio.play().then(() => {
+              bubble.classList.add('playing');
+              bubble.innerHTML = "🎶";
+              label.innerText = song.name;
+              document.getElementById('music-playlist-modal').classList.remove('active');
+            }).catch(e => {
+              console.error(e);
+              alert("သီချင်းဖွင့်၍ မရပါ။ Audio Link သို့မဟုတ် Browser ခွင့်ပြုချက် စစ်ဆေးပါ။");
+            });
+          };
+
+          container.appendChild(itemEl);
+        });
+      } catch (error) {
+        console.error("Error loading songs from Firestore:", error);
+        container.innerHTML = "<p style='text-align:center; font-size:0.8rem; color:red;'>သီချင်း ဆွဲထုတ်ရာတွင် အမှားရှိနေပါသည်။</p>";
+      }
+    }
 
     async function loadShopProducts() {
       const grid = document.getElementById("product-grid");
@@ -1121,10 +1133,9 @@
       });
     };
 
-    // Initialize Page Data & Songs
     loadShopProducts();
+    loadShopSongs();
     updateCartUI();
-    initShopSongs(); // Database ထဲက သီချင်းများကို စတင်ဖတ်ယူမည်
   </script>
 </body>
 </html>
