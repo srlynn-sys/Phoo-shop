@@ -13,18 +13,56 @@
       --card-bg: rgba(255, 255, 255, 0.95);
       --text-main: #2e1065;
       --text-sub: #6b21a8;
+      --body-bg: linear-gradient(135deg, #fae8ff 0%, #f3e8ff 50%, #e9d5ff 100%);
+      --box-bg: #ffffff;
+    }
+
+    /* Dark Mode Theme Variables */
+    body.dark-mode {
+      --primary: #e879f9;
+      --primary-dark: #f0abfc;
+      --accent: #a78bfa;
+      --card-bg: rgba(30, 27, 75, 0.95);
+      --text-main: #f3e8ff;
+      --text-sub: #d8b4fe;
+      --body-bg: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
+      --box-bg: #1e1b4b;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
 
     body {
-      background: linear-gradient(135deg, #fae8ff 0%, #f3e8ff 50%, #e9d5ff 100%);
+      background: var(--body-bg);
       color: var(--text-main);
       min-height: 100vh;
       overflow-x: hidden;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
-    /* K-pop Animated Background Floating Icons */
+    /* Theme Toggle Switch Box */
+    .theme-toggle-wrapper {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      z-index: 10;
+    }
+    .theme-toggle-btn {
+      background: rgba(255, 255, 255, 0.8);
+      border: 2px solid #f0abfc;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 800;
+      font-size: 0.8rem;
+      color: var(--text-main);
+      cursor: pointer;
+      backdrop-filter: blur(5px);
+    }
+    body.dark-mode .theme-toggle-btn {
+      background: rgba(30, 27, 75, 0.8);
+      border-color: #a855f7;
+    }
+
+    /* Animated K-pop Background Icons */
     .bg-icon {
       position: fixed;
       font-size: 2rem;
@@ -47,11 +85,15 @@
       padding: 15px 15px 40px;
     }
 
-    /* Header & Wiggle Address */
+    /* Page Views */
+    .page-view { display: none; }
+    .page-view.active { display: block; }
+
+    /* LANDING PAGE HEADER */
     .site-header {
       text-align: center;
       padding: 15px;
-      background: rgba(255, 255, 255, 0.75);
+      background: var(--card-bg);
       backdrop-filter: blur(10px);
       border-radius: 20px;
       border: 2px solid #f0abfc;
@@ -59,15 +101,15 @@
       box-shadow: 0 8px 20px rgba(217, 70, 239, 0.15);
     }
     .logo {
-      width: 80px;
-      height: 80px;
+      width: 85px;
+      height: 85px;
       border-radius: 50%;
       object-fit: cover;
       box-shadow: 0 0 15px rgba(217, 70, 239, 0.4);
       border: 3px solid #fff;
     }
     .shop-title {
-      font-size: 1.25rem;
+      font-size: 1.3rem;
       font-weight: 900;
       color: var(--primary-dark);
       margin-top: 6px;
@@ -86,7 +128,19 @@
       75% { transform: scale(1.02) rotate(1deg); }
     }
 
-    /* LANDING PAGE: 2 Parallel Options */
+    /* Audio Player Styling */
+    .audio-player-container {
+      margin-top: 15px;
+      text-align: center;
+    }
+    audio {
+      width: 100%;
+      height: 38px;
+      border-radius: 20px;
+      outline: none;
+    }
+
+    /* LANDING PAGE OPTIONS */
     .landing-options {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -94,7 +148,7 @@
       margin-top: 20px;
     }
     .option-card {
-      background: white;
+      background: var(--box-bg);
       border: 3px solid #f0abfc;
       border-radius: 20px;
       padding: 25px 10px;
@@ -112,7 +166,7 @@
 
     /* Back Navigation Button */
     .nav-back-btn {
-      background: rgba(255, 255, 255, 0.8);
+      background: var(--card-bg);
       border: 2px solid #f0abfc;
       padding: 8px 16px;
       border-radius: 20px;
@@ -125,11 +179,7 @@
       gap: 5px;
     }
 
-    /* Page Views */
-    .page-view { display: none; }
-    .page-view.active { display: block; }
-
-    /* PRODUCT GRID (Lightweight Lavender Vibe with Logo BG) */
+    /* PRODUCT GRID */
     .product-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -137,7 +187,6 @@
     }
     .product-card {
       background: var(--card-bg);
-      /* Background Watermark Logos & K-pop Pattern */
       background-image: radial-gradient(#d8b4fe 15%, transparent 16%),
                         url('https://lh3.googleusercontent.com/d/14WBlxcwpCYj9gqkONoxRkhRrgwvBJSRH');
       background-size: 20px 20px, 70px 70px;
@@ -149,7 +198,6 @@
       border: 2px solid #f5d0fe;
       box-shadow: 0 8px 18px rgba(147, 51, 234, 0.12);
       text-align: center;
-      position: relative;
       transition: all 0.3s ease;
     }
     .product-card:hover {
@@ -175,7 +223,6 @@
       font-size: 0.95rem;
       margin-bottom: 8px;
     }
-    
     .btn-show-photo {
       width: 100%;
       background: linear-gradient(135deg, #c084fc 0%, #e879f9 100%);
@@ -189,40 +236,40 @@
       box-shadow: 0 4px 10px rgba(192, 132, 252, 0.4);
     }
 
-    /* Embedded Cart Section in Shop Center */
-    .embedded-cart-section {
-      background: white;
-      border-radius: 22px;
-      padding: 18px;
-      margin-top: 25px;
-      border: 3px solid #f0abfc;
-      box-shadow: 0 10px 25px rgba(217, 70, 239, 0.15);
-    }
-
-    /* Inputs & Action Buttons */
-    .input-field {
-      width: 100%;
-      padding: 12px;
-      border-radius: 12px;
-      border: 2px solid #e9d5ff;
-      margin-top: 8px;
-      margin-bottom: 12px;
-      outline: none;
-      font-size: 0.9rem;
-    }
-    .input-field:focus { border-color: var(--primary); }
-
-    .btn-action {
-      width: 100%;
+    /* FLOATING CART BUTTON */
+    .floating-cart-btn {
+      position: fixed;
+      bottom: 25px;
+      right: 20px;
       background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
       color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 14px;
-      font-weight: 800;
-      font-size: 0.95rem;
+      width: 65px;
+      height: 65px;
+      border-radius: 50%;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      font-size: 1.6rem;
+      box-shadow: 0 10px 25px rgba(217, 70, 239, 0.5);
       cursor: pointer;
-      box-shadow: 0 4px 15px rgba(217, 70, 239, 0.4);
+      z-index: 99;
+      animation: pulseCart 2s infinite ease-in-out;
+    }
+    @keyframes pulseCart {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    .cart-count-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: #ef4444;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 900;
+      padding: 3px 7px;
+      border-radius: 12px;
+      border: 2px solid white;
     }
 
     /* FLOATING BUBBLE MODAL FOR SHOW PHOTO DETAILS */
@@ -238,7 +285,6 @@
     }
     .modal-overlay.active { display: flex; }
 
-    /* Floating Bubble Detail Container (Out of the Box) */
     .floating-bubbles-container {
       position: absolute;
       top: 15%;
@@ -264,9 +310,8 @@
       100% { transform: scale(1) rotate(360deg) translateY(0); opacity: 1; }
     }
 
-    /* Simple Qty-Only Box */
     .qty-modal-box {
-      background: white;
+      background: var(--box-bg);
       width: 85%;
       max-width: 320px;
       border-radius: 24px;
@@ -278,21 +323,82 @@
       border: 3px solid #f0abfc;
     }
 
+    /* Inputs & Buttons */
+    .input-field {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 2px solid #e9d5ff;
+      margin-top: 8px;
+      margin-bottom: 12px;
+      outline: none;
+      font-size: 0.9rem;
+      background: var(--box-bg);
+      color: var(--text-main);
+    }
+    .input-field:focus { border-color: var(--primary); }
+
+    .btn-action {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(217, 70, 239, 0.4);
+    }
+
     .cart-item {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #fdf4ff;
+      background: var(--card-bg);
       padding: 10px 14px;
       border-radius: 12px;
       margin-bottom: 8px;
       border: 1px solid #f0abfc;
     }
+
+    /* ORDER SUCCESS PAGE STYLING */
+    .success-card {
+      background: var(--box-bg);
+      border-radius: 24px;
+      padding: 30px 20px;
+      text-align: center;
+      border: 3px solid #f0abfc;
+      box-shadow: 0 15px 35px rgba(217, 70, 239, 0.25);
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes popIn {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .success-icon { font-size: 4rem; margin-bottom: 15px; display: block; }
+    .success-title { font-size: 1.3rem; font-weight: 900; color: #16a34a; margin-bottom: 10px; }
+    .thanks-msg { font-size: 1rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 20px; }
+    .code-box {
+      background: var(--card-bg);
+      border: 2px dashed var(--primary);
+      padding: 15px;
+      border-radius: 16px;
+      font-size: 1.2rem;
+      font-weight: 900;
+      color: var(--text-main);
+      margin-bottom: 20px;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Floating Background Icons -->
+  <!-- Theme Light/Dark Mode Switcher -->
+  <div class="theme-toggle-wrapper">
+    <button id="theme-btn" class="theme-toggle-btn" onclick="toggleTheme()">🌙 Dark Mode</button>
+  </div>
+
+  <!-- Floating Background Elements -->
   <div class="bg-icon" style="top:10%; left:5%;">🌸</div>
   <div class="bg-icon" style="top:30%; right:8%; animation-delay: 2s;">🎤</div>
   <div class="bg-icon" style="top:60%; left:10%; animation-delay: 4s;">🪄</div>
@@ -300,17 +406,24 @@
 
   <div class="app-container">
 
-    <!-- Header -->
-    <header class="site-header">
-      <img src="https://lh3.googleusercontent.com/d/14WBlxcwpCYj9gqkONoxRkhRrgwvBJSRH" class="logo" alt="Shop Logo">
-      <h1 class="shop-title">Phoo K-pop & Thai-pop Shop</h1>
-      <div class="address-animated">
-        📍 No.460, Su Pyae Yadanar (2) St, 56 ward, South Dagon, Yangon<br>📞 Ph: 09898948790
-      </div>
-    </header>
-
-    <!-- STEP 1: LANDING PAGE WITH 2 OPTIONS -->
+    <!-- PAGE 1: LANDING PAGE -->
     <div id="page-landing" class="page-view active">
+      <header class="site-header">
+        <img src="https://lh3.googleusercontent.com/d/14WBlxcwpCYj9gqkONoxRkhRrgwvBJSRH" class="logo" alt="Shop Logo">
+        <h1 class="shop-title">Phoo K-pop & Thai-pop Shop</h1>
+        <div class="address-animated">
+          📍 No.460, Su Pyae Yadanar (2) St, 56 ward, South Dagon, Yangon<br>📞 Ph: 09898948790
+        </div>
+
+        <!-- Embedded Audio Player -->
+        <div class="audio-player-container">
+          <audio controls>
+            <source src="https://lh3.googleusercontent.com/d/15OiyEq23-58nWzvqpJfsq72328-vtBxf" type="audio/mp4">
+            Your browser does not support the audio element.
+          </audio>
+        </div>
+      </header>
+
       <h2 style="text-align:center; color:var(--text-sub); font-size:1.1rem; margin-bottom:15px;">ကျေးဇူးပြု၍ တစ်ခုရွေးချယ်ပါ</h2>
       <div class="landing-options">
         <div class="option-card" onclick="navigateTo('page-shop')">
@@ -324,24 +437,27 @@
       </div>
     </div>
 
-    <!-- STEP 2: SHOP CENTER PAGE (PRODUCTS + INTEGRATED CART) -->
+    <!-- PAGE 2: SHOP CENTER PAGE -->
     <div id="page-shop" class="page-view">
       <button class="nav-back-btn" onclick="navigateTo('page-landing')">⬅️ ပင်မစာမျက်နှာသို့</button>
-
-      <h2 style="font-size:1.1rem; font-weight:900; color:var(--text-sub); margin-bottom:12px;">🏷️ ပစ္စည်းများ</h2>
+      <h2 style="font-size:1.2rem; font-weight:900; color:var(--text-sub); margin-bottom:15px;">🛍️ Shop Center</h2>
       <div id="product-grid" class="product-grid"></div>
+    </div>
 
-      <!-- EMBEDDED CART IN SHOP CENTER -->
-      <div class="embedded-cart-section">
+    <!-- PAGE 3: CART CHECKOUT PAGE -->
+    <div id="page-cart" class="page-view">
+      <button class="nav-back-btn" onclick="navigateTo('page-shop')">⬅️ ပစ္စည်းများထပ်ရွေးမည်</button>
+      
+      <div style="background:var(--box-bg); border-radius:22px; padding:20px; border:3px solid #f0abfc; box-shadow:0 10px 25px rgba(217,70,239,0.15);">
         <h3 style="font-size:1.1rem; font-weight:900; color:var(--primary-dark); margin-bottom:12px;">🛒 ခြင်းတောင်းထဲမှ ပစ္စည်းများ</h3>
         <div id="cart-items-container"></div>
         
-        <div style="display:flex; justify-content:space-between; font-weight:900; font-size:1.1rem; margin:15px 0 10px;">
+        <div style="display:flex; justify-content:space-between; font-weight:900; font-size:1.15rem; margin:15px 0 10px;">
           <span>စုစုပေါင်း ကျသင့်ငွေ:</span>
           <span id="cart-total-price" style="color:var(--primary-dark);">0 Ks</span>
         </div>
 
-        <h4 style="font-size:0.9rem; margin-top:10px;">အချက်အလက် ဖြည့်ပါ:</h4>
+        <h4 style="font-size:0.9rem; margin-top:10px; font-weight:800;">အချက်အလက် ဖြည့်ပါ:</h4>
         <input type="text" id="cust-name" class="input-field" placeholder="လူကြီးမင်း နာမည်..." required>
         
         <select id="delivery-type" class="input-field" onchange="toggleDeliveryBox(this.value)">
@@ -359,40 +475,55 @@
           <option value="online">📱 Online Payment (KPay / WavePay)</option>
         </select>
 
-        <div id="online-pay-box" style="display:none; background:#f3e8ff; padding:12px; border-radius:12px; margin-bottom:12px; font-size:0.85rem;">
+        <div id="online-pay-box" style="display:none; background:var(--card-bg); padding:12px; border-radius:12px; margin-bottom:12px; font-size:0.85rem;">
           <p><b>Wave Pay:</b> 09898948790 (Khin Saw Htwe)</p>
           <p><b>KPay:</b> 09422725283 (Moe Pyae Pyae Zaw)</p>
           <p style="margin-top:6px; color:var(--primary-dark); font-weight:700;">💳 ပြေစာ Slip ပုံ တိုက်ရိုက် တင်ပါ:</p>
-          <input type="file" id="slip-file-input" accept="image/*" class="input-field" style="background:white; padding:8px;">
+          <input type="file" id="slip-file-input" accept="image/*" class="input-field" style="padding:8px;">
         </div>
 
         <textarea id="order-note" class="input-field" placeholder="Order Note (မှာကြားလိုသည်များရေးရန်)..." style="height:60px; resize:none;"></textarea>
 
-        <button class="btn-action" onclick="submitOrderToTelegram()">✨ Order အတည်ပြုမည် (Telegram သို့ပို့မည်)</button>
+        <button class="btn-action" onclick="submitOrderToTelegram()">✨ Order အတည်ပြုမည်</button>
       </div>
     </div>
 
-    <!-- STEP 3: ORDER CHECKER PAGE -->
+    <!-- PAGE 4: ORDER CHECKER PAGE -->
     <div id="page-checker" class="page-view">
       <button class="nav-back-btn" onclick="navigateTo('page-landing')">⬅️ ပင်မစာမျက်နှာသို့</button>
-
       <h2 style="font-size:1.1rem; font-weight:900; color:var(--text-sub); margin-bottom:12px;">🔍 Order Status စစ်ဆေးရန်</h2>
       <input type="text" id="check-code-input" class="input-field" placeholder="Order Code ရိုက်ထည့်ပါ (ဥပမာ- ORD-1234)">
       <button class="btn-action" onclick="checkOrderStatus()">စစ်ဆေးမည်</button>
       <div id="check-result-box" style="margin-top:15px;"></div>
     </div>
 
+    <!-- PAGE 5: ORDER SUCCESS PAGE -->
+    <div id="page-success" class="page-view">
+      <div class="success-card">
+        <span class="success-icon">🎉</span>
+        <div class="success-title">ဂုဏ်ယူပါတယ် order တင်ခြင်းအောင်မြင်ပါသည်</div>
+        <div class="thanks-msg">ဝယ်ယူအားပေးမှုအတွက် ကျေးဇူးအထူးတင်ပါသည်။</div>
+        
+        <p style="font-size:0.85rem; color:var(--text-sub); margin-bottom:6px;">လူကြီးမင်း၏ Order Code လေးဖြစ်ပါတယ်:</p>
+        <div class="code-box" id="success-order-code">ORD-XXXX</div>
+
+        <button class="btn-action" onclick="navigateTo('page-landing')">🏠 ပင်မစာမျက်နှာသို့ ပြန်သွားမည်</button>
+      </div>
+    </div>
+
   </div>
 
-  <!-- SHOW PHOTO FLOATING BUBBLE MODAL (DETACHED FROM BOX) -->
-  <div id="detail-modal" class="modal-overlay">
-    
-    <!-- Floating Bubbles Out of Box -->
-    <div id="modal-floating-gallery" class="floating-bubbles-container"></div>
+  <!-- FLOATING CART ICON -->
+  <div id="floating-cart-btn" class="floating-cart-btn" onclick="navigateTo('page-cart')">
+    🛒
+    <span id="cart-badge" class="cart-count-badge">0</span>
+  </div>
 
-    <!-- Only Qty Input & Add Button Inside Box -->
+  <!-- SHOW PHOTO FLOATING BUBBLE MODAL -->
+  <div id="detail-modal" class="modal-overlay">
+    <div id="modal-floating-gallery" class="floating-bubbles-container"></div>
     <div class="qty-modal-box">
-      <button onclick="closeModal()" style="position:absolute; right:12px; top:12px; background:none; border:none; font-size:1.2rem; cursor:pointer;">❌</button>
+      <button onclick="closeModal()" style="position:absolute; right:12px; top:12px; background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text-main);">❌</button>
       <h3 id="modal-title" style="font-weight:900; color:var(--primary-dark); margin-top:5px;"></h3>
       <p id="modal-price" style="font-size:1.1rem; font-weight:800; color:var(--accent); margin-bottom:12px;"></p>
 
@@ -427,9 +558,22 @@
     let cart = [];
     let selectedProduct = null;
 
+    // LIGHT / DARK MODE TOGGLE LOGIC
+    window.toggleTheme = function() {
+      const body = document.body;
+      const btn = document.getElementById('theme-btn');
+      body.classList.toggle('dark-mode');
+      if (body.classList.contains('dark-mode')) {
+        btn.innerText = "☀️ Light Mode";
+      } else {
+        btn.innerText = "🌙 Dark Mode";
+      }
+    };
+
     window.navigateTo = function(pageId) {
       document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
       document.getElementById(pageId).classList.add('active');
+      window.scrollTo(0,0);
     };
 
     async function loadShopProducts() {
@@ -498,20 +642,25 @@
 
       updateCartUI();
       closeModal();
-      alert("🛒 ခြင်းတောင်းထဲသို့ ထည့်သွင်းပြီးပါပြီ!");
     };
 
     function updateCartUI() {
       const container = document.getElementById("cart-items-container");
+      const floatingBtn = document.getElementById("floating-cart-btn");
+      const badge = document.getElementById("cart-badge");
+      
       container.innerHTML = "";
       let total = 0;
+      let totalCount = 0;
 
       if(cart.length === 0) {
         container.innerHTML = "<p style='text-align:center; color:var(--text-sub); font-size:0.9rem;'>ခြင်းတောင်းထဲတွင် ပစ္စည်းမရှိသေးပါ။</p>";
+        floatingBtn.style.display = "none";
       } else {
         cart.forEach((item, index) => {
           const itemTotal = item.price * item.qty;
           total += itemTotal;
+          totalCount += item.qty;
           container.innerHTML += `
             <div class="cart-item">
               <div>
@@ -522,6 +671,9 @@
             </div>
           `;
         });
+
+        badge.innerText = totalCount;
+        floatingBtn.style.display = "flex";
       }
 
       document.getElementById("cart-total-price").innerText = `${total} Ks`;
@@ -530,6 +682,9 @@
     window.removeFromCart = function(index) {
       cart.splice(index, 1);
       updateCartUI();
+      if(cart.length === 0) {
+        navigateTo('page-shop');
+      }
     };
 
     window.toggleDeliveryBox = function(val) {
@@ -599,10 +754,11 @@
         console.error("Telegram Sending Error:", e);
       }
 
-      alert(`🎉 Order တင်ခြင်း အောင်မြင်ပါသည်။\nOrder Code: ${orderCode}`);
+      // Show Order Success Page
+      document.getElementById("success-order-code").innerText = orderCode;
       cart = [];
       updateCartUI();
-      navigateTo('page-landing');
+      navigateTo('page-success');
     };
 
     window.checkOrderStatus = async function() {
@@ -621,7 +777,7 @@
       snapshot.forEach(docSnap => {
         const d = docSnap.data();
         resBox.innerHTML = `
-          <div style="background:white; padding:15px; border-radius:14px; border:2px solid #f0abfc;">
+          <div style="background:var(--box-bg); padding:15px; border-radius:14px; border:2px solid #f0abfc;">
             <p>Order Code: <b>${d.orderCode}</b></p>
             <p>Status: <b style="color:var(--primary-dark);">${d.status}</b></p>
             <p>စုစုပေါင်း: ${d.totalAmount} Ks</p>
