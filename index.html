@@ -43,7 +43,7 @@
       position: relative;
     }
 
-    /* FLOWER & LEAF BOMB ANIMATION STYLES */
+    /* 🌸 FLOWER & LEAF BOMB ANIMATION STYLES */
     .flower-particle {
       position: fixed;
       pointer-events: none;
@@ -54,18 +54,9 @@
     }
 
     @keyframes flowerBomb {
-      0% {
-        opacity: 1;
-        transform: translate(0, 0) scale(0.3) rotate(0deg);
-      }
-      40% {
-        opacity: 1;
-        transform: translate(var(--vx), var(--vy)) scale(1.4) rotate(180deg);
-      }
-      100% {
-        opacity: 0;
-        transform: translate(calc(var(--vx) * 1.2), calc(var(--vy) + 140px)) scale(0.5) rotate(360deg);
-      }
+      0% { opacity: 1; transform: translate(0, 0) scale(0.3) rotate(0deg); }
+      40% { opacity: 1; transform: translate(var(--vx), var(--vy)) scale(1.4) rotate(180deg); }
+      100% { opacity: 0; transform: translate(calc(var(--vx) * 1.2), calc(var(--vy) + 140px)) scale(0.5) rotate(360deg); }
     }
 
     .theme-toggle-wrapper {
@@ -118,6 +109,7 @@
     .page-view { display: none; }
     .page-view.active { display: block; }
 
+    /* SITE HEADER WITH CONTINUOUS FLOATING/WIGGLE */
     .site-header {
       text-align: center;
       padding: 15px;
@@ -127,7 +119,13 @@
       border: 2px solid #f0abfc;
       margin-bottom: 20px;
       box-shadow: 0 8px 20px rgba(217, 70, 239, 0.15);
+      animation: globalWiggle 4s infinite ease-in-out;
     }
+    @keyframes globalWiggle {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-4px) rotate(0.5deg); }
+    }
+
     .logo {
       width: 85px;
       height: 85px;
@@ -179,7 +177,6 @@
       box-shadow: 0 8px 25px rgba(217, 70, 239, 0.5);
       cursor: pointer;
       border: 3px solid #fff;
-      transition: all 0.3s ease;
       animation: musicPulse 2s infinite ease-in-out;
     }
     .music-bubble-btn.playing {
@@ -213,6 +210,7 @@
       gap: 15px;
       margin-top: 20px;
     }
+    /* ALL BOXES / CARDS ALWAYS FLOATING / WIGGLING */
     .option-card {
       background: var(--box-bg);
       border: 3px solid #f0abfc;
@@ -221,11 +219,11 @@
       text-align: center;
       cursor: pointer;
       box-shadow: 0 10px 25px rgba(217, 70, 239, 0.2);
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 15px;
+      animation: cardWiggle 3.5s infinite ease-in-out;
     }
     .option-card:hover {
       transform: translateY(-5px) scale(1.02);
@@ -248,7 +246,7 @@
       gap: 5px;
     }
 
-    /* PRODUCT CARDS */
+    /* PRODUCT CARDS WITH CONTINUOUS WIGGLE */
     .product-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -267,7 +265,6 @@
       border: 2px solid #f5d0fe;
       box-shadow: 0 8px 18px rgba(147, 51, 234, 0.12);
       text-align: center;
-      transition: all 0.3s ease;
       animation: cardWiggle 3.5s infinite ease-in-out;
     }
 
@@ -368,7 +365,7 @@
     }
     .modal-overlay.active { display: flex; }
 
-    /* DETAIL BUBBLE PHOTOS & CLOCKWISE / FLOATING SEPARATE LAYER */
+    /* SEPARATED BUBBLE PHOTOS CONTAINER */
     .detail-gallery-container {
       display: flex;
       flex-wrap: wrap;
@@ -387,7 +384,7 @@
     .detail-bubble-img {
       width: 75px;
       height: 75px;
-      border-radius: 50%; /* Pure Bubble Shape */
+      border-radius: 50%;
       object-fit: cover;
       cursor: pointer;
       border: 3px solid #f0abfc;
@@ -435,6 +432,11 @@
       position: relative;
       box-shadow: 0 15px 30px rgba(0,0,0,0.3);
       border: 3px solid #f0abfc;
+      animation: modalWiggle 4s infinite ease-in-out;
+    }
+    @keyframes modalWiggle {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
     }
 
     .input-field {
@@ -524,12 +526,13 @@
       border-radius: 22px;
       padding: 20px;
       box-shadow: 0 10px 25px rgba(217, 70, 239, 0.15);
+      animation: cardWiggle 3.8s infinite ease-in-out;
     }
   </style>
 </head>
 <body>
 
-  <!-- THEME & LANGUAGE SWITCHER WRAPPER -->
+  <!-- THEME & LANGUAGE SWITCHER -->
   <div class="theme-toggle-wrapper">
     <button id="lang-btn" class="lang-toggle-btn" onclick="toggleLanguage()">🇲🇲 MM</button>
     <button id="theme-btn" class="theme-toggle-btn" onclick="toggleTheme()">🌙 Dark Mode</button>
@@ -545,7 +548,7 @@
     <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- MUSIC BUBBLE PLAYER -->
+  <!-- MUSIC BUBBLE -->
   <div class="music-bubble-fixed">
     <div id="music-bubble" class="music-bubble-btn" onclick="toggleMusic()">🎵</div>
     <span id="music-status" class="music-bubble-label" data-mm="ဖွင့်ရန်" data-en="Play">ဖွင့်ရန်</span>
@@ -553,7 +556,7 @@
 
   <div class="app-container">
 
-    <!-- PAGE 1: LANDING PAGE -->
+    <!-- PAGE 1: LANDING -->
     <div id="page-landing" class="page-view active">
       <header class="site-header">
         <img src="https://lh3.googleusercontent.com/d/14WBlxcwpCYj9gqkONoxRkhRrgwvBJSRH" class="logo" alt="Shop Logo">
@@ -581,14 +584,14 @@
       </div>
     </div>
 
-    <!-- PAGE 2: SHOP CENTER PAGE -->
+    <!-- PAGE 2: SHOP CENTER -->
     <div id="page-shop" class="page-view">
       <button class="nav-back-btn" onclick="navigateTo('page-landing')" data-mm="⬅️ ပင်မစာမျက်နှာသို့" data-en="⬅️ Back to Home">⬅️ ပင်မစာမျက်နှာသို့</button>
       <h2 style="font-size:1.2rem; font-weight:900; color:var(--text-sub); margin-bottom:15px;">🛍️ Shop Center</h2>
       <div id="product-grid" class="product-grid"></div>
     </div>
 
-    <!-- PAGE 3: ORDER CHECKER PAGE -->
+    <!-- PAGE 3: ORDER CHECKER -->
     <div id="page-checker" class="page-view">
       <button class="nav-back-btn" onclick="navigateTo('page-landing')" data-mm="⬅️ ပင်မစာမျက်နှာသို့" data-en="⬅️ Back to Home">⬅️ ပင်မစာမျက်နှာသို့</button>
       <h2 style="font-size:1.1rem; font-weight:900; color:var(--text-sub); margin-bottom:12px;" data-mm="🔍 Order Status စစ်ဆေးရန်" data-en="🔍 Check Order Status">🔍 Order Status စစ်ဆေးရန်</h2>
@@ -597,7 +600,7 @@
       <div id="check-result-box" style="margin-top:15px;"></div>
     </div>
 
-    <!-- PAGE 4: REPORT CENTER PAGE -->
+    <!-- PAGE 4: REPORT CENTER -->
     <div id="page-report" class="page-view">
       <button class="nav-back-btn" onclick="navigateTo('page-landing')" data-mm="⬅️ ပင်မစာမျက်နှာသို့" data-en="⬅️ Back to Home">⬅️ ပင်မစာမျက်နှာသို့</button>
       
@@ -622,11 +625,11 @@
       </div>
     </div>
 
-    <!-- PAGE 5: CART CHECKOUT PAGE -->
+    <!-- PAGE 5: CART CHECKOUT -->
     <div id="page-cart" class="page-view">
       <button class="nav-back-btn" onclick="navigateTo('page-shop')" data-mm="⬅️ ပစ္စည်းများထပ်ရွေးမည်" data-en="⬅️ Add More Items">⬅️ ပစ္စည်းများထပ်ရွေးမည်</button>
       
-      <div style="background:var(--box-bg); border-radius:22px; padding:20px; border:3px solid #f0abfc; box-shadow:0 10px 25px rgba(217,70,239,0.15);">
+      <div style="background:var(--box-bg); border-radius:22px; padding:20px; border:3px solid #f0abfc; box-shadow:0 10px 25px rgba(217,70,239,0.15); animation: cardWiggle 4s infinite ease-in-out;">
         <h3 style="font-size:1.1rem; font-weight:900; color:var(--primary-dark); margin-bottom:12px;" data-mm="🛒 ခြင်းတောင်းထဲမှ ပစ္စည်းများ" data-en="🛒 Items in Cart">🛒 ခြင်းတောင်းထဲမှ ပစ္စည်းများ</h3>
         <div id="cart-items-container"></div>
         
@@ -673,7 +676,7 @@
       </div>
     </div>
 
-    <!-- PAGE 6: ORDER SUCCESS PAGE -->
+    <!-- PAGE 6: SUCCESS -->
     <div id="page-success" class="page-view">
       <div class="success-card">
         <span class="success-icon">🎉</span>
@@ -694,18 +697,16 @@
     <span id="cart-badge" class="cart-count-badge">0</span>
   </div>
 
-  <!-- PRODUCT DETAIL MODAL (SEPARATED BUBBLE PHOTOS & ADMIN NOTE) -->
+  <!-- DETAIL MODAL -->
   <div id="detail-modal" class="modal-overlay">
     <div class="qty-modal-box">
       <button onclick="closeModal()" style="position:absolute; right:12px; top:12px; background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text-main);">❌</button>
       <h3 id="modal-title" style="font-weight:900; color:var(--primary-dark); margin-top:5px;"></h3>
       <p id="modal-price" style="font-size:1.1rem; font-weight:800; color:var(--accent); margin-bottom:8px;"></p>
 
-      <!-- Admin Stock Note Display (Admin Panel က note ရေးထားမှ ပေါ်မည်) -->
       <div id="modal-admin-note" class="admin-note-box" style="display:none;"></div>
 
-      <!-- Detail Bubble Photos Layer (Box နဲ့ လုံးဝမရောဘဲ သီးသန့်ပေါ်မည့် နေရာ) -->
-      <p style="font-size:0.75rem; font-weight:bold; color:var(--text-sub);" data-mm="🖼️ Detail Bubble ပုံများ (သီးသန့် Layer) - နှိပ်ပါက ပုံကြီးကြည့်နိုင်သည်" data-en="🖼️ Detail Bubble Images (Separate Layer) - Click for Fullscreen">🖼️ Detail Bubble ပုံများ (သီးသန့် Layer) - နှိပ်ပါက ပုံကြီးကြည့်နိုင်သည်</p>
+      <p style="font-size:0.75rem; font-weight:bold; color:var(--text-sub);" data-mm="🖼️ Detail Bubble ပုံများ (သီးသန့် Layer)" data-en="🖼️ Detail Bubble Images">🖼️ Detail Bubble ပုံများ (သီးသန့် Layer)</p>
       <div id="modal-gallery-grid" class="detail-gallery-container"></div>
 
       <label style="font-size:0.85rem; font-weight:800; color:var(--text-sub);" data-mm="ဝယ်ယူမည့် အရေအတွက် ရွေးပါ:" data-en="Select Quantity:">ဝယ်ယူမည့် အရေအတွက် ရွေးပါ:</label>
@@ -715,7 +716,7 @@
     </div>
   </div>
 
-  <!-- FULLSCREEN LIGHTBOX MODAL -->
+  <!-- FULLSCREEN LIGHTBOX -->
   <div id="fullscreen-modal" class="fullscreen-modal" onclick="closeFullscreenModal()">
     <span style="position:absolute; top:20px; right:25px; color:white; font-size:30px; cursor:pointer;">&times;</span>
     <img id="fullscreen-img" src="" alt="Fullscreen View">
@@ -744,7 +745,6 @@
     let selectedProduct = null;
     let currentLang = 'MM'; 
 
-    /* FLOWER & LEAF TOUCH SPARKLE LOGIC */
     const natureItems = ['🌸', '🍃', '🌺', '🌿', '🌷', '🍀', '🌼', '✨'];
 
     function createFlowerBurst(x, y) {
@@ -753,15 +753,12 @@
         const el = document.createElement('div');
         el.className = 'flower-particle';
         el.innerText = natureItems[Math.floor(Math.random() * natureItems.length)];
-
         const vx = (Math.random() - 0.5) * 160; 
         const vy = (Math.random() - 0.7) * 120;  
-
         el.style.left = `${x}px`;
         el.style.top = `${y}px`;
         el.style.setProperty('--vx', `${vx}px`);
         el.style.setProperty('--vy', `${vy}px`);
-
         document.body.appendChild(el);
         setTimeout(() => { el.remove(); }, 1200);
       }
@@ -771,7 +768,6 @@
       createFlowerBurst(e.clientX, e.clientY);
     });
 
-    /* MULTI-LANGUAGE TOGGLE LOGIC */
     window.toggleLanguage = function() {
       currentLang = currentLang === 'MM' ? 'EN' : 'MM';
       document.getElementById('lang-btn').innerText = currentLang === 'MM' ? '🇲🇲 MM' : '🇬🇧 EN';
@@ -787,7 +783,6 @@
       updateCartUI();
     };
 
-    /* MUSIC PLAYER LOGIC */
     window.toggleMusic = function() {
       const audio = document.getElementById('bg-audio');
       const bubble = document.getElementById('music-bubble');
@@ -799,7 +794,7 @@
           bubble.innerHTML = "🎶";
           label.innerText = currentLang === 'MM' ? "ပိတ်ရန်" : "Pause";
         }).catch(() => {
-          alert(currentLang === 'MM' ? "သီချင်းဖွင့်၍ မရသေးပါ။ တစ်ချက်ထပ်နှိပ်ပေးပါခင်ဗျာ။" : "Could not play audio. Please tap again.");
+          alert(currentLang === 'MM' ? "သီချင်းဖွင့်၍ မရသေးပါ။ တစ်ချက်ထပ်နှိပ်ပေးပါခင်ဗျာ။" : "Could not play audio.");
         });
       } else {
         audio.pause();
@@ -809,7 +804,6 @@
       }
     };
 
-    /* THEME SWITCHER */
     window.toggleTheme = function() {
       const body = document.body;
       const btn = document.getElementById('theme-btn');
@@ -817,14 +811,12 @@
       btn.innerText = body.classList.contains('dark-mode') ? "☀️ Light Mode" : "🌙 Dark Mode";
     };
 
-    /* NAVIGATION LOGIC */
     window.navigateTo = function(pageId) {
       document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
       document.getElementById(pageId).classList.add('active');
       window.scrollTo(0,0);
     };
 
-    /* SHOP PRODUCTS DISPLAY */
     async function loadShopProducts() {
       const grid = document.getElementById("product-grid");
       grid.innerHTML = "<p style='grid-column:span 2; text-align:center;'>Loading...</p>";
@@ -851,14 +843,12 @@
       });
     }
 
-    /* OPEN PRODUCT DETAIL MODAL (SEPARATED BUBBLES & ADMIN STOCK NOTE) */
     function openBubbleModal(p) {
       selectedProduct = p;
       document.getElementById("modal-title").innerText = p.name;
       document.getElementById("modal-price").innerText = `${p.price} Ks`;
       document.getElementById("modal-qty").value = 1;
       
-      // Admin Stock Note Display (Admin panel က note ရေးထားရင် ပေါ်မယ်)
       const adminNoteEl = document.getElementById("modal-admin-note");
       if (p.adminNote && p.adminNote.trim() !== "") {
         adminNoteEl.style.display = "block";
@@ -867,7 +857,6 @@
         adminNoteEl.style.display = "none";
       }
 
-      // Collect Photos into Separate Bubbles Container
       const gallery = document.getElementById("modal-gallery-grid");
       gallery.innerHTML = "";
       
@@ -889,7 +878,6 @@
       document.getElementById("detail-modal").classList.add("active");
     }
 
-    /* FULLSCREEN LIGHTBOX VIEW */
     window.openFullscreenModal = function(url) {
       const fsModal = document.getElementById("fullscreen-modal");
       const fsImg = document.getElementById("fullscreen-img");
@@ -967,17 +955,13 @@
     }
 
     window.updateItemNote = function(index, val) {
-      if(cart[index]) {
-        cart[index].itemNote = val.trim();
-      }
+      if(cart[index]) cart[index].itemNote = val.trim();
     };
 
     window.removeFromCart = function(index) {
       cart.splice(index, 1);
       updateCartUI();
-      if(cart.length === 0) {
-        navigateTo('page-shop');
-      }
+      if(cart.length === 0) navigateTo('page-shop');
     };
 
     window.toggleDeliveryBox = function(val) {
@@ -989,7 +973,7 @@
     };
 
     window.submitOrderToTelegram = async function() {
-      if(cart.length === 0) return alert(currentLang === 'MM' ? "ခြင်းတောင်းထဲတွင် ပစ္စည်းထည့်ပါဦး!" : "Add items to cart first!");
+      if(cart.length === 0) return alert(currentLang === 'MM' ? "ခြင်းတောင်းထဲတွင် ပစ္စည်းထည့်ပါဦး!" : "Add items to cart!");
       
       const name = document.getElementById("cust-name").value.trim();
       if(!name) return alert(currentLang === 'MM' ? "နာမည် ရိုက်ထည့်ပေးပါ!" : "Please enter your name!");
@@ -1002,7 +986,7 @@
       const slipFile = document.getElementById("slip-file-input").files[0];
 
       if(delType === 'delivery' && (!address || !phone)) {
-        return alert(currentLang === 'MM' ? "Delivery ပို့ရန် လိပ်စာနှင့် ဖုန်းနံပါတ် ဖြည့်ပေးပါ!" : "Please provide address and phone for delivery!");
+        return alert(currentLang === 'MM' ? "Delivery ပို့ရန် လိပ်စာနှင့် ဖုန်းနံပါတ် ဖြည့်ပေးပါ!" : "Provide address and phone!");
       }
 
       const orderCode = "ORD-" + Math.floor(1000 + Math.random() * 9000);
@@ -1046,7 +1030,7 @@
           });
         }
       } catch (e) {
-        console.error("Telegram Sending Error:", e);
+        console.error("Telegram Error:", e);
       }
 
       document.getElementById("success-order-code").innerText = orderCode;
@@ -1055,7 +1039,6 @@
       navigateTo('page-success');
     };
 
-    /* ORDER CHECKER LOGIC (ADMIN NOTE DISPLAYED ON CHECK) */
     window.checkOrderStatus = async function() {
       const code = document.getElementById("check-code-input").value.trim();
       if(!code) return alert(currentLang === 'MM' ? "Order Code ရိုက်ထည့်ပါ" : "Enter Order Code");
@@ -1087,7 +1070,6 @@
       });
     };
 
-    /* REPORT CENTER LOGIC */
     window.switchReportTab = function(type) {
       if(type === 'sub') {
         document.getElementById("sec-rep-sub-form").style.display = "block";
@@ -1107,7 +1089,7 @@
         reportCode: rpCode, message: msg, status: "စစ်ဆေးနေဆဲ", createdAt: new Date()
       });
 
-      alert(currentLang === 'MM' ? `Report ပေးပို့ပြီးပါပြီ!\nသင့် Report Code မှာ [ ${rpCode} ] ဖြစ်ပါသည်။` : `Report Submitted!\nYour Report Code is [ ${rpCode} ].`);
+      alert(currentLang === 'MM' ? `Report ပေးပို့ပြီးပါပြီ!\nသင့် Report Code မှာ [ ${rpCode} ] ဖြစ်ပါသည်။` : `Report Submitted! Code: [ ${rpCode} ]`);
       document.getElementById("rep-text-input").value = "";
     };
 
@@ -1121,7 +1103,7 @@
       const snapshot = await getDocs(q);
 
       if(snapshot.empty) {
-        outEl.innerText = currentLang === 'MM' ? "❌ Report Code ရှာမတွေ့ပါ။" : "❌ Report Code Not Found.";
+        outEl.innerText = currentLang === 'MM' ? "❌ Report Code ရှာမတွေ့ပါ။" : "❌ Not Found.";
         return;
       }
 
