@@ -126,6 +126,33 @@
     }
     .input-modern:focus { border-color: var(--primary); }
 
+    /* Paste Input Wrapper styling */
+    .input-paste-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      margin-top: 8px;
+      margin-bottom: 12px;
+    }
+    .input-paste-row .input-modern {
+      margin-top: 0;
+      margin-bottom: 0;
+      flex: 1;
+    }
+    .btn-quick-paste {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 11px 12px;
+      border-radius: 12px;
+      font-weight: 800;
+      font-size: 0.8rem;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(217, 70, 239, 0.3);
+    }
+    .btn-quick-paste:active { transform: scale(0.95); }
+
     .btn-primary, .btn-secondary, .btn-danger, .btn-warning {
       width: 100%;
       border: none;
@@ -227,8 +254,19 @@
         <input type="hidden" id="p-edit-id">
         <input type="text" id="p-name" class="input-modern" placeholder="ပစ္စည်းအမည်">
         <input type="number" id="p-price" class="input-modern" placeholder="ဈေးနှုန်း (Ks)">
-        <input type="text" id="p-show-img" class="input-modern" placeholder="Show Photo Direct URL">
-        <input type="text" id="p-detail-imgs" class="input-modern" placeholder="Detail Photo Links (ကော်မာ ၊ ခြားရေးပါ)">
+        
+        <label style="font-size:0.85rem; font-weight:700; display:block;">Show Photo Direct URL:</label>
+        <div class="input-paste-row">
+          <input type="text" id="p-show-img" class="input-modern" placeholder="Show Photo Direct URL">
+          <button type="button" class="btn-quick-paste" onclick="pasteToInput('p-show-img')">📋 Paste</button>
+        </div>
+
+        <label style="font-size:0.85rem; font-weight:700; display:block;">Detail Photo Links:</label>
+        <div class="input-paste-row">
+          <input type="text" id="p-detail-imgs" class="input-modern" placeholder="Detail Photo Links (ကော်မာ ၊ ခြားရေးပါ)">
+          <button type="button" class="btn-quick-paste" onclick="pasteToInput('p-detail-imgs')">📋 Paste</button>
+        </div>
+
         <input type="text" id="p-admin-note" class="input-modern" placeholder="🏷️ Stock Note (ပစ္စည်းအကြောင်းအရာ/အသိပေးချက် Note)">
         
         <button id="btn-save-product" class="btn-primary">ပစ္စည်း တင်မည် / သိမ်းဆည်းမည် ➔</button>
@@ -242,29 +280,71 @@
         <h2 style="font-size:1rem; font-weight:800; color:#059669; margin-bottom:15px;">🔄 Google Drive Link Changer (10 ပုံအထိ)</h2>
         
         <label style="font-size:0.85rem; font-weight:700;">Show Photo Drive Link:</label>
-        <input type="text" id="drive-show-input" class="input-modern" placeholder="Google Drive Link ကူးထည့်ပါ...">
+        <div class="input-paste-row">
+          <input type="text" id="drive-show-input" class="input-modern" placeholder="Google Drive Link ကူးထည့်ပါ...">
+          <button type="button" class="btn-quick-paste" onclick="pasteToInput('drive-show-input')">📋 Paste</button>
+        </div>
 
         <div id="drive-detail-inputs-container">
           <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 1 Link:</label>
-          <input type="text" class="input-modern drive-detail-field" placeholder="Detail Photo 1 Link...">
+          <div class="input-paste-row">
+            <input type="text" id="drive-detail-1" class="input-modern drive-detail-field" placeholder="Detail Photo 1 Link...">
+            <button type="button" class="btn-quick-paste" onclick="pasteToInput('drive-detail-1')">📋 Paste</button>
+          </div>
+
           <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 2 Link:</label>
-          <input type="text" class="input-modern drive-detail-field" placeholder="Detail Photo 2 Link...">
+          <div class="input-paste-row">
+            <input type="text" id="drive-detail-2" class="input-modern drive-detail-field" placeholder="Detail Photo 2 Link...">
+            <button type="button" class="btn-quick-paste" onclick="pasteToInput('drive-detail-2')">📋 Paste</button>
+          </div>
+
           <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 3 Link:</label>
-          <input type="text" class="input-modern drive-detail-field" placeholder="Detail Photo 3 Link...">
+          <div class="input-paste-row">
+            <input type="text" id="drive-detail-3" class="input-modern drive-detail-field" placeholder="Detail Photo 3 Link...">
+            <button type="button" class="btn-quick-paste" onclick="pasteToInput('drive-detail-3')">📋 Paste</button>
+          </div>
+
           <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 4 Link:</label>
-          <input type="text" class="input-modern drive-detail-field" placeholder="Detail Photo 4 Link...">
+          <div class="input-paste-row">
+            <input type="text" id="drive-detail-4" class="input-modern drive-detail-field" placeholder="Detail Photo 4 Link...">
+            <button type="button" class="btn-quick-paste" onclick="pasteToInput('drive-detail-4')">📋 Paste</button>
+          </div>
+
           <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 5 Link:</label>
-          <input type="text" class="input-modern drive-detail-field" placeholder="Detail Photo 5 Link...">
+          <div class="input-paste-row">
+            <input type="text" id="drive-detail-5" class="input-modern drive-detail-field" placeholder="Detail Photo 5 Link...">
+            <button type="button" class="btn-quick-paste" onclick="pasteToInput('drive-detail-5')">📋 Paste</button>
+          </div>
+
           <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 6 Link:</label>
-          <input type="text" class="input-modern drive-detail-field" placeholder="Detail Photo 6 Link...">
+          <div class="input-paste-row">
+            <input type="text" id="drive-detail-6" class="input-modern drive-detail-field" placeholder="Detail Photo 6 Link...">
+            <button type="button" class="btn-quick-paste" onclick="pasteToInput('drive-detail-6')">📋 Paste</button>
+          </div>
+
           <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 7 Link:</label>
-          <input type="text" class="input-modern drive-detail-field" placeholder="Detail Photo 7 Link...">
+          <div class="input-paste-row">
+            <input type="text" id="drive-detail-7" class="input-modern drive-detail-field" placeholder="Detail Photo 7 Link...">
+            <button type="button" class="btn-quick-paste" onclick="pasteToInput('drive-detail-7')">📋 Paste</button>
+          </div>
+
           <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 8 Link:</label>
-          <input type="text" class="input-modern drive-detail-field" placeholder="Detail Photo 8 Link...">
+          <div class="input-paste-row">
+            <input type="text" id="drive-detail-8" class="input-modern drive-detail-field" placeholder="Detail Photo 8 Link...">
+            <button type="button" class="btn-quick-paste" onclick="pasteToInput('drive-detail-8')">📋 Paste</button>
+          </div>
+
           <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 9 Link:</label>
-          <input type="text" class="input-modern drive-detail-field" placeholder="Detail Photo 9 Link...">
+          <div class="input-paste-row">
+            <input type="text" id="drive-detail-9" class="input-modern drive-detail-field" placeholder="Detail Photo 9 Link...">
+            <button type="button" class="btn-quick-paste" onclick="pasteToInput('drive-detail-9')">📋 Paste</button>
+          </div>
+
           <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 10 Link:</label>
-          <input type="text" class="input-modern drive-detail-field" placeholder="Detail Photo 10 Link...">
+          <div class="input-paste-row">
+            <input type="text" id="drive-detail-10" class="input-modern drive-detail-field" placeholder="Detail Photo 10 Link...">
+            <button type="button" class="btn-quick-paste" onclick="pasteToInput('drive-detail-10')">📋 Paste</button>
+          </div>
         </div>
 
         <button id="btn-generate-drive" class="btn-primary" style="background:linear-gradient(135deg, #059669, #10b981); margin-top:12px;">⚙️ Direct Links ပြောင်းမည် ➔</button>
@@ -290,7 +370,12 @@
         
         <input type="hidden" id="song-edit-id">
         <input type="text" id="song-name" class="input-modern" placeholder="သီချင်းအမည် (Song Name - Artist)">
-        <input type="text" id="song-url" class="input-modern" placeholder="သီချင်း Direct Audio/Stream Link (.mp3 သို့မဟုတ် link)">
+        
+        <label style="font-size:0.85rem; font-weight:700; display:block;">သီချင်း Direct Audio/Stream Link:</label>
+        <div class="input-paste-row">
+          <input type="text" id="song-url" class="input-modern" placeholder=".mp3 သို့မဟုတ် link">
+          <button type="button" class="btn-quick-paste" onclick="pasteToInput('song-url')">📋 Paste</button>
+        </div>
 
         <button id="btn-save-song" class="btn-primary" style="background:linear-gradient(135deg, #0284c7, #38bdf8);">🎵 သီချင်း သိမ်းဆည်းမည် / ထည့်မည် ➔</button>
         <button id="btn-cancel-song-edit" class="btn-secondary hidden">Cancel Edit</button>
@@ -316,6 +401,22 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+
+    // Global Paste Function for quick clipboard insertion
+    window.pasteToInput = async function(inputId) {
+      try {
+        const text = await navigator.clipboard.readText();
+        const inputElement = document.getElementById(inputId);
+        if (inputElement) {
+          inputElement.value = text;
+          inputElement.dispatchEvent(new Event('input'));
+          inputElement.dispatchEvent(new Event('change'));
+        }
+      } catch (err) {
+        console.error('Paste error: ', err);
+        alert('Clipboard ခွင့်ပြုချက်မရှိပါ။ (သို့) Browser က တားမြစ်ထားပါက Keyboard မှ Ctrl+V (သို့) Long-press ဖြင့် Paste လုပ်ပါ။');
+      }
+    };
 
     const natureItems = ['🌸', '🍃', '🌺', '🌿', '🌷', '🍀', '🌼', '✨'];
     window.addEventListener('pointerdown', (e) => {
