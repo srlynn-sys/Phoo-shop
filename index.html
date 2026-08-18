@@ -36,6 +36,32 @@
       min-height: 100vh;
       overflow-x: hidden;
       transition: background 0.3s ease, color 0.3s ease;
+      position: relative;
+    }
+
+    /* FLOWER & LEAF BOMB ANIMATION STYLES */
+    .flower-particle {
+      position: fixed;
+      pointer-events: none;
+      font-size: 1.6rem;
+      z-index: 9999;
+      animation: flowerBomb 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      user-select: none;
+    }
+
+    @keyframes flowerBomb {
+      0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(0.3) rotate(0deg);
+      }
+      40% {
+        opacity: 1;
+        transform: translate(var(--vx), var(--vy)) scale(1.4) rotate(180deg);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(calc(var(--vx) * 1.2), calc(var(--vy) + 140px)) scale(0.5) rotate(360deg);
+      }
     }
 
     .theme-toggle-wrapper {
@@ -175,8 +201,8 @@
     }
 
     .landing-options {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      display: flex;
+      flex-direction: column;
       gap: 15px;
       margin-top: 20px;
     }
@@ -184,18 +210,22 @@
       background: var(--box-bg);
       border: 3px solid #f0abfc;
       border-radius: 20px;
-      padding: 22px 10px;
+      padding: 20px;
       text-align: center;
       cursor: pointer;
       box-shadow: 0 10px 25px rgba(217, 70, 239, 0.2);
       transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
     }
     .option-card:hover {
-      transform: translateY(-8px) scale(1.03);
+      transform: translateY(-5px) scale(1.02);
       border-color: var(--primary);
     }
-    .option-icon { font-size: 2.5rem; margin-bottom: 8px; display: block; }
-    .option-title { font-weight: 900; color: var(--primary-dark); font-size: 0.95rem; }
+    .option-icon { font-size: 2.2rem; }
+    .option-title { font-weight: 900; color: var(--primary-dark); font-size: 1.1rem; }
 
     .nav-back-btn {
       background: var(--card-bg);
@@ -211,6 +241,7 @@
       gap: 5px;
     }
 
+    /* ANIMATED PRODUCT CARDS IN SHOP CENTER */
     .product-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -230,10 +261,32 @@
       box-shadow: 0 8px 18px rgba(147, 51, 234, 0.12);
       text-align: center;
       transition: all 0.3s ease;
+      /* Stock Post Wiggle/Floating Animation */
+      animation: cardWiggle 3.5s infinite ease-in-out;
     }
+
+    /* Alternating animation speeds for nice variation */
+    .product-card:nth-child(even) {
+      animation-duration: 4s;
+      animation-delay: 0.5s;
+    }
+
+    @keyframes cardWiggle {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      25% {
+        transform: translateY(-4px) rotate(-1deg);
+      }
+      75% {
+        transform: translateY(3px) rotate(1deg);
+      }
+    }
+
     .product-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 25px rgba(217, 70, 239, 0.25);
+      transform: translateY(-8px) scale(1.03) !important;
+      box-shadow: 0 14px 28px rgba(217, 70, 239, 0.3);
+      border-color: var(--primary);
     }
     .product-img {
       width: 100%;
@@ -417,28 +470,6 @@
       margin-bottom: 20px;
     }
 
-    /* MINI GAME STYLES */
-    .game-box {
-      background: var(--box-bg);
-      border: 3px solid #f0abfc;
-      border-radius: 22px;
-      padding: 20px;
-      text-align: center;
-      box-shadow: 0 10px 25px rgba(217, 70, 239, 0.15);
-    }
-    .game-choice-btn {
-      padding: 10px 18px;
-      border-radius: 14px;
-      border: none;
-      color: white;
-      font-weight: 800;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: transform 0.2s;
-    }
-    .game-choice-btn:hover { transform: scale(1.05); }
-
-    /* REPORT CARD STYLES */
     .report-card {
       background: var(--box-bg);
       border: 3px solid #f0abfc;
@@ -459,11 +490,13 @@
   <div class="bg-icon" style="top:60%; left:10%; animation-delay: 4s;">🪄</div>
   <div class="bg-icon" style="top:85%; right:6%; animation-delay: 1s;">🎵</div>
 
+  <!-- AUDIO ELEMENT -->
+  <audio id="bg-audio" loop preload="auto" crossorigin="anonymous">
+    <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
+  </audio>
+
   <!-- MUSIC BUBBLE PLAYER -->
   <div class="music-bubble-fixed">
-    <audio id="bg-audio" preload="metadata">
-      <source src="https://files.catbox.moe/fi2yff.m4a" type="audio/mp4">
-    </audio>
     <div id="music-bubble" class="music-bubble-btn" onclick="toggleMusic()">
       🎵
     </div>
@@ -484,15 +517,11 @@
 
       <h2 style="text-align:center; color:var(--text-sub); font-size:1.1rem; margin-bottom:15px;">ကျေးဇူးပြု၍ တစ်ခုရွေးချယ်ပါ</h2>
       
-      <!-- 4 FUNCTION OPTIONS -->
+      <!-- IDOL GAME OPTION IS REMOVED HERE -->
       <div class="landing-options">
         <div class="option-card" onclick="navigateTo('page-shop')">
           <span class="option-icon">🛍️</span>
           <div class="option-title">Shop Center</div>
-        </div>
-        <div class="option-card" onclick="navigateTo('page-game')">
-          <span class="option-icon">🎮</span>
-          <div class="option-title">Idol Game</div>
         </div>
         <div class="option-card" onclick="navigateTo('page-checker')">
           <span class="option-icon">🔍</span>
@@ -512,28 +541,7 @@
       <div id="product-grid" class="product-grid"></div>
     </div>
 
-    <!-- PAGE 3: BTS & BLACKPINK MINI GAME PAGE -->
-    <div id="page-game" class="page-view">
-      <button class="nav-back-btn" onclick="navigateTo('page-landing')">⬅️ ပင်မစာမျက်နှာသို့</button>
-
-      <div class="game-box">
-        <h2 style="font-size:1.2rem; font-weight:900; color:var(--primary-dark); margin-bottom:10px;">🎮 Idol Mini Game</h2>
-        <p style="font-size:0.85rem; color:var(--text-sub); margin-bottom:15px;">ဂိမ်းကစားရန် Idol Group တစ်ခု ရွေးချယ်ပါ</p>
-        
-        <div style="display:flex; gap:10px; justify-content:center; margin-bottom:15px;">
-          <button class="game-choice-btn" style="background:#7c3aed;" onclick="startGame('BTS')">💜 BTS Game</button>
-          <button class="game-choice-btn" style="background:#ec4899;" onclick="startGame('BLACKPINK')">🩷 BLACKPINK Game</button>
-        </div>
-
-        <div id="game-play-area" style="display:none; margin-top:15px; background:var(--card-bg); padding:15px; border-radius:16px; border:2px dashed #f0abfc;">
-          <p id="game-hint-text" style="font-weight:800; font-size:0.95rem; margin-bottom:10px; color:var(--text-main);"></p>
-          <input type="text" id="game-ans-input" class="input-field" placeholder="အဖြေ ရိုက်ထည့်ပါ..." style="text-align:center;">
-          <button class="btn-action" style="margin-top:5px;" onclick="checkGameAnswer()">အဖြေစစ်မည် ✨</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- PAGE 4: ORDER CHECKER PAGE -->
+    <!-- PAGE 3: ORDER CHECKER PAGE -->
     <div id="page-checker" class="page-view">
       <button class="nav-back-btn" onclick="navigateTo('page-landing')">⬅️ ပင်မစာမျက်နှာသို့</button>
       <h2 style="font-size:1.1rem; font-weight:900; color:var(--text-sub); margin-bottom:12px;">🔍 Order Status စစ်ဆေးရန်</h2>
@@ -542,7 +550,7 @@
       <div id="check-result-box" style="margin-top:15px;"></div>
     </div>
 
-    <!-- PAGE 5: REPORT CENTER PAGE -->
+    <!-- PAGE 4: REPORT CENTER PAGE -->
     <div id="page-report" class="page-view">
       <button class="nav-back-btn" onclick="navigateTo('page-landing')">⬅️ ပင်မစာမျက်နှာသို့</button>
       
@@ -554,13 +562,11 @@
           <button id="tab-rep-chk" class="btn-action" style="flex:1; padding:8px; font-size:0.8rem; background:#059669;" onclick="switchReportTab('chk')">Report စစ်မည်</button>
         </div>
 
-        <!-- REPORT SUBMIT FORM -->
         <div id="sec-rep-sub-form">
           <textarea id="rep-text-input" class="input-field" placeholder="ကြုံတွေ့ရသော အခက်အခဲ/တိုင်ကြားစာ ရေးသားပါ..." style="height:80px; resize:none;"></textarea>
           <button class="btn-action" style="background:#e11d48;" onclick="submitReport()">Report ပေးပို့မည် ➔</button>
         </div>
 
-        <!-- REPORT CHECKER FORM -->
         <div id="sec-rep-chk-form" style="display:none;">
           <input type="text" id="rep-code-search" class="input-field" placeholder="Report Code ရိုက်ထည့်ပါ (ဥပမာ - RP-1234)">
           <button class="btn-action" style="background:#059669;" onclick="checkReportStatus()">Status စစ်မည်</button>
@@ -569,7 +575,7 @@
       </div>
     </div>
 
-    <!-- PAGE 6: CART CHECKOUT PAGE -->
+    <!-- PAGE 5: CART CHECKOUT PAGE -->
     <div id="page-cart" class="page-view">
       <button class="nav-back-btn" onclick="navigateTo('page-shop')">⬅️ ပစ္စည်းများထပ်ရွေးမည်</button>
       
@@ -613,7 +619,7 @@
       </div>
     </div>
 
-    <!-- PAGE 7: ORDER SUCCESS PAGE -->
+    <!-- PAGE 6: ORDER SUCCESS PAGE -->
     <div id="page-success" class="page-view">
       <div class="success-card">
         <span class="success-icon">🎉</span>
@@ -670,6 +676,38 @@
     let cart = [];
     let selectedProduct = null;
 
+    /* FLOWER & LEAF TOUCH SPARKLE LOGIC */
+    const natureItems = ['🌸', '🍃', '🌺', '🌿', '🌷', '🍀', '🌼', '✨'];
+
+    function createFlowerBurst(x, y) {
+      const count = 9; // Touch ထိလိုက်တိုင်း ဖောက်ခနဲ ထွက်လာမည့် အရေအတွက်
+      for (let i = 0; i < count; i++) {
+        const el = document.createElement('div');
+        el.className = 'flower-particle';
+        el.innerText = natureItems[Math.floor(Math.random() * natureItems.length)];
+
+        // ဖောက်ခနဲ ပြန့်ထွက်သွားမည့် အလှမ်း
+        const vx = (Math.random() - 0.5) * 160; 
+        const vy = (Math.random() - 0.7) * 120;  
+
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+        el.style.setProperty('--vx', `${vx}px`);
+        el.style.setProperty('--vy', `${vy}px`);
+
+        document.body.appendChild(el);
+
+        setTimeout(() => {
+          el.remove();
+        }, 1200);
+      }
+    }
+
+    // Touch and Click Event Handler
+    window.addEventListener('pointerdown', (e) => {
+      createFlowerBurst(e.clientX, e.clientY);
+    });
+
     /* MUSIC PLAYER LOGIC */
     window.toggleMusic = function() {
       const audio = document.getElementById('bg-audio');
@@ -682,7 +720,8 @@
           bubble.innerHTML = "🎶";
           label.innerText = "ပိတ်ရန်";
         }).catch(err => {
-          console.error("Audio Play Error:", err);
+          console.log("Audio play error:", err);
+          alert("သီချင်းဖွင့်၍ မရသေးပါ။ တစ်ချက်ထပ်နှိပ်ပေးပါခင်ဗျာ။");
         });
       } else {
         audio.pause();
@@ -918,31 +957,6 @@
           </div>
         `;
       });
-    };
-
-    /* MINI GAME LOGIC */
-    const gameData = {
-      BTS: [{ hint: "👑 BTS ရဲ့ Leader က ဘယ်သူလဲ?", ans: "rm" }, { hint: "💜 'Worldwide Handsome' လို့ တင်စားခံရသူ?", ans: "jin" }],
-      BLACKPINK: [{ hint: "🩷 BLACKPINK ရဲ့ Main Dancer က ဘယ်သူလဲ?", ans: "lisa" }, { hint: "🌹 'On The Ground' သီချင်းဆိုထားသူ?", ans: "rose" }]
-    };
-    let currentGame = null, currentQ = null;
-
-    window.startGame = function(group) {
-      currentGame = group;
-      currentQ = gameData[group][Math.floor(Math.random() * gameData[group].length)];
-      document.getElementById("game-hint-text").innerText = currentQ.hint;
-      document.getElementById("game-play-area").style.display = "block";
-    };
-
-    window.checkGameAnswer = function() {
-      const userAns = document.getElementById("game-ans-input").value.trim().toLowerCase();
-      if(userAns === currentQ.ans) {
-        alert("🎉 မှန်ကန်ပါတယ်ဗျာ! အဖြေမှန်အောင် ဖြေဆိုနိုင်ခဲ့ပါတယ်။");
-        document.getElementById("game-ans-input").value = "";
-        document.getElementById("game-play-area").style.display = "none";
-      } else {
-        alert("❌ အဖြေမှားနေပါတယ်၊ ပြန်လည်ကြိုးစားကြည့်ပါ!");
-      }
     };
 
     /* REPORT CENTER LOGIC */
