@@ -17,6 +17,11 @@
       margin-top: 15px; background: #f0fdf4; padding: 14px;
       border-radius: 14px; border: 1px solid #a7f3d0;
     }
+    /* REPORT CARD STYLES */
+    .report-card {
+      background: #fff1f2; padding: 14px; border-radius: 16px;
+      border: 1px solid #fecdd3; margin-bottom: 12px;
+    }
   </style>
 </head>
 <body>
@@ -36,11 +41,12 @@
 
     <!-- Main Dashboard -->
     <main id="admin-dashboard-sec" class="hidden">
-      <!-- TAB BAR (3 OPTIONS) -->
+      <!-- TAB BAR (4 TABS) -->
       <div class="admin-tab-bar" style="display:flex; gap:5px; margin-bottom:15px;">
-        <button id="tab-btn-orders" class="admin-tab-btn active" style="flex:1;">📦 Order Editing</button>
-        <button id="tab-btn-stock" class="admin-tab-btn" style="flex:1;">🏷️ Stock Editing</button>
-        <button id="tab-btn-drive" class="admin-tab-btn" style="flex:1;">🔄 Drive Changer</button>
+        <button id="tab-btn-orders" class="admin-tab-btn active" style="flex:1; font-size:0.8rem;">📦 Orders</button>
+        <button id="tab-btn-stock" class="admin-tab-btn" style="flex:1; font-size:0.8rem;">🏷️ Stock</button>
+        <button id="tab-btn-drive" class="admin-tab-btn" style="flex:1; font-size:0.8rem;">🔄 Drive</button>
+        <button id="tab-btn-report" class="admin-tab-btn" style="flex:1; font-size:0.8rem; background:#ffe4e6; color:#e11d48;">🚨 Reports</button>
       </div>
 
       <!-- Tab 1: Order Editing -->
@@ -100,6 +106,12 @@
           <button id="btn-copy-detail" class="btn-copy btn-copy-comma">📋 Detail Links (Comma ခံလျက်) Copy ရယူရန်</button>
         </div>
       </section>
+
+      <!-- Tab 4: Report Management (NEW) -->
+      <section id="tab-sec-report" class="view-card hidden">
+        <h2 style="font-size:1rem; font-weight:800; color:#e11d48; margin-bottom:15px;">🚨 Customer Reports စာရင်း</h2>
+        <div id="admin-reports-list">Loading...</div>
+      </section>
     </main>
   </div>
 
@@ -119,7 +131,7 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // ADMIN LOGIN LOGIC (Passcode ပြင်ဆင်ပြီး)
+    // ADMIN LOGIN LOGIC
     document.getElementById("btn-admin-login").onclick = () => {
       const pass = document.getElementById("admin-passcode-input").value.trim();
       if(pass === "254007") {
@@ -127,36 +139,42 @@
         document.getElementById("admin-dashboard-sec").classList.remove("hidden");
         loadAdminOrders();
         loadAdminProducts();
+        loadAdminReports();
       } else {
         alert("❌ Passcode မှားယွင်းနေပါသည်။");
       }
     };
 
-    // TAB SWITCHING LOGIC (3 TABS)
+    // TAB SWITCHING LOGIC (4 TABS)
     const tabOrdersBtn = document.getElementById("tab-btn-orders");
     const tabStockBtn = document.getElementById("tab-btn-stock");
     const tabDriveBtn = document.getElementById("tab-btn-drive");
+    const tabReportBtn = document.getElementById("tab-btn-report");
 
     const secOrders = document.getElementById("tab-sec-orders");
     const secStock = document.getElementById("tab-sec-stock");
     const secDrive = document.getElementById("tab-sec-drive");
+    const secReport = document.getElementById("tab-sec-report");
 
     tabOrdersBtn.onclick = () => {
-      tabOrdersBtn.classList.add("active"); tabStockBtn.classList.remove("active"); tabDriveBtn.classList.remove("active");
-      secOrders.classList.remove("hidden"); secStock.classList.add("hidden"); secDrive.classList.add("hidden");
+      resetTabActive(); tabOrdersBtn.classList.add("active"); secOrders.classList.remove("hidden");
     };
-
     tabStockBtn.onclick = () => {
-      tabStockBtn.classList.add("active"); tabOrdersBtn.classList.remove("active"); tabDriveBtn.classList.remove("active");
-      secStock.classList.remove("hidden"); secOrders.classList.add("hidden"); secDrive.classList.add("hidden");
+      resetTabActive(); tabStockBtn.classList.add("active"); secStock.classList.remove("hidden");
     };
-
     tabDriveBtn.onclick = () => {
-      tabDriveBtn.classList.add("active"); tabOrdersBtn.classList.remove("active"); tabStockBtn.classList.remove("active");
-      secDrive.classList.remove("hidden"); secOrders.classList.add("hidden"); secStock.classList.add("hidden");
+      resetTabActive(); tabDriveBtn.classList.add("active"); secDrive.classList.remove("hidden");
+    };
+    tabReportBtn.onclick = () => {
+      resetTabActive(); tabReportBtn.classList.add("active"); secReport.classList.remove("hidden");
     };
 
-    // ORDERS LOGIC
+    function resetTabActive() {
+      [tabOrdersBtn, tabStockBtn, tabDriveBtn, tabReportBtn].forEach(b => b.classList.remove("active"));
+      [secOrders, secStock, secDrive, secReport].forEach(s => s.classList.add("hidden"));
+    }
+
+    // 1. ORDERS LOGIC
     async function loadAdminOrders() {
       const container = document.getElementById("admin-orders-list");
       container.innerHTML = "Loading...";
@@ -185,9 +203,9 @@
             <button class="btn-danger" id="del-ord-${docId}">🗑️ ဖျက်မည်</button>
           </div>
           <p style="font-size:0.85rem;"><b>အမည်:</b> ${order.customerName} | <b>ဖုန်း:</b> ${order.phone || 'N/A'}</p>
-          <p style="font-size:0.85rem;"><b>ပစ္စည်း:</b> ${order.item} (${order.qty}ခု) | <b>ကျသင့်ငွေ:</b> ${order.totalAmount} Ks</p>
+          <p style="font-size:0.85rem;"><b>ပစ္စည်း:</b> ${order.item} (${order.qty || 1}ခု) | <b>ကျသင့်ငွေ:</b> ${order.totalAmount || 0} Ks</p>
           <p style="font-size:0.85rem;"><b>Note:</b> ${order.note || 'မရှိပါ'}</p>
-          <p style="font-size:0.85rem; margin-bottom:8px;"><b>Pay Slip:</b> ${order.paymentScreenshot !== 'N/A' ? `<a href="${order.paymentScreenshot}" target="_blank">ကြည့်ရန်</a>` : 'မရှိပါ'}</p>
+          <p style="font-size:0.85rem; margin-bottom:8px;"><b>Pay Slip:</b> ${order.paymentScreenshot && order.paymentScreenshot !== 'N/A' ? `<a href="${order.paymentScreenshot}" target="_blank">ကြည့်ရန်</a>` : 'မရှိပါ'}</p>
           
           <select id="status-sel-${docId}" class="input-modern" style="padding:8px; font-size:0.85rem; margin-bottom:6px;">
             <option value="order စစ်ဆေးနေဆဲ" ${order.status === "order စစ်ဆေးနေဆဲ" ? "selected" : ""}>order စစ်ဆေးနေဆဲ</option>
@@ -227,7 +245,7 @@
       }
     };
 
-    // STOCK LOGIC
+    // 2. STOCK LOGIC
     async function loadAdminProducts() {
       const container = document.getElementById("admin-products-list");
       container.innerHTML = "Loading...";
@@ -333,7 +351,7 @@
       }
     };
 
-    // GOOGLE DRIVE CHANGER LOGIC
+    // 3. GOOGLE DRIVE CHANGER LOGIC
     function convertDriveLink(url) {
       if (!url) return "";
       const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
@@ -375,6 +393,55 @@
       navigator.clipboard.writeText(input.value);
       alert("📋 Detail Photo Links (Comma ခံလျက်) ကို Copy ကူးပြီးပါပြီ!");
     };
+
+    // 4. REPORTS LOGIC (NEW)
+    async function loadAdminReports() {
+      const container = document.getElementById("admin-reports-list");
+      container.innerHTML = "Loading...";
+      const snapshot = await getDocs(collection(db, "reports"));
+      container.innerHTML = "";
+
+      if(snapshot.empty) {
+        container.innerHTML = "<p style='color:var(--text-sub); text-align:center;'>တိုင်ကြားချက် Report မရှိသေးပါ။</p>";
+        return;
+      }
+
+      snapshot.forEach(docSnap => {
+        const r = docSnap.data();
+        const docId = docSnap.id;
+
+        const card = document.createElement("div");
+        card.className = "report-card";
+        card.innerHTML = `
+          <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+            <b style="color:#e11d48;">${r.reportCode || 'RP-0000'}</b>
+            <button class="btn-danger" id="del-rep-${docId}">🗑️ ဖျက်မည်</button>
+          </div>
+          <p style="font-size:0.85rem; margin-bottom:6px;"><b>အကြောင်းအရာ:</b> ${r.message || 'မရှိပါ'}</p>
+          <select id="rep-status-${docId}" class="input-modern" style="padding:8px; font-size:0.85rem; margin-bottom:6px;">
+            <option value="စစ်ဆေးနေဆဲ" ${r.status === "စစ်ဆေးနေဆဲ" ? "selected" : ""}>စစ်ဆေးနေဆဲ</option>
+            <option value="အရေးယူဆောင်ရွက်ပြီး" ${r.status === "အရေးယူဆောင်ရွက်ပြီး" ? "selected" : ""}>အရေးယူဆောင်ရွက်ပြီး</option>
+            <option value="ပယ်ဖျက်လိုက်သည်" ${r.status === "ပယ်ဖျက်လိုက်သည်" ? "selected" : ""}>ပယ်ဖျက်လိုက်သည်</option>
+          </select>
+          <button class="btn-primary" style="padding:8px; font-size:0.85rem; background:#8b5cf6;" id="save-rep-${docId}">Status ပြင်ဆင်ချက် သိမ်းမည်</button>
+        `;
+        container.appendChild(card);
+
+        document.getElementById(`save-rep-${docId}`).onclick = async () => {
+          const val = document.getElementById(`rep-status-${docId}`).value;
+          await updateDoc(doc(db, "reports", docId), { status: val });
+          alert("Report Status ပြင်ဆင်ပြီးပါပြီ!");
+        };
+
+        document.getElementById(`del-rep-${docId}`).onclick = async () => {
+          if(confirm("ဤ Report ကို ဖျက်ရန် သေချာပါသလား?")) {
+            await deleteDoc(doc(db, "reports", docId));
+            alert("Report ဖျက်ပြီးပါပြီ!");
+            loadAdminReports();
+          }
+        };
+      });
+    }
   </script>
 </body>
 </html>
