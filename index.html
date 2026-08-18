@@ -368,7 +368,7 @@
     }
     .modal-overlay.active { display: flex; }
 
-    /* DETAIL BUBBLE PHOTOS & FLOATING ANIMATION */
+    /* DETAIL BUBBLE PHOTOS & CLOCKWISE / FLOATING SEPARATE LAYER */
     .detail-gallery-container {
       display: flex;
       flex-wrap: wrap;
@@ -403,18 +403,10 @@
       animation-delay: 0.8s;
     }
 
-    /* BUBBLE FLOATING ANIMATION (NON-DEGREE ROTATION) */
     @keyframes bubbleFloat {
-      0% {
-        transform: translateY(0px) scale(1);
-      }
-      50% {
-        transform: translateY(-6px) scale(1.05);
-        box-shadow: 0 10px 20px rgba(217, 70, 239, 0.5);
-      }
-      100% {
-        transform: translateY(3px) scale(0.98);
-      }
+      0% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-6px) scale(1.05); box-shadow: 0 10px 20px rgba(217, 70, 239, 0.5); }
+      100% { transform: translateY(3px) scale(0.98); }
     }
 
     .fullscreen-modal {
@@ -490,12 +482,13 @@
     .admin-note-box {
       background: var(--admin-note-bg);
       border-left: 4px solid var(--admin-note-border);
-      padding: 10px;
+      padding: 12px;
       border-radius: 8px;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       text-align: left;
-      margin: 10px 0;
+      margin: 12px 0;
       color: var(--text-main);
+      box-shadow: 0 4px 10px rgba(245, 158, 11, 0.15);
     }
 
     .success-card {
@@ -554,9 +547,7 @@
 
   <!-- MUSIC BUBBLE PLAYER -->
   <div class="music-bubble-fixed">
-    <div id="music-bubble" class="music-bubble-btn" onclick="toggleMusic()">
-      🎵
-    </div>
+    <div id="music-bubble" class="music-bubble-btn" onclick="toggleMusic()">🎵</div>
     <span id="music-status" class="music-bubble-label" data-mm="ဖွင့်ရန်" data-en="Play">ဖွင့်ရန်</span>
   </div>
 
@@ -654,11 +645,6 @@
           <option value="Device 3 (Tablet / iPad)">Device 3 (Tablet / iPad)</option>
           <option value="Device 4 (Laptop / PC)">Device 4 (Laptop / PC)</option>
           <option value="Device 5 (Office Device)">Device 5 (Office Device)</option>
-          <option value="Device 6 (Spare Phone A)">Device 6 (Spare Phone A)</option>
-          <option value="Device 7 (Spare Phone B)">Device 7 (Spare Phone B)</option>
-          <option value="Device 8 (Family Device 1)">Device 8 (Family Device 1)</option>
-          <option value="Device 9 (Family Device 2)">Device 9 (Family Device 2)</option>
-          <option value="Device 10 (Custom Extra Device)">Device 10 (Custom Extra Device)</option>
         </select>
 
         <select id="delivery-type" class="input-field" onchange="toggleDeliveryBox(this.value)">
@@ -708,18 +694,18 @@
     <span id="cart-badge" class="cart-count-badge">0</span>
   </div>
 
-  <!-- PRODUCT DETAIL MODAL (BUBBLE PHOTOS & ADMIN NOTE) -->
+  <!-- PRODUCT DETAIL MODAL (SEPARATED BUBBLE PHOTOS & ADMIN NOTE) -->
   <div id="detail-modal" class="modal-overlay">
     <div class="qty-modal-box">
       <button onclick="closeModal()" style="position:absolute; right:12px; top:12px; background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text-main);">❌</button>
       <h3 id="modal-title" style="font-weight:900; color:var(--primary-dark); margin-top:5px;"></h3>
       <p id="modal-price" style="font-size:1.1rem; font-weight:800; color:var(--accent); margin-bottom:8px;"></p>
 
-      <!-- Admin Stock Note Display (Conditional) -->
+      <!-- Admin Stock Note Display (Admin Panel က note ရေးထားမှ ပေါ်မည်) -->
       <div id="modal-admin-note" class="admin-note-box" style="display:none;"></div>
 
-      <!-- Detail Bubble Photos with Floating Animation -->
-      <p style="font-size:0.75rem; font-weight:bold; color:var(--text-sub);" data-mm="🖼️ Detail Bubble ပုံများ - နှိပ်ပါက ပုံကြီးကြည့်နိုင်သည်" data-en="🖼️ Detail Bubble Images - Click for Fullscreen">🖼️ Detail Bubble ပုံများ - နှိပ်ပါက ပုံကြီးကြည့်နိုင်သည်</p>
+      <!-- Detail Bubble Photos Layer (Box နဲ့ လုံးဝမရောဘဲ သီးသန့်ပေါ်မည့် နေရာ) -->
+      <p style="font-size:0.75rem; font-weight:bold; color:var(--text-sub);" data-mm="🖼️ Detail Bubble ပုံများ (သီးသန့် Layer) - နှိပ်ပါက ပုံကြီးကြည့်နိုင်သည်" data-en="🖼️ Detail Bubble Images (Separate Layer) - Click for Fullscreen">🖼️ Detail Bubble ပုံများ (သီးသန့် Layer) - နှိပ်ပါက ပုံကြီးကြည့်နိုင်သည်</p>
       <div id="modal-gallery-grid" class="detail-gallery-container"></div>
 
       <label style="font-size:0.85rem; font-weight:800; color:var(--text-sub);" data-mm="ဝယ်ယူမည့် အရေအတွက် ရွေးပါ:" data-en="Select Quantity:">ဝယ်ယူမည့် အရေအတွက် ရွေးပါ:</label>
@@ -785,7 +771,7 @@
       createFlowerBurst(e.clientX, e.clientY);
     });
 
-    /* MULTI-LANGUAGE TOGGLE LOGIC (MM / EN) */
+    /* MULTI-LANGUAGE TOGGLE LOGIC */
     window.toggleLanguage = function() {
       currentLang = currentLang === 'MM' ? 'EN' : 'MM';
       document.getElementById('lang-btn').innerText = currentLang === 'MM' ? '🇲🇲 MM' : '🇬🇧 EN';
@@ -858,30 +844,30 @@
           <img src="${p.showPhoto}" class="product-img" onerror="this.src='https://via.placeholder.com/150'">
           <div class="product-title">${p.name}</div>
           <div class="product-price">${p.price} Ks</div>
-          <button class="btn-show-photo">🖼️ Show Photo (Details)</button>
+          <button class="btn-show-photo">🖼️ Show Photo Stock</button>
         `;
         card.querySelector('.btn-show-photo').onclick = () => openBubbleModal(p);
         grid.appendChild(card);
       });
     }
 
-    /* OPEN PRODUCT DETAIL MODAL (Bubble Photos & Admin Note Display) */
+    /* OPEN PRODUCT DETAIL MODAL (SEPARATED BUBBLES & ADMIN STOCK NOTE) */
     function openBubbleModal(p) {
       selectedProduct = p;
       document.getElementById("modal-title").innerText = p.name;
       document.getElementById("modal-price").innerText = `${p.price} Ks`;
       document.getElementById("modal-qty").value = 1;
       
-      // Admin Stock Note (Shows if non-empty)
+      // Admin Stock Note Display (Admin panel က note ရေးထားရင် ပေါ်မယ်)
       const adminNoteEl = document.getElementById("modal-admin-note");
       if (p.adminNote && p.adminNote.trim() !== "") {
         adminNoteEl.style.display = "block";
-        adminNoteEl.innerHTML = `<b>📌 Admin Stock Note:</b> ${p.adminNote}`;
+        adminNoteEl.innerHTML = `<b>📢 Admin Stock Note:</b> ${p.adminNote}`;
       } else {
         adminNoteEl.style.display = "none";
       }
 
-      // Collect Main Photo + Detail Photos
+      // Collect Photos into Separate Bubbles Container
       const gallery = document.getElementById("modal-gallery-grid");
       gallery.innerHTML = "";
       
@@ -930,7 +916,7 @@
           name: selectedProduct.name,
           price: selectedProduct.price,
           qty: qty,
-          itemNote: "" // Item-specific note field
+          itemNote: ""
         });
       }
 
@@ -967,7 +953,6 @@
                 </div>
                 <button onclick="removeFromCart(${index})" style="background:none; border:none; color:red; font-size:1.1rem; cursor:pointer;">🗑️</button>
               </div>
-              <!-- Individual Stock Note Input -->
               <input type="text" class="input-field" style="margin:4px 0 0; padding:6px 10px; font-size:0.8rem;" 
                 placeholder="${phText}" value="${item.itemNote || ''}" onchange="updateItemNote(${index}, this.value)">
             </div>
@@ -981,7 +966,6 @@
       document.getElementById("cart-total-price").innerText = `${total} Ks`;
     }
 
-    /* UPDATE INDIVIDUAL ITEM NOTE */
     window.updateItemNote = function(index, val) {
       if(cart[index]) {
         cart[index].itemNote = val.trim();
@@ -1004,7 +988,6 @@
       document.getElementById("online-pay-box").style.display = (val === 'online') ? 'block' : 'none';
     };
 
-    /* SUBMIT ORDER TO TELEGRAM (With Item Notes & Multi-Language Alert) */
     window.submitOrderToTelegram = async function() {
       if(cart.length === 0) return alert(currentLang === 'MM' ? "ခြင်းတောင်းထဲတွင် ပစ္စည်းထည့်ပါဦး!" : "Add items to cart first!");
       
@@ -1024,7 +1007,6 @@
 
       const orderCode = "ORD-" + Math.floor(1000 + Math.random() * 9000);
       
-      // Items Summary with Individual Item Notes
       let itemsSummary = cart.map(i => {
         let noteTxt = i.itemNote ? ` [Note: ${i.itemNote}]` : '';
         return `• ${i.name} (${i.qty}ခု)${noteTxt} = ${i.price * i.qty}Ks`;
@@ -1073,7 +1055,7 @@
       navigateTo('page-success');
     };
 
-    /* ORDER CHECKER LOGIC */
+    /* ORDER CHECKER LOGIC (ADMIN NOTE DISPLAYED ON CHECK) */
     window.checkOrderStatus = async function() {
       const code = document.getElementById("check-code-input").value.trim();
       if(!code) return alert(currentLang === 'MM' ? "Order Code ရိုက်ထည့်ပါ" : "Enter Order Code");
@@ -1091,7 +1073,7 @@
         const d = docSnap.data();
         let adminNoteHTML = "";
         if (d.adminNote && d.adminNote.trim() !== "") {
-          adminNoteHTML = `<div class="admin-note-box"><b>📌 Admin Status Note:</b> ${d.adminNote}</div>`;
+          adminNoteHTML = `<div class="admin-note-box"><b>📢 Admin Order Note:</b> ${d.adminNote}</div>`;
         }
 
         resBox.innerHTML = `
