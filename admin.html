@@ -92,7 +92,6 @@
       font-weight: 700;
     }
 
-    /* ALL BOXES & CARDS CONTINUOUS ANIMATION */
     .view-card, .admin-card-item, .report-card {
       background: var(--box-bg);
       border: 3px solid #f0abfc;
@@ -152,8 +151,8 @@
     .admin-tab-btn {
       background: rgba(255, 255, 255, 0.85);
       border: 2px solid #f0abfc;
-      padding: 8px;
-      border-radius: 15px;
+      padding: 6px 4px;
+      border-radius: 12px;
       font-weight: 800;
       color: var(--text-main);
       cursor: pointer;
@@ -196,36 +195,32 @@
       <p class="address">Phoo K-pop & Thai-pop Shop</p>
     </header>
 
-    <!-- Passcode Login Section -->
     <section id="admin-login-sec" class="view-card">
       <h2 style="font-size:1.1rem; font-weight:800; margin-bottom:10px; text-align:center; color:var(--primary-dark);">🔐 Admin Passcode ထည့်ပါ</h2>
       <input type="password" id="admin-passcode-input" class="input-modern" placeholder="Passcode ရိုက်ထည့်ပါ..." style="text-align:center; font-size:1.2rem;">
       <button id="btn-admin-login" class="btn-primary">Dashboard သို့ဝင်မည် ➔</button>
     </section>
 
-    <!-- Main Dashboard -->
     <main id="admin-dashboard-sec" class="hidden">
-      <!-- TAB BAR (4 TABS) -->
-      <div class="admin-tab-bar" style="display:flex; gap:5px; margin-bottom:15px;">
-        <button id="tab-btn-orders" class="admin-tab-btn active" style="flex:1; font-size:0.8rem;">📦 Orders</button>
-        <button id="tab-btn-stock" class="admin-tab-btn" style="flex:1; font-size:0.8rem;">🏷️ Stock</button>
-        <button id="tab-btn-drive" class="admin-tab-btn" style="flex:1; font-size:0.8rem;">🔄 Drive</button>
-        <button id="tab-btn-report" class="admin-tab-btn" style="flex:1; font-size:0.8rem; background:#ffe4e6; color:#e11d48;">🚨 Reports</button>
+      <div class="admin-tab-bar" style="display:flex; gap:3px; margin-bottom:15px;">
+        <button id="tab-btn-orders" class="admin-tab-btn active" style="flex:1; font-size:0.75rem;">📦 Orders</button>
+        <button id="tab-btn-stock" class="admin-tab-btn" style="flex:1; font-size:0.75rem;">🏷️ Stock</button>
+        <button id="tab-btn-drive" class="admin-tab-btn" style="flex:1; font-size:0.75rem;">🔄 Drive</button>
+        <button id="tab-btn-report" class="admin-tab-btn" style="flex:1; font-size:0.75rem; background:#ffe4e6; color:#e11d48;">🚨 Reports</button>
+        <button id="tab-btn-songs" class="admin-tab-btn" style="flex:1; font-size:0.75rem; background:#e0f2fe; color:#0284c7;">🎵 Songs</button>
       </div>
 
-      <!-- Tab 1: Order Editing -->
       <section id="tab-sec-orders" class="view-card">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
-          <h2 style="font-size:1rem; font-weight:800; color:var(--primary-dark);">📦 Orders စာရင်း & Status ပြင်ရန်</h2>
+          <h2 style="font-size:1rem; font-weight:800; color:var(--primary-dark);">📦 Orders စာရင်း & Status/Note ပြင်ရန်</h2>
           <button id="btn-reset-all-orders" class="btn-danger">⚠️ Reset All Orders</button>
         </div>
         <div id="admin-orders-list">Loading...</div>
       </section>
 
-      <!-- Tab 2: Stock Editing -->
       <section id="tab-sec-stock" class="view-card hidden">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
-          <h2 style="font-size:1rem; font-weight:800; color:var(--primary-dark);">➕ ပစ္စည်းအသစ် တင်ရန် / Edit လုပ်ရန်</h2>
+          <h2 style="font-size:1rem; font-weight:800; color:var(--primary-dark);">➕ ပစ္စည်းအသစ် တင်ရန် / Note ထည့်ရန်</h2>
           <button id="btn-reset-all-stock" class="btn-danger">⚠️ Reset All Stock</button>
         </div>
 
@@ -234,7 +229,7 @@
         <input type="number" id="p-price" class="input-modern" placeholder="ဈေးနှုန်း (Ks)">
         <input type="text" id="p-show-img" class="input-modern" placeholder="Show Photo Direct URL">
         <input type="text" id="p-detail-imgs" class="input-modern" placeholder="Detail Photo Links (ကော်မာ ၊ ခြားရေးပါ)">
-        <input type="text" id="p-admin-note" class="input-modern" placeholder="Admin Stock Note (ဥပမာ - ပစ္စည်းအသစ်ရောက်ရှိ)">
+        <input type="text" id="p-admin-note" class="input-modern" placeholder="🏷️ Stock Note (ပစ္စည်းအကြောင်းအရာ/အသိပေးချက် Note)">
         
         <button id="btn-save-product" class="btn-primary">ပစ္စည်း တင်မည် / သိမ်းဆည်းမည် ➔</button>
         <button id="btn-cancel-edit" class="btn-secondary hidden">Cancel Edit</button>
@@ -243,21 +238,34 @@
         <div id="admin-products-list">Loading...</div>
       </section>
 
-      <!-- Tab 3: Google Drive Link Changer -->
       <section id="tab-sec-drive" class="view-card hidden">
-        <h2 style="font-size:1rem; font-weight:800; color:#059669; margin-bottom:15px;">🔄 Google Drive Link Changer</h2>
+        <h2 style="font-size:1rem; font-weight:800; color:#059669; margin-bottom:15px;">🔄 Google Drive Link Changer (10 ပုံအထိ)</h2>
         
         <label style="font-size:0.85rem; font-weight:700;">Show Photo Drive Link:</label>
         <input type="text" id="drive-show-input" class="input-modern" placeholder="Google Drive Link ကူးထည့်ပါ...">
 
-        <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 1 Link:</label>
-        <input type="text" id="drive-detail-1" class="input-modern" placeholder="Detail Photo 1 Drive Link...">
-
-        <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 2 Link:</label>
-        <input type="text" id="drive-detail-2" class="input-modern" placeholder="Detail Photo 2 Drive Link...">
-
-        <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 3 Link:</label>
-        <input type="text" id="drive-detail-3" class="input-modern" placeholder="Detail Photo 3 Drive Link...">
+        <div id="drive-detail-inputs-container">
+          <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 1 Link:</label>
+          <input type="text" class="input-modern drive-detail-field" placeholder="Detail Photo 1 Link...">
+          <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 2 Link:</label>
+          <input type="text" class="input-modern drive-detail-field" placeholder="Detail Photo 2 Link...">
+          <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 3 Link:</label>
+          <input type="text" class="input-modern drive-detail-field" placeholder="Detail Photo 3 Link...">
+          <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 4 Link:</label>
+          <input type="text" class="input-modern drive-detail-field" placeholder="Detail Photo 4 Link...">
+          <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 5 Link:</label>
+          <input type="text" class="input-modern drive-detail-field" placeholder="Detail Photo 5 Link...">
+          <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 6 Link:</label>
+          <input type="text" class="input-modern drive-detail-field" placeholder="Detail Photo 6 Link...">
+          <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 7 Link:</label>
+          <input type="text" class="input-modern drive-detail-field" placeholder="Detail Photo 7 Link...">
+          <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 8 Link:</label>
+          <input type="text" class="input-modern drive-detail-field" placeholder="Detail Photo 8 Link...">
+          <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 9 Link:</label>
+          <input type="text" class="input-modern drive-detail-field" placeholder="Detail Photo 9 Link...">
+          <label style="font-size:0.85rem; font-weight:700; margin-top:8px; display:block;">Detail Photo 10 Link:</label>
+          <input type="text" class="input-modern drive-detail-field" placeholder="Detail Photo 10 Link...">
+        </div>
 
         <button id="btn-generate-drive" class="btn-primary" style="background:linear-gradient(135deg, #059669, #10b981); margin-top:12px;">⚙️ Direct Links ပြောင်းမည် ➔</button>
 
@@ -267,15 +275,28 @@
           <button id="btn-copy-show" class="btn-copy">📋 Show Photo Link Copy ရယူရန်</button>
 
           <label style="font-size:0.85rem; font-weight:800; color:#065f46; margin-top:12px; display:block;">Direct Detail Photo Links (Comma ခံထားသည်):</label>
-          <textarea id="out-detail-links" class="input-modern" style="height:65px; resize:none;" readonly></textarea>
+          <textarea id="out-detail-links" class="input-modern" style="height:90px; resize:none;" readonly></textarea>
           <button id="btn-copy-detail" class="btn-copy btn-copy-comma">📋 Detail Links (Comma ခံလျက်) Copy ရယူရန်</button>
         </div>
       </section>
 
-      <!-- Tab 4: Report Management -->
       <section id="tab-sec-report" class="view-card hidden">
-        <h2 style="font-size:1rem; font-weight:800; color:#e11d48; margin-bottom:15px;">🚨 Customer Reports စာရင်း</h2>
+        <h2 style="font-size:1rem; font-weight:800; color:#e11d48; margin-bottom:15px;">🚨 Customer Reports & Admin Note</h2>
         <div id="admin-reports-list">Loading...</div>
+      </section>
+
+      <section id="tab-sec-songs" class="view-card hidden">
+        <h2 style="font-size:1rem; font-weight:800; color:#0284c7; margin-bottom:15px;">🎵 Shop Web Song Bubble ပြင်ဆင်ရန်</h2>
+        
+        <input type="hidden" id="song-edit-id">
+        <input type="text" id="song-name" class="input-modern" placeholder="သီချင်းအမည် (Song Name - Artist)">
+        <input type="text" id="song-url" class="input-modern" placeholder="သီချင်း Direct Audio/Stream Link (.mp3 သို့မဟုတ် link)">
+
+        <button id="btn-save-song" class="btn-primary" style="background:linear-gradient(135deg, #0284c7, #38bdf8);">🎵 သီချင်း သိမ်းဆည်းမည် / ထည့်မည် ➔</button>
+        <button id="btn-cancel-song-edit" class="btn-secondary hidden">Cancel Edit</button>
+
+        <h3 style="font-size:1rem; font-weight:800; margin:20px 0 10px 0; color:#0284c7;">🎶 လက်ရှိ သီချင်းစာရင်း</h3>
+        <div id="admin-songs-list">Loading...</div>
       </section>
     </main>
   </div>
@@ -319,6 +340,7 @@
         loadAdminOrders();
         loadAdminProducts();
         loadAdminReports();
+        loadAdminSongs();
       } else {
         alert("❌ Passcode မှားယွင်းနေပါသည်။");
       }
@@ -328,22 +350,26 @@
     const tabStockBtn = document.getElementById("tab-btn-stock");
     const tabDriveBtn = document.getElementById("tab-btn-drive");
     const tabReportBtn = document.getElementById("tab-btn-report");
+    const tabSongsBtn = document.getElementById("tab-btn-songs");
 
     const secOrders = document.getElementById("tab-sec-orders");
     const secStock = document.getElementById("tab-sec-stock");
     const secDrive = document.getElementById("tab-sec-drive");
     const secReport = document.getElementById("tab-sec-report");
+    const secSongs = document.getElementById("tab-sec-songs");
 
     tabOrdersBtn.onclick = () => { resetTabActive(); tabOrdersBtn.classList.add("active"); secOrders.classList.remove("hidden"); };
     tabStockBtn.onclick = () => { resetTabActive(); tabStockBtn.classList.add("active"); secStock.classList.remove("hidden"); };
     tabDriveBtn.onclick = () => { resetTabActive(); tabDriveBtn.classList.add("active"); secDrive.classList.remove("hidden"); };
     tabReportBtn.onclick = () => { resetTabActive(); tabReportBtn.classList.add("active"); secReport.classList.remove("hidden"); };
+    tabSongsBtn.onclick = () => { resetTabActive(); tabSongsBtn.classList.add("active"); secSongs.classList.remove("hidden"); };
 
     function resetTabActive() {
-      [tabOrdersBtn, tabStockBtn, tabDriveBtn, tabReportBtn].forEach(b => b.classList.remove("active"));
-      [secOrders, secStock, secDrive, secReport].forEach(s => s.classList.add("hidden"));
+      [tabOrdersBtn, tabStockBtn, tabDriveBtn, tabReportBtn, tabSongsBtn].forEach(b => b.classList.remove("active"));
+      [secOrders, secStock, secDrive, secReport, secSongs].forEach(s => s.classList.add("hidden"));
     }
 
+    // 1. ORDERS LOGIC WITH ADMIN NOTE
     async function loadAdminOrders() {
       const container = document.getElementById("admin-orders-list");
       container.innerHTML = "Loading...";
@@ -376,15 +402,14 @@
         card.innerHTML = `
           <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
             <b style="color:var(--primary-dark);">${order.orderCode}</b>
-            <button class="btn-danger" id="del-ord-${docId}">🗑️ ဖျက်မည်</button>
+            <button class="btn-danger" id="del-ord-${docId}">🗑️ ဖျက်</button>
           </div>
           <p style="font-size:0.85rem;"><b>အမည်:</b> ${order.customerName} | <b>ဖုန်း:</b> ${order.phone || 'N/A'}</p>
-          <p style="font-size:0.85rem;"><b>Device:</b> ${order.selectedDevice || 'N/A'}</p>
-          <p style="font-size:0.85rem; margin:4px 0;"><b>ပစ္စည်းများ:</b><br>${itemsHTML}</p>
+          <p style="font-size:0.85rem;"><b>ပစ္စည်းများ:</b><br>${itemsHTML}</p>
           <p style="font-size:0.85rem;"><b>စုစုပေါင်း:</b> ${order.totalAmount || 0} Ks</p>
           
-          <label style="font-size:0.8rem; font-weight:bold; margin-top:8px; display:block;">Admin Note (Customer ချက်ချင်းမြင်ရမည့် မှတ်ချက်):</label>
-          <input type="text" id="admin-ord-note-${docId}" class="input-modern" style="padding:6px; font-size:0.85rem; margin-top:2px;" value="${order.adminNote || ''}" placeholder="Order နှင့် ပတ်သက်၍ မှာကြားရန်...">
+          <label style="font-size:0.8rem; font-weight:bold; margin-top:8px; display:block;">📝 Admin Note (Customer ချက်ချင်းမြင်ရမည့် မှတ်ချက်):</label>
+          <input type="text" id="admin-ord-note-${docId}" class="input-modern" style="padding:8px; font-size:0.85rem; margin-top:2px;" value="${order.adminNote || ''}" placeholder="Order နှင့် ပတ်သက်၍ Admin မှတ်ချက်ရေးရန်...">
 
           <select id="status-sel-${docId}" class="input-modern" style="padding:8px; font-size:0.85rem; margin-bottom:6px;">
             <option value="order စစ်ဆေးနေဆဲ" ${order.status === "order စစ်ဆေးနေဆဲ" ? "selected" : ""}>order စစ်ဆေးနေဆဲ</option>
@@ -425,6 +450,7 @@
       }
     };
 
+    // 2. STOCK LOGIC WITH ADMIN NOTE
     async function loadAdminProducts() {
       const container = document.getElementById("admin-products-list");
       container.innerHTML = "Loading...";
@@ -456,6 +482,7 @@
             <div>
               <b style="font-size:0.9rem;">${p.name}</b>
               <p style="font-size:0.8rem; color:var(--primary-dark); font-weight:700;">${p.price} Ks</p>
+              ${p.adminNote ? `<p style="font-size:0.75rem; color:#d97706;">📝 ${p.adminNote}</p>` : ''}
             </div>
           </div>
           <div style="display:flex; gap:6px;">
@@ -533,6 +560,7 @@
       }
     };
 
+    // 3. GOOGLE DRIVE LINK CHANGER (UP TO 10 PHOTOS)
     function convertDriveLink(url) {
       if (!url) return "";
       const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
@@ -544,15 +572,16 @@
 
     document.getElementById("btn-generate-drive").onclick = () => {
       const showRaw = document.getElementById("drive-show-input").value;
-      const d1Raw = document.getElementById("drive-detail-1").value;
-      const d2Raw = document.getElementById("drive-detail-2").value;
-      const d3Raw = document.getElementById("drive-detail-3").value;
+      const detailFields = document.querySelectorAll(".drive-detail-field");
 
       const showDirect = convertDriveLink(showRaw);
       const detailDirects = [];
-      if (d1Raw) detailDirects.push(convertDriveLink(d1Raw));
-      if (d2Raw) detailDirects.push(convertDriveLink(d2Raw));
-      if (d3Raw) detailDirects.push(convertDriveLink(d3Raw));
+      
+      detailFields.forEach(field => {
+        if (field.value.trim()) {
+          detailDirects.push(convertDriveLink(field.value));
+        }
+      });
 
       document.getElementById("out-show-link").value = showDirect;
       document.getElementById("out-detail-links").value = detailDirects.join(",");
@@ -570,9 +599,10 @@
       const input = document.getElementById("out-detail-links");
       input.select();
       navigator.clipboard.writeText(input.value);
-      alert("📋 Detail Photo Links ကို Copy ကူးပြီးပါပြီ!");
+      alert("📋 Detail Photo Links (10 ပုံအထိ) ကို Copy ကူးပြီးပါပြီ!");
     };
 
+    // 4. REPORTS LOGIC WITH ADMIN NOTE
     async function loadAdminReports() {
       const container = document.getElementById("admin-reports-list");
       container.innerHTML = "Loading...";
@@ -596,19 +626,24 @@
             <button class="btn-danger" id="del-rep-${docId}">🗑️ ဖျက်</button>
           </div>
           <p style="font-size:0.85rem; margin-bottom:6px;"><b>အကြောင်းအရာ:</b> ${r.message || 'မရှိပါ'}</p>
+          
+          <label style="font-size:0.8rem; font-weight:bold; margin-top:6px; display:block;">📝 Admin Note (Report တုံ့ပြန်ချက် Note):</label>
+          <input type="text" id="admin-rep-note-${docId}" class="input-modern" style="padding:6px; font-size:0.85rem; margin-top:2px;" value="${r.adminNote || ''}" placeholder="Report အတွက် မှတ်ချက်ရေးရန်...">
+
           <select id="rep-status-${docId}" class="input-modern" style="padding:8px; font-size:0.85rem; margin-bottom:6px;">
             <option value="စစ်ဆေးနေဆဲ" ${r.status === "စစ်ဆေးနေဆဲ" ? "selected" : ""}>စစ်ဆေးနေဆဲ</option>
             <option value="အရေးယူဆောင်ရွက်ပြီး" ${r.status === "အရေးယူဆောင်ရွက်ပြီး" ? "selected" : ""}>အရေးယူဆောင်ရွက်ပြီး</option>
             <option value="ပယ်ဖျက်လိုက်သည်" ${r.status === "ပယ်ဖျက်လိုက်သည်" ? "selected" : ""}>ပယ်ဖျက်လိုက်သည်</option>
           </select>
-          <button class="btn-primary" style="padding:8px; font-size:0.85rem; background:#8b5cf6;" id="save-rep-${docId}">Status ပြင်ဆင်ချက် သိမ်းမည်</button>
+          <button class="btn-primary" style="padding:8px; font-size:0.85rem; background:#8b5cf6;" id="save-rep-${docId}">Status & Note သိမ်းမည်</button>
         `;
         container.appendChild(card);
 
         document.getElementById(`save-rep-${docId}`).onclick = async () => {
           const val = document.getElementById(`rep-status-${docId}`).value;
-          await updateDoc(doc(db, "reports", docId), { status: val });
-          alert("Report Status ပြင်ဆင်ပြီးပါပြီ!");
+          const noteVal = document.getElementById(`admin-rep-note-${docId}`).value.trim();
+          await updateDoc(doc(db, "reports", docId), { status: val, adminNote: noteVal });
+          alert("Report ပြင်ဆင်ချက် သိမ်းဆည်းပြီးပါပြီ!");
         };
 
         document.getElementById(`del-rep-${docId}`).onclick = async () => {
@@ -620,6 +655,92 @@
         };
       });
     }
+
+    // 5. SONG BUBBLE MANAGEMENT LOGIC (NEW)
+    async function loadAdminSongs() {
+      const container = document.getElementById("admin-songs-list");
+      container.innerHTML = "Loading...";
+      const snapshot = await getDocs(collection(db, "songs"));
+      container.innerHTML = "";
+
+      if(snapshot.empty) {
+        container.innerHTML = "<p style='color:var(--text-sub); text-align:center;'>သီချင်း မထည့်ရသေးပါ။</p>";
+        return;
+      }
+
+      snapshot.forEach(docSnap => {
+        const s = docSnap.data();
+        const docId = docSnap.id;
+
+        const card = document.createElement("div");
+        card.style.display = "flex";
+        card.style.alignItems = "center";
+        card.style.justifyContent = "space-between";
+        card.style.background = "#e0f2fe";
+        card.style.padding = "10px 14px";
+        card.style.borderRadius = "16px";
+        card.style.marginBottom = "10px";
+        card.style.border = "1px solid #bae6fd";
+
+        card.innerHTML = `
+          <div>
+            <b style="font-size:0.9rem; color:#0369a1;">🎵 ${s.name}</b>
+            <p style="font-size:0.75rem; color:#0284c7; max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${s.url}</p>
+          </div>
+          <div style="display:flex; gap:6px;">
+            <button class="btn-warning" id="edit-song-${docId}" style="background:#0284c7;">✏️ Edit</button>
+            <button class="btn-danger" id="del-song-${docId}">🗑️ ဖျက်</button>
+          </div>
+        `;
+        container.appendChild(card);
+
+        document.getElementById(`edit-song-${docId}`).onclick = () => {
+          document.getElementById("song-edit-id").value = docId;
+          document.getElementById("song-name").value = s.name;
+          document.getElementById("song-url").value = s.url;
+          document.getElementById("btn-save-song").innerText = "✨ သီချင်းပြင်ဆင်ချက် သိမ်းမည် ➔";
+          document.getElementById("btn-cancel-song-edit").classList.remove("hidden");
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        document.getElementById(`del-song-${docId}`).onclick = async () => {
+          if(confirm("ဤသီချင်းကို ဖျက်ရန် သေချာပါသလား?")) {
+            await deleteDoc(doc(db, "songs", docId));
+            alert("သီချင်း ဖျက်ပြီးပါပြီ!");
+            loadAdminSongs();
+          }
+        };
+      });
+    }
+
+    document.getElementById("btn-save-song").onclick = async () => {
+      const editId = document.getElementById("song-edit-id").value;
+      const name = document.getElementById("song-name").value.trim();
+      const url = document.getElementById("song-url").value.trim();
+
+      if(!name || !url) return alert("သီချင်းအမည်နှင့် Link အပြည့်အစုံ ဖြည့်ပါ။");
+
+      if(editId) {
+        await updateDoc(doc(db, "songs", editId), { name, url });
+        alert("သီချင်း ပြင်ဆင်ပြီးပါပြီ!");
+      } else {
+        await addDoc(collection(db, "songs"), { name, url });
+        alert("သီချင်းအသစ် ထည့်သွင်းပြီးပါပြီ!");
+      }
+
+      resetSongForm();
+      loadAdminSongs();
+    };
+
+    function resetSongForm() {
+      document.getElementById("song-edit-id").value = "";
+      document.getElementById("song-name").value = "";
+      document.getElementById("song-url").value = "";
+      document.getElementById("btn-save-song").innerText = "🎵 သီချင်း သိမ်းဆည်းမည် / ထည့်မည် ➔";
+      document.getElementById("btn-cancel-song-edit").classList.add("hidden");
+    }
+
+    document.getElementById("btn-cancel-song-edit").onclick = resetSongForm;
   </script>
 </body>
 </html>
