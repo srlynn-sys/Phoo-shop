@@ -4,565 +4,141 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Phoo K-pop & Thai-pop Shop</title>
+  <link rel="stylesheet" href="style.css">
   <style>
-    :root {
-      --primary: #d946ef;
-      --primary-dark: #a21caf;
-      --accent: #8b5cf6;
-      --bg-lavender: #f7f0ff;
-      --card-bg: rgba(255, 255, 255, 0.95);
-      --text-main: #2e1065;
-      --text-sub: #6b21a8;
-      --body-bg: linear-gradient(135deg, #fae8ff 0%, #f3e8ff 50%, #e9d5ff 100%);
-      --box-bg: #ffffff;
-    }
-
-    body.dark-mode {
-      --primary: #e879f9;
-      --primary-dark: #f0abfc;
-      --accent: #a78bfa;
-      --card-bg: rgba(30, 27, 75, 0.95);
-      --text-main: #f3e8ff;
-      --text-sub: #d8b4fe;
-      --body-bg: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
-      --box-bg: #1e1b4b;
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
-
+    /* WATERMARK REPEATING LOGO BACKGROUND */
     body {
-      background: var(--body-bg);
-      color: var(--text-main);
-      min-height: 100vh;
-      overflow-x: hidden;
-      transition: background 0.3s ease, color 0.3s ease;
+      background-color: #faf5ff;
+      background-image: repeating-linear-gradient(45deg, rgba(217, 70, 239, 0.04) 0, rgba(217, 70, 239, 0.04) 15px, transparent 0, transparent 50px),
+                        url("data:image/svg+xml,%3Csvg width='140' height='140' viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Ctext x='50%25' y='50%25' font-size='13' font-weight='900' fill='%23d946ef' opacity='0.12' dominant-baseline='middle' text-anchor='middle'%3E🛍️ PHOO SHOP%3C/text%3E%3C/svg%3E");
     }
 
-    .theme-toggle-wrapper {
-      position: absolute;
-      top: 15px;
-      right: 15px;
-      z-index: 10;
+    /* LIKE BUTTON STYLES */
+    .like-box {
+      display: flex; align-items: center; justify-content: center;
+      gap: 10px; margin-top: 10px;
     }
-    .theme-toggle-btn {
-      background: rgba(255, 255, 255, 0.8);
-      border: 2px solid #f0abfc;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-weight: 800;
-      font-size: 0.8rem;
-      color: var(--text-main);
-      cursor: pointer;
-      backdrop-filter: blur(5px);
+    .btn-like {
+      background: #ffe4e6; color: #e11d48; border: 2px solid #fecdd3;
+      border-radius: 30px; padding: 6px 16px; font-weight: 800;
+      cursor: pointer; font-size: 0.85rem; transition: 0.2s;
     }
-    body.dark-mode .theme-toggle-btn {
-      background: rgba(30, 27, 75, 0.8);
-      border-color: #a855f7;
+    .btn-like.liked { background: #e11d48; color: white; border-color: #e11d48; }
+
+    /* GAME SECTION STYLES */
+    .game-card {
+      background: #fff; border-radius: 20px; padding: 16px;
+      border: 2px dashed #c084fc; margin-bottom: 20px; text-align: center;
+    }
+    .game-btn {
+      background: #8b5cf6; color: white; border: none; padding: 8px 14px;
+      border-radius: 10px; font-weight: bold; cursor: pointer; font-size: 0.85rem;
     }
 
-    .bg-icon {
-      position: fixed;
-      font-size: 2rem;
-      opacity: 0.2;
-      animation: float 8s infinite ease-in-out;
-      pointer-events: none;
-      z-index: 0;
+    /* REPORT SECTION STYLES */
+    .report-card {
+      background: #fff; border-radius: 20px; padding: 16px;
+      border: 2px solid #fecdd3; margin-bottom: 20px;
     }
-    @keyframes float {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-25px) rotate(15deg); }
-    }
-
-    .app-container {
-      max-width: 500px;
-      margin: 0 auto;
-      min-height: 100vh;
-      position: relative;
-      z-index: 1;
-      padding: 15px 15px 40px;
-    }
-
-    .page-view { display: none; }
-    .page-view.active { display: block; }
-
-    .site-header {
-      text-align: center;
-      padding: 15px;
-      background: var(--card-bg);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      border: 2px solid #f0abfc;
-      margin-bottom: 20px;
-      box-shadow: 0 8px 20px rgba(217, 70, 239, 0.15);
-    }
-    .logo {
-      width: 85px;
-      height: 85px;
-      border-radius: 50%;
-      object-fit: cover;
-      box-shadow: 0 0 15px rgba(217, 70, 239, 0.4);
-      border: 3px solid #fff;
-    }
-    .shop-title {
-      font-size: 1.3rem;
-      font-weight: 900;
-      color: var(--primary-dark);
-      margin-top: 6px;
-    }
-    .address-animated {
-      font-size: 0.8rem;
-      color: var(--text-sub);
-      margin-top: 6px;
-      font-weight: 700;
-      display: inline-block;
-      animation: pulseWiggle 3s infinite ease-in-out;
-    }
-    @keyframes pulseWiggle {
-      0%, 100% { transform: scale(1) rotate(0deg); }
-      25% { transform: scale(1.02) rotate(-1deg); }
-      75% { transform: scale(1.02) rotate(1deg); }
-    }
-
-    /* MUSIC BUBBLE STYLING */
-    .music-bubble-fixed {
-      position: fixed;
-      bottom: 25px;
-      left: 20px;
-      z-index: 200;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .music-bubble-btn {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-      color: white;
-      font-size: 1.6rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 8px 25px rgba(217, 70, 239, 0.5);
-      cursor: pointer;
-      border: 3px solid #fff;
-      transition: all 0.3s ease;
-      animation: musicPulse 2s infinite ease-in-out;
-    }
-    .music-bubble-btn.playing {
-      animation: musicRotate 4s linear infinite;
-      box-shadow: 0 0 25px rgba(217, 70, 239, 0.8);
-      border-color: #f0abfc;
-    }
-    .music-bubble-label {
-      font-size: 0.65rem;
-      font-weight: 800;
-      color: var(--text-main);
-      margin-top: 4px;
-      background: var(--card-bg);
-      padding: 2px 8px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      backdrop-filter: blur(4px);
-    }
-    @keyframes musicPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.08); }
-    }
-    @keyframes musicRotate {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .landing-options {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-      margin-top: 20px;
-    }
-    .option-card {
-      background: var(--box-bg);
-      border: 3px solid #f0abfc;
-      border-radius: 20px;
-      padding: 25px 10px;
-      text-align: center;
-      cursor: pointer;
-      box-shadow: 0 10px 25px rgba(217, 70, 239, 0.2);
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    .option-card:hover {
-      transform: translateY(-8px) scale(1.03);
-      border-color: var(--primary);
-    }
-    .option-icon { font-size: 2.8rem; margin-bottom: 8px; display: block; }
-    .option-title { font-weight: 900; color: var(--primary-dark); font-size: 1rem; }
-
-    .nav-back-btn {
-      background: var(--card-bg);
-      border: 2px solid #f0abfc;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-weight: 800;
-      color: var(--text-sub);
-      cursor: pointer;
-      margin-bottom: 15px;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .product-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
-    }
-    .product-card {
-      background: var(--card-bg);
-      background-image: radial-gradient(#d8b4fe 15%, transparent 16%),
-                        url('https://lh3.googleusercontent.com/d/14WBlxcwpCYj9gqkONoxRkhRrgwvBJSRH');
-      background-size: 20px 20px, 70px 70px;
-      background-position: center, center;
-      background-repeat: repeat, no-repeat;
-      background-blend-mode: normal, soft-light;
-      border-radius: 20px;
-      padding: 12px;
-      border: 2px solid #f5d0fe;
-      box-shadow: 0 8px 18px rgba(147, 51, 234, 0.12);
-      text-align: center;
-      transition: all 0.3s ease;
-    }
-    .product-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 25px rgba(217, 70, 239, 0.25);
-    }
-    .product-img {
-      width: 100%;
-      height: 135px;
-      object-fit: cover;
-      border-radius: 14px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    .product-title {
-      font-weight: 800;
-      font-size: 0.9rem;
-      margin: 8px 0 4px;
-      color: var(--text-main);
-    }
-    .product-price {
-      font-weight: 900;
-      color: var(--primary-dark);
-      font-size: 0.95rem;
-      margin-bottom: 8px;
-    }
-    .btn-show-photo {
-      width: 100%;
-      background: linear-gradient(135deg, #c084fc 0%, #e879f9 100%);
-      color: white;
-      border: none;
-      padding: 8px;
-      border-radius: 12px;
-      font-weight: 800;
-      font-size: 0.8rem;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(192, 132, 252, 0.4);
-    }
-
-    .floating-cart-btn {
-      position: fixed;
-      bottom: 25px;
-      right: 20px;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-      color: white;
-      width: 65px;
-      height: 65px;
-      border-radius: 50%;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      font-size: 1.6rem;
-      box-shadow: 0 10px 25px rgba(217, 70, 239, 0.5);
-      cursor: pointer;
-      z-index: 199;
-      animation: pulseCart 2s infinite ease-in-out;
-    }
-    @keyframes pulseCart {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
-    }
-    .cart-count-badge {
-      position: absolute;
-      top: 0;
-      right: 0;
-      background: #ef4444;
-      color: white;
-      font-size: 0.75rem;
-      font-weight: 900;
-      padding: 3px 7px;
-      border-radius: 12px;
-      border: 2px solid white;
-    }
-
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(46, 16, 101, 0.65);
-      backdrop-filter: blur(6px);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 300;
-    }
-    .modal-overlay.active { display: flex; }
-
-    .floating-bubbles-container {
-      position: absolute;
-      top: 15%;
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      gap: 15px;
-      flex-wrap: wrap;
-      pointer-events: none;
-    }
-    .floating-bubble-img {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 4px solid #fff;
-      box-shadow: 0 8px 25px rgba(217, 70, 239, 0.6);
-      animation: bubbleFloatSpin 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-      pointer-events: auto;
-    }
-    @keyframes bubbleFloatSpin {
-      0% { transform: scale(0) rotate(-180deg) translateY(50px); opacity: 0; }
-      100% { transform: scale(1) rotate(360deg) translateY(0); opacity: 1; }
-    }
-
-    .qty-modal-box {
-      background: var(--box-bg);
-      width: 85%;
-      max-width: 320px;
-      border-radius: 24px;
-      padding: 22px;
-      text-align: center;
-      position: relative;
-      margin-top: 130px;
-      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-      border: 3px solid #f0abfc;
-    }
-
-    .input-field {
-      width: 100%;
-      padding: 12px;
-      border-radius: 12px;
-      border: 2px solid #e9d5ff;
-      margin-top: 8px;
-      margin-bottom: 12px;
-      outline: none;
-      font-size: 0.9rem;
-      background: var(--box-bg);
-      color: var(--text-main);
-    }
-    .input-field:focus { border-color: var(--primary); }
-
-    .btn-action {
-      width: 100%;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-      color: white;
-      border: none;
-      padding: 12px;
-      border-radius: 14px;
-      font-weight: 800;
-      font-size: 0.95rem;
-      cursor: pointer;
-      box-shadow: 0 4px 15px rgba(217, 70, 239, 0.4);
-    }
-
-    .cart-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: var(--card-bg);
-      padding: 10px 14px;
-      border-radius: 12px;
-      margin-bottom: 8px;
-      border: 1px solid #f0abfc;
-    }
-
-    .success-card {
-      background: var(--box-bg);
-      border-radius: 24px;
-      padding: 30px 20px;
-      text-align: center;
-      border: 3px solid #f0abfc;
-      box-shadow: 0 15px 35px rgba(217, 70, 239, 0.25);
-      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    @keyframes popIn {
-      0% { transform: scale(0.7); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-    .success-icon { font-size: 4rem; margin-bottom: 15px; display: block; }
-    .success-title { font-size: 1.3rem; font-weight: 900; color: #16a34a; margin-bottom: 10px; }
-    .thanks-msg { font-size: 1rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 20px; }
-    .code-box {
-      background: var(--card-bg);
-      border: 2px dashed var(--primary);
-      padding: 15px;
-      border-radius: 16px;
-      font-size: 1.2rem;
-      font-weight: 900;
-      color: var(--text-main);
-      margin-bottom: 20px;
+    
+    /* RECEIPT LOGO BOX */
+    .receipt-box {
+      margin-top: 15px; padding: 15px; border: 2px dashed #d946ef;
+      border-radius: 16px; background: #faf5ff; text-align: center;
     }
   </style>
 </head>
 <body>
 
-  <div class="theme-toggle-wrapper">
-    <button id="theme-btn" class="theme-toggle-btn" onclick="toggleTheme()">🌙 Dark Mode</button>
-  </div>
-
-  <div class="bg-icon" style="top:10%; left:5%;">🌸</div>
-  <div class="bg-icon" style="top:30%; right:8%; animation-delay: 2s;">🎤</div>
-  <div class="bg-icon" style="top:60%; left:10%; animation-delay: 4s;">🪄</div>
-  <div class="bg-icon" style="top:85%; right:6%; animation-delay: 1s;">🎵</div>
-
-  <!-- UPDATED CATBOX AUDIO SOURCE LINK -->
-  <div class="music-bubble-fixed">
-    <audio id="bg-audio" preload="metadata">
-      <source src="https://files.catbox.moe/fi2yff.m4a" type="audio/mp4">
-    </audio>
-    <div id="music-bubble" class="music-bubble-btn" onclick="toggleMusic()">
-      🎵
-    </div>
-    <span id="music-status" class="music-bubble-label">ဖွင့်ရန်</span>
-  </div>
-
   <div class="app-container">
-
-    <!-- PAGE 1: LANDING PAGE -->
-    <div id="page-landing" class="page-view active">
-      <header class="site-header">
-        <img src="https://lh3.googleusercontent.com/d/14WBlxcwpCYj9gqkONoxRkhRrgwvBJSRH" class="logo" alt="Shop Logo">
-        <h1 class="shop-title">Phoo K-pop & Thai-pop Shop</h1>
-        <div class="address-animated">
-          📍 No.460, Su Pyae Yadanar (2) St, 56 ward, South Dagon, Yangon<br>📞 Ph: 09898948790
-        </div>
-      </header>
-
-      <h2 style="text-align:center; color:var(--text-sub); font-size:1.1rem; margin-bottom:15px;">ကျေးဇူးပြု၍ တစ်ခုရွေးချယ်ပါ</h2>
-      <div class="landing-options">
-        <div class="option-card" onclick="navigateTo('page-shop')">
-          <span class="option-icon">🛍️</span>
-          <div class="option-title">Shop Center</div>
-        </div>
-        <div class="option-card" onclick="navigateTo('page-checker')">
-          <span class="option-icon">🔍</span>
-          <div class="option-title">Order Checker</div>
+    <!-- SHOP HEADER -->
+    <header class="site-header">
+      <div style="display:flex; align-items:center; justify-content:center; gap:10px;">
+        <!-- LOGO ICON -->
+        <div style="width:45px; height:45px; background:#d946ef; color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.2rem;">PS</div>
+        <div>
+          <h1 class="shop-title">🛍️ Phoo Shop</h1>
+          <p class="address">Phoo K-pop & Thai-pop Shop</p>
         </div>
       </div>
-    </div>
 
-    <!-- PAGE 2: SHOP CENTER PAGE -->
-    <div id="page-shop" class="page-view">
-      <button class="nav-back-btn" onclick="navigateTo('page-landing')">⬅️ ပင်မစာမျက်နှာသို့</button>
-      <h2 style="font-size:1.2rem; font-weight:900; color:var(--text-sub); margin-bottom:15px;">🛍️ Shop Center</h2>
-      <div id="product-grid" class="product-grid"></div>
-    </div>
-
-    <!-- PAGE 3: CART CHECKOUT PAGE -->
-    <div id="page-cart" class="page-view">
-      <button class="nav-back-btn" onclick="navigateTo('page-shop')">⬅️ ပစ္စည်းများထပ်ရွေးမည်</button>
-      
-      <div style="background:var(--box-bg); border-radius:22px; padding:20px; border:3px solid #f0abfc; box-shadow:0 10px 25px rgba(217,70,239,0.15);">
-        <h3 style="font-size:1.1rem; font-weight:900; color:var(--primary-dark); margin-bottom:12px;">🛒 ခြင်းတောင်းထဲမှ ပစ္စည်းများ</h3>
-        <div id="cart-items-container"></div>
-        
-        <div style="display:flex; justify-content:space-between; font-weight:900; font-size:1.15rem; margin:15px 0 10px;">
-          <span>စုစုပေါင်း ကျသင့်ငွေ:</span>
-          <span id="cart-total-price" style="color:var(--primary-dark);">0 Ks</span>
-        </div>
-
-        <h4 style="font-size:0.9rem; margin-top:10px; font-weight:800;">အချက်အလက် ဖြည့်ပါ:</h4>
-        <input type="text" id="cust-name" class="input-field" placeholder="လူကြီးမင်း နာမည်..." required>
-        
-        <select id="delivery-type" class="input-field" onchange="toggleDeliveryBox(this.value)">
-          <option value="pickup">🏠 ကိုယ်တိုင် Pick-up လာယူမည်</option>
-          <option value="delivery">🚚 Delivery ပို့ပေးပါ</option>
-        </select>
-
-        <div id="delivery-box" style="display:none;">
-          <input type="text" id="cust-address" class="input-field" placeholder="နေရပ်လိပ်စာ အပြည့်အစုံ">
-          <input type="tel" id="cust-phone" class="input-field" placeholder="ဖုန်းနံပါတ်">
-        </div>
-
-        <select id="payment-type" class="input-field" onchange="togglePaymentBox(this.value)">
-          <option value="cod">💵 Cash on Delivery / Pick-up</option>
-          <option value="online">📱 Online Payment (KPay / WavePay)</option>
-        </select>
-
-        <div id="online-pay-box" style="display:none; background:var(--card-bg); padding:12px; border-radius:12px; margin-bottom:12px; font-size:0.85rem;">
-          <p><b>Wave Pay:</b> 09898948790 (Khin Saw Htwe)</p>
-          <p><b>KPay:</b> 09422725283 (Moe Pyae Pyae Zaw)</p>
-          <p style="margin-top:6px; color:var(--primary-dark); font-weight:700;">💳 ပြေစာ Slip ပုံ တိုက်ရိုက် တင်ပါ:</p>
-          <input type="file" id="slip-file-input" accept="image/*" class="input-field" style="padding:8px;">
-        </div>
-
-        <textarea id="order-note" class="input-field" placeholder="Order Note (မှာကြားလိုသည်များရေးရန်)..." style="height:60px; resize:none;"></textarea>
-
-        <button class="btn-action" onclick="submitOrderToTelegram()">✨ Order အတည်ပြုမည်</button>
+      <!-- DEVICE LIKE SYSTEM -->
+      <div class="like-box">
+        <button id="btn-heart" class="btn-like">❤️ အသည်းပေးမည်</button>
+        <span id="like-count" style="font-weight:800; color:#e11d48; font-size:0.9rem;">0 Likes</span>
       </div>
-    </div>
+    </header>
 
-    <!-- PAGE 4: ORDER CHECKER PAGE -->
-    <div id="page-checker" class="page-view">
-      <button class="nav-back-btn" onclick="navigateTo('page-landing')">⬅️ ပင်မစာမျက်နှာသို့</button>
-      <h2 style="font-size:1.1rem; font-weight:900; color:var(--text-sub); margin-bottom:12px;">🔍 Order Status စစ်ဆေးရန်</h2>
-      <input type="text" id="check-code-input" class="input-field" placeholder="Order Code ရိုက်ထည့်ပါ (ဥပမာ- ORD-1234)">
-      <button class="btn-action" onclick="checkOrderStatus()">စစ်ဆေးမည်</button>
-      <div id="check-result-box" style="margin-top:15px;"></div>
-    </div>
+    <!-- MAIN SHOP CONTENT -->
+    <main>
+      <!-- BTS & BLACKPINK FAN MINI GAME -->
+      <section class="game-card">
+        <h3 style="font-size:1rem; font-weight:800; color:#6b21a8; margin-bottom:10px;">🎮 K-Pop Idol Mini Game (အစမ်းဆော့ရန်)</h3>
+        <div style="display:flex; gap:10px; justify-content:center; margin-bottom:12px;">
+          <button id="btn-game-bts" class="game-btn" style="background:#7c3aed;">💜 BTS Game</button>
+          <button id="btn-game-bp" class="game-btn" style="background:#ec4899;">🩷 BLACKPINK Game</button>
+        </div>
 
-    <!-- PAGE 5: ORDER SUCCESS PAGE -->
-    <div id="page-success" class="page-view">
-      <div class="success-card">
-        <span class="success-icon">🎉</span>
-        <div class="success-title">ဂုဏ်ယူပါတယ် order တင်ခြင်းအောင်မြင်ပါသည်</div>
-        <div class="thanks-msg">ဝယ်ယူအားပေးမှုအတွက် ကျေးဇူးအထူးတင်ပါသည်။</div>
+        <div id="game-play-area" class="hidden">
+          <p id="game-hint-text" style="font-weight:bold; font-size:0.95rem; margin-bottom:10px; color:#4c1d95;"></p>
+          <input type="text" id="game-ans-input" class="input-modern" placeholder="Member နာမည် ရိုက်ထည့်ပါ..." style="text-align:center; max-width:250px; margin:0 auto 10px;">
+          <button id="btn-submit-game" class="btn-primary" style="padding:8px 16px; font-size:0.85rem;">အဖြေစစ်မည်</button>
+        </div>
+      </section>
+
+      <!-- PRODUCT CATALOGUE / STOCK DISPLAY -->
+      <section class="view-card">
+        <h2 style="font-size:1rem; font-weight:800; margin-bottom:12px;">🏷️ ရရှိနိုင်သော ပစ္စည်းများ</h2>
+        <div id="shop-products-list">Loading products...</div>
+      </section>
+
+      <!-- CHECKOUT / ORDER FORM -->
+      <section class="view-card" style="margin-top:20px;">
+        <h2 style="font-size:1rem; font-weight:800; margin-bottom:12px;">📦 အော်ဒါ တင်သွင်းရန်</h2>
+        <input type="text" id="cust-name" class="input-modern" placeholder="သင့်အမည်">
+        <input type="text" id="cust-phone" class="input-modern" placeholder="ဖုန်းနံပါတ်">
+        <input type="text" id="cust-item" class="input-modern" placeholder="ဝယ်ယူမည့် ပစ္စည်းအမည်">
+        <input type="number" id="cust-qty" class="input-modern" placeholder="အရေအတွက် (Qty)" value="1">
+        <textarea id="cust-note" class="input-modern" placeholder="မှတ်ချက် (မရှိပါက လွတ်ထားနိုင်သည်)"></textarea>
         
-        <p style="font-size:0.85rem; color:var(--text-sub); margin-bottom:6px;">လူကြီးမင်း၏ Order Code လေးဖြစ်ပါတယ်:</p>
-        <div class="code-box" id="success-order-code">ORD-XXXX</div>
+        <button id="btn-submit-order" class="btn-primary">Order အတည်ပြုမည် ➔</button>
 
-        <button class="btn-action" onclick="navigateTo('page-landing')">🏠 ပင်မစာမျက်နှာသို့ ပြန်သွားမည်</button>
-      </div>
-    </div>
+        <!-- RECEIPT DISPLAY WITH LOGO -->
+        <div id="order-receipt-area" class="receipt-box hidden">
+          <div style="font-weight:900; color:#a21caf; font-size:1.1rem; margin-bottom:5px;">🛍️ PHOO SHOP RECEIPT</div>
+          <p style="font-size:0.85rem;">Order Code: <b id="rec-code" style="color:#d946ef;"></b></p>
+          <p style="font-size:0.85rem;">မှာယူသည့် ပစ္စည်း: <span id="rec-item"></span></p>
+          <p style="font-size:0.8rem; color:#6b21a8; margin-top:6px;">Order ကို အောင်မြင်စွာ လက်ခံရရှိပါပြီ။</p>
+        </div>
+      </section>
 
-  </div>
+      <!-- REPORT SYSTEM & STATUS CHECKER -->
+      <section class="report-card">
+        <h3 style="font-size:1rem; font-weight:800; color:#e11d48; margin-bottom:10px;">🚨 Report တင်ရန် / အခြေအနေစစ်ရန်</h3>
+        <div style="display:flex; gap:8px; margin-bottom:12px;">
+          <button id="tab-rep-sub" class="btn-primary" style="flex:1; padding:8px; font-size:0.8rem;">Report တင်မည်</button>
+          <button id="tab-rep-chk" class="btn-secondary" style="flex:1; padding:8px; font-size:0.8rem; background:#059669; color:white;">Report စစ်မည်</button>
+        </div>
 
-  <div id="floating-cart-btn" class="floating-cart-btn" onclick="navigateTo('page-cart')">
-    🛒
-    <span id="cart-badge" class="cart-count-badge">0</span>
-  </div>
+        <!-- SUBMIT FORM -->
+        <div id="sec-rep-sub-form">
+          <textarea id="rep-text-input" class="input-modern" placeholder="ကြုံတွေ့ရသော အခက်အခဲ/တိုင်ကြားစာ ရေးသားပါ..." style="height:70px;"></textarea>
+          <button id="btn-send-report" class="btn-primary" style="background:#e11d48;">Report ပေးပို့မည်</button>
+        </div>
 
-  <div id="detail-modal" class="modal-overlay">
-    <div id="modal-floating-gallery" class="floating-bubbles-container"></div>
-    <div class="qty-modal-box">
-      <button onclick="closeModal()" style="position:absolute; right:12px; top:12px; background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text-main);">❌</button>
-      <h3 id="modal-title" style="font-weight:900; color:var(--primary-dark); margin-top:5px;"></h3>
-      <p id="modal-price" style="font-size:1.1rem; font-weight:800; color:var(--accent); margin-bottom:12px;"></p>
-
-      <label style="font-size:0.85rem; font-weight:800; color:var(--text-sub);">ဝယ်ယူမည့် အရေအတွက် ရွေးပါ:</label>
-      <input type="number" id="modal-qty" class="input-field" value="1" min="1" style="text-align:center; font-weight:800;">
-
-      <button class="btn-action" onclick="addToCartFromModal()">🛒 ခြင်းတောင်းထဲထည့်မည်</button>
-    </div>
+        <!-- CHECKER FORM -->
+        <div id="sec-rep-chk-form" class="hidden">
+          <input type="text" id="rep-code-search" class="input-modern" placeholder="Report Code (ဥပမာ - RP-1234)">
+          <button id="btn-check-report" class="btn-primary" style="background:#059669;">Status စစ်မည်</button>
+          <div id="rep-status-output" style="margin-top:10px; font-size:0.9rem; font-weight:bold; text-align:center;"></div>
+        </div>
+      </section>
+    </main>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, setDoc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCkT8J7ttr9w-ZJJmbyu6aT9qLCUmauXcA",
@@ -576,258 +152,161 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    const TELEGRAM_BOT_TOKEN = "8997594636:AAGGXMgiTnbufcUozWn2yBW7XdfLnbLP4R8"; 
-    const TELEGRAM_CHAT_ID = "5050699658";
+    // 1. DEVICE LIKE LOGIC
+    const likeBtn = document.getElementById("btn-heart");
+    const likeCountEl = document.getElementById("like-count");
 
-    let cart = [];
-    let selectedProduct = null;
-
-    window.toggleMusic = function() {
-      const audio = document.getElementById('bg-audio');
-      const bubble = document.getElementById('music-bubble');
-      const label = document.getElementById('music-status');
-
-      if (audio.paused) {
-        audio.play().then(() => {
-          bubble.classList.add('playing');
-          bubble.innerHTML = "🎶";
-          label.innerText = "ပိတ်ရန်";
-        }).catch(err => {
-          console.error("Audio Play Error:", err);
-        });
+    async function initLikes() {
+      const docRef = doc(db, "settings", "shop_likes");
+      const snap = await getDoc(docRef);
+      if(snap.exists()) {
+        likeCountEl.innerText = snap.data().count + " Likes";
       } else {
-        audio.pause();
-        bubble.classList.remove('playing');
-        bubble.innerHTML = "🎵";
-        label.innerText = "ဖွင့်ရန်";
+        await setDoc(docRef, { count: 0 });
+      }
+
+      if(localStorage.getItem("phoo_shop_liked")) {
+        likeBtn.classList.add("liked");
+        likeBtn.innerText = "❤️ အသည်းပေးပြီးပါပြီ";
+      }
+    }
+    initLikes();
+
+    likeBtn.onclick = async () => {
+      if(localStorage.getItem("phoo_shop_liked")) {
+        return alert("သင့် Device ဖြင့် အသည်းပေးပြီးဖြစ်ပါသည်။");
+      }
+      const docRef = doc(db, "settings", "shop_likes");
+      await updateDoc(docRef, { count: increment(1) });
+      localStorage.setItem("phoo_shop_liked", "true");
+      likeBtn.classList.add("liked");
+      likeBtn.innerText = "❤️ အသည်းပေးပြီးပါပြီ";
+      const snap = await getDoc(docRef);
+      likeCountEl.innerText = snap.data().count + " Likes";
+    };
+
+    // 2. BTS & BLACKPINK GAME LOGIC
+    const gameData = {
+      BTS: [{ hint: "👑 BTS ရဲ့ Leader က ဘယ်သူလဲ?", ans: "rm" }, { hint: "💜 'Worldwide Handsome' လို့ တင်စားခံရသူ?", ans: "jin" }],
+      BLACKPINK: [{ hint: "🩷 BLACKPINK ရဲ့ Main Dancer က ဘယ်သူလဲ?", ans: "lisa" }, { hint: "🌹 'On The Ground' သီချင်းဆိုထားသူ?", ans: "rose" }]
+    };
+    let currentGame = null, currentQ = null;
+
+    document.getElementById("btn-game-bts").onclick = () => startGame('BTS');
+    document.getElementById("btn-game-bp").onclick = () => startGame('BLACKPINK');
+
+    function startGame(group) {
+      currentGame = group;
+      currentQ = gameData[group][Math.floor(Math.random() * gameData[group].length)];
+      document.getElementById("game-hint-text").innerText = currentQ.hint;
+      document.getElementById("game-play-area").classList.remove("hidden");
+    }
+
+    document.getElementById("btn-submit-game").onclick = () => {
+      const userAns = document.getElementById("game-ans-input").value.trim().toLowerCase();
+      if(userAns === currentQ.ans) {
+        alert("🎉 မှန်ကန်ပါတယ်ဗျာ! မှန်အောင် ဖြေဆိုနိုင်ခဲ့ပါတယ်။");
+        document.getElementById("game-ans-input").value = "";
+        document.getElementById("game-play-area").classList.add("hidden");
+      } else {
+        alert("❌ မှားနေပါတယ်၊ ပြန်လည် ကြိုးစားကြည့်ပါ!");
       }
     };
 
-    window.toggleTheme = function() {
-      const body = document.body;
-      const btn = document.getElementById('theme-btn');
-      body.classList.toggle('dark-mode');
-      if (body.classList.contains('dark-mode')) {
-        btn.innerText = "☀️ Light Mode";
-      } else {
-        btn.innerText = "🌙 Dark Mode";
-      }
-    };
-
-    window.navigateTo = function(pageId) {
-      document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
-      document.getElementById(pageId).classList.add('active');
-      window.scrollTo(0,0);
-    };
-
+    // 3. LOAD PRODUCTS DISPLAY
     async function loadShopProducts() {
-      const grid = document.getElementById("product-grid");
-      grid.innerHTML = "<p style='grid-column:span 2; text-align:center;'>Loading...</p>";
+      const container = document.getElementById("shop-products-list");
       const snapshot = await getDocs(collection(db, "products"));
-      grid.innerHTML = "";
+      container.innerHTML = "";
 
       if(snapshot.empty) {
-        grid.innerHTML = "<p style='grid-column:span 2; text-align:center;'>ပစ္စည်းများ မရှိသေးပါ။</p>";
+        container.innerHTML = "<p style='text-align:center;'>ပစ္စည်းများ မရှိသေးပါ။</p>";
         return;
       }
 
       snapshot.forEach(docSnap => {
         const p = docSnap.data();
         const card = document.createElement("div");
-        card.className = "product-card";
+        card.style.cssText = "background:#fff; padding:10px; border-radius:12px; margin-bottom:10px; display:flex; align-items:center; gap:10px; border:1px solid #e9d5ff;";
         card.innerHTML = `
-          <img src="${p.showPhoto}" class="product-img" onerror="this.src='https://via.placeholder.com/150'">
-          <div class="product-title">${p.name}</div>
-          <div class="product-price">${p.price} Ks</div>
-          <button class="btn-show-photo">🖼️ Show Photo (Details)</button>
-        `;
-        card.querySelector('.btn-show-photo').onclick = () => openBubbleModal(p);
-        grid.appendChild(card);
-      });
-    }
-
-    function openBubbleModal(p) {
-      selectedProduct = p;
-      document.getElementById("modal-title").innerText = p.name;
-      document.getElementById("modal-price").innerText = `${p.price} Ks`;
-      document.getElementById("modal-qty").value = 1;
-      
-      const gallery = document.getElementById("modal-floating-gallery");
-      gallery.innerHTML = `<img src="${p.showPhoto}" class="floating-bubble-img" style="animation-delay: 0.1s;">`;
-      
-      if(p.detailPhotos) {
-        p.detailPhotos.forEach((url, i) => {
-          if(url.trim()) {
-            gallery.innerHTML += `<img src="${url.trim()}" class="floating-bubble-img" style="animation-delay: ${(i+2)*0.15}s;">`;
-          }
-        });
-      }
-
-      document.getElementById("detail-modal").classList.add("active");
-    }
-
-    window.closeModal = function() {
-      document.getElementById("detail-modal").classList.remove("active");
-    };
-
-    window.addToCartFromModal = function() {
-      const qty = parseInt(document.getElementById("modal-qty").value) || 1;
-      const existing = cart.find(item => item.name === selectedProduct.name);
-      
-      if(existing) {
-        existing.qty += qty;
-      } else {
-        cart.push({
-          name: selectedProduct.name,
-          price: selectedProduct.price,
-          qty: qty
-        });
-      }
-
-      updateCartUI();
-      closeModal();
-    };
-
-    function updateCartUI() {
-      const container = document.getElementById("cart-items-container");
-      const floatingBtn = document.getElementById("floating-cart-btn");
-      const badge = document.getElementById("cart-badge");
-      
-      container.innerHTML = "";
-      let total = 0;
-      let totalCount = 0;
-
-      if(cart.length === 0) {
-        container.innerHTML = "<p style='text-align:center; color:var(--text-sub); font-size:0.9rem;'>ခြင်းတောင်းထဲတွင် ပစ္စည်းမရှိသေးပါ။</p>";
-        floatingBtn.style.display = "none";
-      } else {
-        cart.forEach((item, index) => {
-          const itemTotal = item.price * item.qty;
-          total += itemTotal;
-          totalCount += item.qty;
-          container.innerHTML += `
-            <div class="cart-item">
-              <div>
-                <b>${item.name}</b><br>
-                <small>${item.price} Ks x ${item.qty} = ${itemTotal} Ks</small>
-              </div>
-              <button onclick="removeFromCart(${index})" style="background:none; border:none; color:red; font-size:1.1rem; cursor:pointer;">🗑️</button>
-            </div>
-          `;
-        });
-
-        badge.innerText = totalCount;
-        floatingBtn.style.display = "flex";
-      }
-
-      document.getElementById("cart-total-price").innerText = `${total} Ks`;
-    }
-
-    window.removeFromCart = function(index) {
-      cart.splice(index, 1);
-      updateCartUI();
-      if(cart.length === 0) {
-        navigateTo('page-shop');
-      }
-    };
-
-    window.toggleDeliveryBox = function(val) {
-      document.getElementById("delivery-box").style.display = (val === 'delivery') ? 'block' : 'none';
-    };
-
-    window.togglePaymentBox = function(val) {
-      document.getElementById("online-pay-box").style.display = (val === 'online') ? 'block' : 'none';
-    };
-
-    window.submitOrderToTelegram = async function() {
-      if(cart.length === 0) return alert("ခြင်းတောင်းထဲတွင် ပစ္စည်းထည့်ပါဦး!");
-      
-      const name = document.getElementById("cust-name").value.trim();
-      if(!name) return alert("နာမည် ရိုက်ထည့်ပေးပါ!");
-
-      const delType = document.getElementById("delivery-type").value;
-      const address = document.getElementById("cust-address").value;
-      const phone = document.getElementById("cust-phone").value;
-      const payType = document.getElementById("payment-type").value;
-      const note = document.getElementById("order-note").value;
-      const slipFile = document.getElementById("slip-file-input").files[0];
-
-      if(delType === 'delivery' && (!address || !phone)) {
-        return alert("Delivery ပို့ရန် လိပ်စာနှင့် ဖုန်းနံပါတ် ဖြည့်ပေးပါ!");
-      }
-
-      const orderCode = "ORD-" + Math.floor(1000 + Math.random() * 9000);
-      let itemsSummary = cart.map(i => `• ${i.name} (${i.qty}ခု) = ${i.price * i.qty}Ks`).join("\n");
-      let totalAmount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
-
-      let msg = `🛍️ **NEW ORDER (${orderCode})**\n\n`;
-      msg += `👤 ဝယ်ယူသူ: ${name}\n`;
-      msg += `📦 ပစ္စည်းများ:\n${itemsSummary}\n`;
-      msg += `💰 စုစုပေါင်း: ${totalAmount} Ks\n`;
-      msg += `🚚 ပို့ဆောင်ရေး: ${delType === 'delivery' ? 'Delivery' : 'Pick-up'}\n`;
-      if(delType === 'delivery') {
-        msg += `📍 လိပ်စာ: ${address}\n📞 ဖုန်း: ${phone}\n`;
-      }
-      msg += `💳 ငွေရှင်းစနစ်: ${payType}\n`;
-      if(note) msg += `📝 Note: ${note}\n`;
-
-      await addDoc(collection(db, "orders"), {
-        orderCode, customerName: name, items: cart, totalAmount,
-        deliveryType: delType, address: address || "N/A", phone: phone || "N/A",
-        paymentType: payType, note: note || "N/A", status: "order စစ်ဆေးနေဆဲ", createdAt: new Date()
-      });
-
-      try {
-        if(slipFile && payType === 'online') {
-          const formData = new FormData();
-          formData.append("chat_id", TELEGRAM_CHAT_ID);
-          formData.append("photo", slipFile);
-          formData.append("caption", msg);
-          await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, { method: "POST", body: formData });
-        } else {
-          await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: msg })
-          });
-        }
-      } catch (e) {
-        console.error("Telegram Sending Error:", e);
-      }
-
-      document.getElementById("success-order-code").innerText = orderCode;
-      cart = [];
-      updateCartUI();
-      navigateTo('page-success');
-    };
-
-    window.checkOrderStatus = async function() {
-      const code = document.getElementById("check-code-input").value.trim();
-      if(!code) return alert("Order Code ရိုက်ထည့်ပါ");
-
-      const q = query(collection(db, "orders"), where("orderCode", "==", code));
-      const snapshot = await getDocs(q);
-      const resBox = document.getElementById("check-result-box");
-
-      if(snapshot.empty) {
-        resBox.innerHTML = "<p style='color:red;'>Order Code မတွေ့ရှိပါ။</p>";
-        return;
-      }
-
-      snapshot.forEach(docSnap => {
-        const d = docSnap.data();
-        resBox.innerHTML = `
-          <div style="background:var(--box-bg); padding:15px; border-radius:14px; border:2px solid #f0abfc;">
-            <p>Order Code: <b>${d.orderCode}</b></p>
-            <p>Status: <b style="color:var(--primary-dark);">${d.status}</b></p>
-            <p>စုစုပေါင်း: ${d.totalAmount} Ks</p>
+          <img src="${p.showPhoto}" style="width:50px; height:50px; border-radius:8px; object-fit:cover;">
+          <div>
+            <b style="font-size:0.9rem;">${p.name}</b>
+            <p style="font-size:0.85rem; color:#8b5cf6; font-weight:bold;">${p.price} Ks</p>
           </div>
         `;
+        container.appendChild(card);
       });
+    }
+    loadShopProducts();
+
+    // 4. SUBMIT ORDER LOGIC
+    document.getElementById("btn-submit-order").onclick = async () => {
+      const name = document.getElementById("cust-name").value;
+      const phone = document.getElementById("cust-phone").value;
+      const item = document.getElementById("cust-item").value;
+      const qty = document.getElementById("cust-qty").value;
+      const note = document.getElementById("cust-note").value;
+
+      if(!name || !item) return alert("အမည်နှင့် ပစ္စည်းအမည် ဖြည့်စွက်ပေးပါ။");
+
+      const code = "ORD-" + Math.floor(1000 + Math.random() * 9000);
+      await addDoc(collection(db, "orders"), {
+        orderCode: code, customerName: name, phone: phone,
+        item: item, qty: qty, note: note, status: "order စစ်ဆေးနေဆဲ"
+      });
+
+      document.getElementById("rec-code").innerText = code;
+      document.getElementById("rec-item").innerText = `${item} (${qty}ခု)`;
+      document.getElementById("order-receipt-area").classList.remove("hidden");
+      alert("Order တင်ခြင်း အောင်မြင်ပါသည်။");
     };
 
-    loadShopProducts();
-    updateCartUI();
+    // 5. REPORT SYSTEM LOGIC
+    const btnRepSub = document.getElementById("tab-rep-sub");
+    const btnRepChk = document.getElementById("tab-rep-chk");
+    const secRepSub = document.getElementById("sec-rep-sub-form");
+    const secRepChk = document.getElementById("sec-rep-chk-form");
+
+    btnRepSub.onclick = () => {
+      secRepSub.classList.remove("hidden"); secRepChk.classList.add("hidden");
+    };
+    btnRepChk.onclick = () => {
+      secRepChk.classList.remove("hidden"); secRepSub.classList.add("hidden");
+    };
+
+    document.getElementById("btn-send-report").onclick = async () => {
+      const msg = document.getElementById("rep-text-input").value.trim();
+      if(!msg) return alert("Report အကြောင်းအရာ ရိုက်ထည့်ပါ။");
+
+      const rpCode = "RP-" + Math.floor(1000 + Math.random() * 9000);
+      await addDoc(collection(db, "reports"), {
+        reportCode: rpCode, message: msg, status: "စစ်ဆေးနေဆဲ"
+      });
+
+      alert(`Report ပေးပို့ပြီးပါပြီ!\nသင့် Report Code မှာ [ ${rpCode} ] ဖြစ်ပါသည်။`);
+      document.getElementById("rep-text-input").value = "";
+    };
+
+    document.getElementById("btn-check-report").onclick = async () => {
+      const code = document.getElementById("rep-code-search").value.trim();
+      const outEl = document.getElementById("rep-status-output");
+      if(!code) return alert("Report Code ရိုက်ထည့်ပါ။");
+
+      outEl.innerText = "⏳ စစ်ဆေးနေပါသည်...";
+      const snapshot = await getDocs(collection(db, "reports"));
+      let found = false;
+
+      snapshot.forEach(docSnap => {
+        const r = docSnap.data();
+        if(r.reportCode === code) {
+          found = true;
+          outEl.innerHTML = `အခြေအနေ: <span style="color:#d946ef;">${r.status}</span>`;
+        }
+      });
+
+      if(!found) outEl.innerText = "❌ Report Code ရှာမတွေ့ပါ။";
+    };
   </script>
 </body>
 </html>
