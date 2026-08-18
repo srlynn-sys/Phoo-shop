@@ -39,6 +39,19 @@
       position: relative;
     }
 
+    /* GLOBAL ANIMATIONS FOR ALL BOXES & BUBBLES */
+    @keyframes floatingWiggleSoft {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      25% { transform: translateY(-4px) rotate(-1.2deg); }
+      75% { transform: translateY(4px) rotate(1.2deg); }
+    }
+
+    @keyframes floatingWiggleAlt {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      25% { transform: translateY(4px) rotate(1.2deg); }
+      75% { transform: translateY(-4px) rotate(-1.2deg); }
+    }
+
     /* FLOWER & LEAF BOMB ANIMATION STYLES */
     .flower-particle {
       position: fixed;
@@ -69,6 +82,7 @@
       top: 15px;
       right: 15px;
       z-index: 10;
+      animation: floatingWiggleSoft 3s infinite ease-in-out;
     }
     .theme-toggle-btn {
       background: rgba(255, 255, 255, 0.8);
@@ -89,14 +103,14 @@
     .bg-icon {
       position: fixed;
       font-size: 2rem;
-      opacity: 0.2;
-      animation: float 8s infinite ease-in-out;
+      opacity: 0.25;
+      animation: floatBg 6s infinite ease-in-out;
       pointer-events: none;
       z-index: 0;
     }
-    @keyframes float {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-25px) rotate(15deg); }
+    @keyframes floatBg {
+      0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+      50% { transform: translateY(-30px) rotate(20deg) scale(1.1); }
     }
 
     .app-container {
@@ -111,6 +125,7 @@
     .page-view { display: none; }
     .page-view.active { display: block; }
 
+    /* ANIMATED HEADER BOX */
     .site-header {
       text-align: center;
       padding: 15px;
@@ -120,6 +135,7 @@
       border: 2px solid #f0abfc;
       margin-bottom: 20px;
       box-shadow: 0 8px 20px rgba(217, 70, 239, 0.15);
+      animation: floatingWiggleSoft 4s infinite ease-in-out;
     }
     .logo {
       width: 85px;
@@ -128,6 +144,7 @@
       object-fit: cover;
       box-shadow: 0 0 15px rgba(217, 70, 239, 0.4);
       border: 3px solid #fff;
+      animation: floatingWiggleAlt 3.5s infinite ease-in-out;
     }
     .shop-title {
       font-size: 1.3rem;
@@ -141,15 +158,10 @@
       margin-top: 6px;
       font-weight: 700;
       display: inline-block;
-      animation: pulseWiggle 3s infinite ease-in-out;
-    }
-    @keyframes pulseWiggle {
-      0%, 100% { transform: scale(1) rotate(0deg); }
-      25% { transform: scale(1.02) rotate(-1deg); }
-      75% { transform: scale(1.02) rotate(1deg); }
+      animation: floatingWiggleAlt 2.5s infinite ease-in-out;
     }
 
-    /* MUSIC BUBBLE STYLING */
+    /* MUSIC BUBBLE PLAYER & SELECTION PANEL */
     .music-bubble-fixed {
       position: fixed;
       bottom: 25px;
@@ -173,7 +185,7 @@
       cursor: pointer;
       border: 3px solid #fff;
       transition: all 0.3s ease;
-      animation: musicPulse 2s infinite ease-in-out;
+      animation: musicPulseFloat 2.8s infinite ease-in-out;
     }
     .music-bubble-btn.playing {
       animation: musicRotate 4s linear infinite;
@@ -190,16 +202,49 @@
       border-radius: 10px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
       backdrop-filter: blur(4px);
+      animation: floatingWiggleSoft 3s infinite ease-in-out;
     }
-    @keyframes musicPulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.08); }
+    @keyframes musicPulseFloat {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-6px) scale(1.08); }
     }
     @keyframes musicRotate {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
 
+    /* MUSIC MENU POPUP */
+    .music-selector-popup {
+      position: fixed;
+      bottom: 100px;
+      left: 20px;
+      background: var(--card-bg);
+      border: 2px solid #f0abfc;
+      border-radius: 18px;
+      padding: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      z-index: 201;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      width: 220px;
+      backdrop-filter: blur(10px);
+      animation: floatingWiggleSoft 3.5s infinite ease-in-out;
+    }
+    .music-selector-popup.active { display: flex; }
+    .music-select-dropdown {
+      width: 100%;
+      padding: 8px;
+      border-radius: 10px;
+      border: 2px solid var(--primary);
+      background: var(--box-bg);
+      color: var(--text-main);
+      font-weight: 700;
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    /* ANIMATED LANDING OPTIONS */
     .landing-options {
       display: flex;
       flex-direction: column;
@@ -219,12 +264,15 @@
       align-items: center;
       justify-content: center;
       gap: 15px;
+      animation: floatingWiggleSoft 4s infinite ease-in-out;
     }
+    .option-card:nth-child(even) { animation-name: floatingWiggleAlt; animation-duration: 3.5s; }
+    
     .option-card:hover {
-      transform: translateY(-5px) scale(1.02);
+      transform: translateY(-6px) scale(1.02) !important;
       border-color: var(--primary);
     }
-    .option-icon { font-size: 2.2rem; }
+    .option-icon { font-size: 2.2rem; animation: floatingWiggleAlt 2.5s infinite ease-in-out; }
     .option-title { font-weight: 900; color: var(--primary-dark); font-size: 1.1rem; }
 
     .nav-back-btn {
@@ -239,9 +287,10 @@
       display: inline-flex;
       align-items: center;
       gap: 5px;
+      animation: floatingWiggleSoft 3s infinite ease-in-out;
     }
 
-    /* ANIMATED PRODUCT CARDS IN SHOP CENTER */
+    /* ANIMATED PRODUCT CARDS */
     .product-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -261,27 +310,9 @@
       box-shadow: 0 8px 18px rgba(147, 51, 234, 0.12);
       text-align: center;
       transition: all 0.3s ease;
-      /* Stock Post Wiggle/Floating Animation */
-      animation: cardWiggle 3.5s infinite ease-in-out;
+      animation: floatingWiggleSoft 3.5s infinite ease-in-out;
     }
-
-    /* Alternating animation speeds for nice variation */
-    .product-card:nth-child(even) {
-      animation-duration: 4s;
-      animation-delay: 0.5s;
-    }
-
-    @keyframes cardWiggle {
-      0%, 100% {
-        transform: translateY(0) rotate(0deg);
-      }
-      25% {
-        transform: translateY(-4px) rotate(-1deg);
-      }
-      75% {
-        transform: translateY(3px) rotate(1deg);
-      }
-    }
+    .product-card:nth-child(even) { animation-name: floatingWiggleAlt; animation-duration: 4s; }
 
     .product-card:hover {
       transform: translateY(-8px) scale(1.03) !important;
@@ -318,8 +349,10 @@
       font-size: 0.8rem;
       cursor: pointer;
       box-shadow: 0 4px 10px rgba(192, 132, 252, 0.4);
+      animation: floatingWiggleSoft 2.8s infinite ease-in-out;
     }
 
+    /* FLOATING CART BUBBLE */
     .floating-cart-btn {
       position: fixed;
       bottom: 25px;
@@ -336,11 +369,7 @@
       box-shadow: 0 10px 25px rgba(217, 70, 239, 0.5);
       cursor: pointer;
       z-index: 199;
-      animation: pulseCart 2s infinite ease-in-out;
-    }
-    @keyframes pulseCart {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.1); }
+      animation: musicPulseFloat 2.5s infinite ease-in-out;
     }
     .cart-count-badge {
       position: absolute;
@@ -384,7 +413,7 @@
       object-fit: cover;
       border: 4px solid #fff;
       box-shadow: 0 8px 25px rgba(217, 70, 239, 0.6);
-      animation: bubbleFloatSpin 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+      animation: bubbleFloatSpin 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, floatingWiggleAlt 3s infinite ease-in-out 1s;
       pointer-events: auto;
     }
     @keyframes bubbleFloatSpin {
@@ -403,6 +432,7 @@
       margin-top: 130px;
       box-shadow: 0 15px 30px rgba(0,0,0,0.3);
       border: 3px solid #f0abfc;
+      animation: floatingWiggleSoft 4s infinite ease-in-out;
     }
 
     .input-field {
@@ -416,6 +446,7 @@
       font-size: 0.9rem;
       background: var(--box-bg);
       color: var(--text-main);
+      animation: floatingWiggleSoft 3.5s infinite ease-in-out;
     }
     .input-field:focus { border-color: var(--primary); }
 
@@ -430,6 +461,7 @@
       font-size: 0.95rem;
       cursor: pointer;
       box-shadow: 0 4px 15px rgba(217, 70, 239, 0.4);
+      animation: floatingWiggleAlt 3s infinite ease-in-out;
     }
 
     .cart-item {
@@ -441,6 +473,7 @@
       border-radius: 12px;
       margin-bottom: 8px;
       border: 1px solid #f0abfc;
+      animation: floatingWiggleSoft 3s infinite ease-in-out;
     }
 
     .success-card {
@@ -450,13 +483,13 @@
       text-align: center;
       border: 3px solid #f0abfc;
       box-shadow: 0 15px 35px rgba(217, 70, 239, 0.25);
-      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275), floatingWiggleSoft 4s infinite ease-in-out 0.5s;
     }
     @keyframes popIn {
       0% { transform: scale(0.7); opacity: 0; }
       100% { transform: scale(1); opacity: 1; }
     }
-    .success-icon { font-size: 4rem; margin-bottom: 15px; display: block; }
+    .success-icon { font-size: 4rem; margin-bottom: 15px; display: block; animation: floatingWiggleAlt 2.5s infinite ease-in-out; }
     .success-title { font-size: 1.3rem; font-weight: 900; color: #16a34a; margin-bottom: 10px; }
     .thanks-msg { font-size: 1rem; font-weight: 800; color: var(--primary-dark); margin-bottom: 20px; }
     .code-box {
@@ -468,6 +501,7 @@
       font-weight: 900;
       color: var(--text-main);
       margin-bottom: 20px;
+      animation: floatingWiggleSoft 3s infinite ease-in-out;
     }
 
     .report-card {
@@ -476,6 +510,7 @@
       border-radius: 22px;
       padding: 20px;
       box-shadow: 0 10px 25px rgba(217, 70, 239, 0.15);
+      animation: floatingWiggleSoft 3.8s infinite ease-in-out;
     }
   </style>
 </head>
@@ -490,17 +525,32 @@
   <div class="bg-icon" style="top:60%; left:10%; animation-delay: 4s;">🪄</div>
   <div class="bg-icon" style="top:85%; right:6%; animation-delay: 1s;">🎵</div>
 
-  <!-- AUDIO ELEMENT -->
+  <!-- AUDIO PLAYER ELEMENT -->
   <audio id="bg-audio" loop preload="auto" crossorigin="anonymous">
-    <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3" type="audio/mpeg">
+    <source id="audio-source" src="https://files.catbox.moe/fi2yff.m4a" type="audio/mp4">
   </audio>
 
   <!-- MUSIC BUBBLE PLAYER -->
   <div class="music-bubble-fixed">
-    <div id="music-bubble" class="music-bubble-btn" onclick="toggleMusic()">
+    <div id="music-bubble" class="music-bubble-btn" onclick="toggleMusicPopup()">
       🎵
     </div>
-    <span id="music-status" class="music-bubble-label">ဖွင့်ရန်</span>
+    <span id="music-status" class="music-bubble-label">သီချင်းရွေးရန်</span>
+  </div>
+
+  <!-- MUSIC SELECTOR POPUP BOX -->
+  <div id="music-popup" class="music-selector-popup">
+    <div style="font-size:0.75rem; font-weight:900; color:var(--primary-dark); text-align:center;">🎵 သီချင်းရွေးချယ်ပါ</div>
+    <select id="song-select" class="music-select-dropdown" onchange="changeTrack(this.value)">
+      <option value="https://files.catbox.moe/fi2yff.m4a">🎶 Song 1</option>
+      <option value="https://files.catbox.moe/bwrnae.m4a">🎶 Song 2</option>
+      <option value="https://files.catbox.moe/2uqw9x.m4a">🎶 Song 3</option>
+      <option value="https://files.catbox.moe/1o778h.m4a">🎶 Song 4</option>
+    </select>
+    <div style="display:flex; gap:6px;">
+      <button id="play-pause-btn" class="btn-action" style="padding:6px; font-size:0.75rem;" onclick="togglePlayPause()">▶️ Play</button>
+      <button class="btn-action" style="padding:6px; font-size:0.75rem; background:#64748b;" onclick="toggleMusicPopup()">❌ ပိတ်မည်</button>
+    </div>
   </div>
 
   <div class="app-container">
@@ -515,9 +565,8 @@
         </div>
       </header>
 
-      <h2 style="text-align:center; color:var(--text-sub); font-size:1.1rem; margin-bottom:15px;">ကျေးဇူးပြု၍ တစ်ခုရွေးချယ်ပါ</h2>
+      <h2 style="text-align:center; color:var(--text-sub); font-size:1.1rem; margin-bottom:15px; animation: floatingWiggleSoft 3s infinite ease-in-out;">ကျေးဇူးပြု၍ တစ်ခုရွေးချယ်ပါ</h2>
       
-      <!-- IDOL GAME OPTION IS REMOVED HERE -->
       <div class="landing-options">
         <div class="option-card" onclick="navigateTo('page-shop')">
           <span class="option-icon">🛍️</span>
@@ -537,17 +586,19 @@
     <!-- PAGE 2: SHOP CENTER PAGE -->
     <div id="page-shop" class="page-view">
       <button class="nav-back-btn" onclick="navigateTo('page-landing')">⬅️ ပင်မစာမျက်နှာသို့</button>
-      <h2 style="font-size:1.2rem; font-weight:900; color:var(--text-sub); margin-bottom:15px;">🛍️ Shop Center</h2>
+      <h2 style="font-size:1.2rem; font-weight:900; color:var(--text-sub); margin-bottom:15px; animation: floatingWiggleSoft 3s infinite ease-in-out;">🛍️ Shop Center</h2>
       <div id="product-grid" class="product-grid"></div>
     </div>
 
     <!-- PAGE 3: ORDER CHECKER PAGE -->
     <div id="page-checker" class="page-view">
       <button class="nav-back-btn" onclick="navigateTo('page-landing')">⬅️ ပင်မစာမျက်နှာသို့</button>
-      <h2 style="font-size:1.1rem; font-weight:900; color:var(--text-sub); margin-bottom:12px;">🔍 Order Status စစ်ဆေးရန်</h2>
-      <input type="text" id="check-code-input" class="input-field" placeholder="Order Code ရိုက်ထည့်ပါ (ဥပမာ- ORD-1234)">
-      <button class="btn-action" onclick="checkOrderStatus()">စစ်ဆေးမည်</button>
-      <div id="check-result-box" style="margin-top:15px;"></div>
+      <div style="background:var(--box-bg); border-radius:22px; padding:20px; border:3px solid #f0abfc; box-shadow:0 10px 25px rgba(217,70,239,0.15); animation: floatingWiggleSoft 3.5s infinite ease-in-out;">
+        <h2 style="font-size:1.1rem; font-weight:900; color:var(--text-sub); margin-bottom:12px;">🔍 Order Status စစ်ဆေးရန်</h2>
+        <input type="text" id="check-code-input" class="input-field" placeholder="Order Code ရိုက်ထည့်ပါ (ဥပမာ- ORD-1234)">
+        <button class="btn-action" onclick="checkOrderStatus()">စစ်ဆေးမည်</button>
+        <div id="check-result-box" style="margin-top:15px;"></div>
+      </div>
     </div>
 
     <!-- PAGE 4: REPORT CENTER PAGE -->
@@ -579,7 +630,7 @@
     <div id="page-cart" class="page-view">
       <button class="nav-back-btn" onclick="navigateTo('page-shop')">⬅️ ပစ္စည်းများထပ်ရွေးမည်</button>
       
-      <div style="background:var(--box-bg); border-radius:22px; padding:20px; border:3px solid #f0abfc; box-shadow:0 10px 25px rgba(217,70,239,0.15);">
+      <div style="background:var(--box-bg); border-radius:22px; padding:20px; border:3px solid #f0abfc; box-shadow:0 10px 25px rgba(217,70,239,0.15); animation: floatingWiggleSoft 3.8s infinite ease-in-out;">
         <h3 style="font-size:1.1rem; font-weight:900; color:var(--primary-dark); margin-bottom:12px;">🛒 ခြင်းတောင်းထဲမှ ပစ္စည်းများ</h3>
         <div id="cart-items-container"></div>
         
@@ -606,7 +657,7 @@
           <option value="online">📱 Online Payment (KPay / WavePay)</option>
         </select>
 
-        <div id="online-pay-box" style="display:none; background:var(--card-bg); padding:12px; border-radius:12px; margin-bottom:12px; font-size:0.85rem;">
+        <div id="online-pay-box" style="display:none; background:var(--card-bg); padding:12px; border-radius:12px; margin-bottom:12px; font-size:0.85rem; animation: floatingWiggleSoft 3s infinite ease-in-out;">
           <p><b>Wave Pay:</b> 09898948790 (Khin Saw Htwe)</p>
           <p><b>KPay:</b> 09422725283 (Moe Pyae Pyae Zaw)</p>
           <p style="margin-top:6px; color:var(--primary-dark); font-weight:700;">💳 ပြေစာ Slip ပုံ တိုက်ရိုက် တင်ပါ:</p>
@@ -680,13 +731,12 @@
     const natureItems = ['🌸', '🍃', '🌺', '🌿', '🌷', '🍀', '🌼', '✨'];
 
     function createFlowerBurst(x, y) {
-      const count = 9; // Touch ထိလိုက်တိုင်း ဖောက်ခနဲ ထွက်လာမည့် အရေအတွက်
+      const count = 9;
       for (let i = 0; i < count; i++) {
         const el = document.createElement('div');
         el.className = 'flower-particle';
         el.innerText = natureItems[Math.floor(Math.random() * natureItems.length)];
 
-        // ဖောက်ခနဲ ပြန့်ထွက်သွားမည့် အလှမ်း
         const vx = (Math.random() - 0.5) * 160; 
         const vy = (Math.random() - 0.7) * 120;  
 
@@ -703,22 +753,30 @@
       }
     }
 
-    // Touch and Click Event Handler
     window.addEventListener('pointerdown', (e) => {
+      // Avoid firing burst if clicked inside selector
+      if(e.target.closest('#music-popup')) return;
       createFlowerBurst(e.clientX, e.clientY);
     });
 
-    /* MUSIC PLAYER LOGIC */
-    window.toggleMusic = function() {
+    /* MUSIC PLAYLIST POPUP & PLAYER LOGIC */
+    window.toggleMusicPopup = function() {
+      const popup = document.getElementById('music-popup');
+      popup.classList.toggle('active');
+    };
+
+    window.togglePlayPause = function() {
       const audio = document.getElementById('bg-audio');
       const bubble = document.getElementById('music-bubble');
       const label = document.getElementById('music-status');
+      const btn = document.getElementById('play-pause-btn');
 
       if (audio.paused) {
         audio.play().then(() => {
           bubble.classList.add('playing');
           bubble.innerHTML = "🎶";
-          label.innerText = "ပိတ်ရန်";
+          label.innerText = "ဖွင့်နေသည်";
+          btn.innerText = "⏸️ Pause";
         }).catch(err => {
           console.log("Audio play error:", err);
           alert("သီချင်းဖွင့်၍ မရသေးပါ။ တစ်ချက်ထပ်နှိပ်ပေးပါခင်ဗျာ။");
@@ -727,8 +785,25 @@
         audio.pause();
         bubble.classList.remove('playing');
         bubble.innerHTML = "🎵";
-        label.innerText = "ဖွင့်ရန်";
+        label.innerText = "သီချင်းရွေးရန်";
+        btn.innerText = "▶️ Play";
       }
+    };
+
+    window.changeTrack = function(srcUrl) {
+      const audio = document.getElementById('bg-audio');
+      const source = document.getElementById('audio-source');
+      source.src = srcUrl;
+      audio.load();
+      audio.play().then(() => {
+        const bubble = document.getElementById('music-bubble');
+        const label = document.getElementById('music-status');
+        const btn = document.getElementById('play-pause-btn');
+        bubble.classList.add('playing');
+        bubble.innerHTML = "🎶";
+        label.innerText = "ဖွင့်နေသည်";
+        btn.innerText = "⏸️ Pause";
+      });
     };
 
     /* THEME SWITCHER */
