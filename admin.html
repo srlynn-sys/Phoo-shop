@@ -6,7 +6,167 @@
   <title>Admin Panel - Phoo Shop</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* DRIVE LINK CHANGER STYLES */
+    :root {
+      --primary: #d946ef;
+      --primary-dark: #a21caf;
+      --accent: #8b5cf6;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --text-main: #2e1065;
+      --text-sub: #6b21a8;
+      --body-bg: linear-gradient(135deg, #fae8ff 0%, #f3e8ff 50%, #e9d5ff 100%);
+      --box-bg: #ffffff;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+    body {
+      background: var(--body-bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding: 15px;
+      position: relative;
+    }
+
+    /* 🌸 FLOATING PARTICLES & ANIMATIONS */
+    .flower-particle {
+      position: fixed;
+      pointer-events: none;
+      font-size: 1.6rem;
+      z-index: 9999;
+      animation: flowerBomb 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+      user-select: none;
+    }
+    @keyframes flowerBomb {
+      0% { opacity: 1; transform: translate(0, 0) scale(0.3) rotate(0deg); }
+      40% { opacity: 1; transform: translate(var(--vx), var(--vy)) scale(1.4) rotate(180deg); }
+      100% { opacity: 0; transform: translate(calc(var(--vx) * 1.2), calc(var(--vy) + 140px)) scale(0.5) rotate(360deg); }
+    }
+
+    .bg-icon {
+      position: fixed;
+      font-size: 2rem;
+      opacity: 0.2;
+      animation: float 8s infinite ease-in-out;
+      pointer-events: none;
+      z-index: 0;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-25px) rotate(15deg); }
+    }
+
+    .app-container {
+      max-width: 500px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .site-header {
+      text-align: center;
+      padding: 15px;
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      border: 2px solid #f0abfc;
+      margin-bottom: 20px;
+      box-shadow: 0 8px 20px rgba(217, 70, 239, 0.15);
+      animation: globalWiggle 4s infinite ease-in-out;
+    }
+    @keyframes globalWiggle {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(0.5deg); }
+    }
+
+    .shop-title {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--primary-dark);
+      margin-top: 6px;
+    }
+    .address {
+      font-size: 0.8rem;
+      color: var(--text-sub);
+      margin-top: 4px;
+      font-weight: 700;
+    }
+
+    /* ALL BOXES & CARDS CONTINUOUS ANIMATION */
+    .view-card, .admin-card-item, .report-card {
+      background: var(--box-bg);
+      border: 3px solid #f0abfc;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 10px 25px rgba(217, 70, 239, 0.2);
+      animation: cardWiggle 3.5s infinite ease-in-out;
+    }
+    .view-card:nth-child(even), .report-card:nth-child(even) { animation-duration: 4s; animation-delay: 0.4s; }
+    .view-card:nth-child(odd), .report-card:nth-child(odd) { animation-duration: 3.2s; animation-delay: 0.2s; }
+
+    @keyframes cardWiggle {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-5px) rotate(-1deg); }
+      75% { transform: translateY(4px) rotate(1deg); }
+    }
+
+    .hidden { display: none !important; }
+
+    .input-modern {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 2px solid #e9d5ff;
+      margin-top: 8px;
+      margin-bottom: 12px;
+      outline: none;
+      font-size: 0.9rem;
+      background: var(--box-bg);
+      color: var(--text-main);
+    }
+    .input-modern:focus { border-color: var(--primary); }
+
+    .btn-primary, .btn-secondary, .btn-danger, .btn-warning {
+      width: 100%;
+      border: none;
+      padding: 12px;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(217, 70, 239, 0.4);
+      animation: buttonFloat 3s infinite ease-in-out;
+      margin-top: 5px;
+    }
+    @keyframes buttonFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+
+    .btn-primary { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; }
+    .btn-secondary { background: #cbd5e1; color: #334155; }
+    .btn-danger { background: #ef4444; color: white; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); width: auto; padding: 6px 12px; font-size: 0.8rem; }
+    .btn-warning { background: #f59e0b; color: white; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); width: auto; padding: 6px 12px; font-size: 0.8rem; }
+
+    .admin-tab-btn {
+      background: rgba(255, 255, 255, 0.85);
+      border: 2px solid #f0abfc;
+      padding: 8px;
+      border-radius: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      transition: all 0.2s;
+    }
+    .admin-tab-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary-dark);
+      transform: scale(1.05);
+    }
+
     .btn-copy {
       background: #8b5cf6; color: white; border: none; padding: 10px;
       border-radius: 10px; font-size: 0.85rem; font-weight: 800; cursor: pointer;
@@ -17,14 +177,18 @@
       margin-top: 15px; background: #f0fdf4; padding: 14px;
       border-radius: 14px; border: 1px solid #a7f3d0;
     }
-    /* REPORT CARD STYLES */
     .report-card {
       background: #fff1f2; padding: 14px; border-radius: 16px;
-      border: 1px solid #fecdd3; margin-bottom: 12px;
+      border: 2px solid #fecdd3; margin-bottom: 12px;
     }
   </style>
 </head>
 <body>
+
+  <div class="bg-icon" style="top:10%; left:5%;">🌸</div>
+  <div class="bg-icon" style="top:30%; right:8%; animation-delay: 2s;">⚙️</div>
+  <div class="bg-icon" style="top:60%; left:10%; animation-delay: 4s;">🪄</div>
+  <div class="bg-icon" style="top:85%; right:6%; animation-delay: 1s;">📦</div>
 
   <div class="app-container">
     <header class="site-header">
@@ -34,7 +198,7 @@
 
     <!-- Passcode Login Section -->
     <section id="admin-login-sec" class="view-card">
-      <h2 style="font-size:1.1rem; font-weight:800; margin-bottom:10px; text-align:center;">🔐 Admin Passcode ထည့်ပါ</h2>
+      <h2 style="font-size:1.1rem; font-weight:800; margin-bottom:10px; text-align:center; color:var(--primary-dark);">🔐 Admin Passcode ထည့်ပါ</h2>
       <input type="password" id="admin-passcode-input" class="input-modern" placeholder="Passcode ရိုက်ထည့်ပါ..." style="text-align:center; font-size:1.2rem;">
       <button id="btn-admin-login" class="btn-primary">Dashboard သို့ဝင်မည် ➔</button>
     </section>
@@ -51,8 +215,8 @@
 
       <!-- Tab 1: Order Editing -->
       <section id="tab-sec-orders" class="view-card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-          <h2 style="font-size:1rem; font-weight:800;">📦 Orders စာရင်း & Status ပြင်ရန်</h2>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
+          <h2 style="font-size:1rem; font-weight:800; color:var(--primary-dark);">📦 Orders စာရင်း & Status ပြင်ရန်</h2>
           <button id="btn-reset-all-orders" class="btn-danger">⚠️ Reset All Orders</button>
         </div>
         <div id="admin-orders-list">Loading...</div>
@@ -60,8 +224,8 @@
 
       <!-- Tab 2: Stock Editing -->
       <section id="tab-sec-stock" class="view-card hidden">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-          <h2 style="font-size:1rem; font-weight:800;">➕ ပစ္စည်းအသစ် တင်ရန် / Edit လုပ်ရန်</h2>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; flex-wrap:wrap; gap:10px;">
+          <h2 style="font-size:1rem; font-weight:800; color:var(--primary-dark);">➕ ပစ္စည်းအသစ် တင်ရန် / Edit လုပ်ရန်</h2>
           <button id="btn-reset-all-stock" class="btn-danger">⚠️ Reset All Stock</button>
         </div>
 
@@ -70,11 +234,12 @@
         <input type="number" id="p-price" class="input-modern" placeholder="ဈေးနှုန်း (Ks)">
         <input type="text" id="p-show-img" class="input-modern" placeholder="Show Photo Direct URL">
         <input type="text" id="p-detail-imgs" class="input-modern" placeholder="Detail Photo Links (ကော်မာ ၊ ခြားရေးပါ)">
+        <input type="text" id="p-admin-note" class="input-modern" placeholder="Admin Stock Note (ဥပမာ - ပစ္စည်းအသစ်ရောက်ရှိ)">
         
         <button id="btn-save-product" class="btn-primary">ပစ္စည်း တင်မည် / သိမ်းဆည်းမည် ➔</button>
         <button id="btn-cancel-edit" class="btn-secondary hidden">Cancel Edit</button>
 
-        <h3 style="font-size:1rem; font-weight:800; margin:20px 0 10px 0;">🏷️ လက်ရှိ တင်ထားသော ပစ္စည်းများ</h3>
+        <h3 style="font-size:1rem; font-weight:800; margin:20px 0 10px 0; color:var(--primary-dark);">🏷️ လက်ရှိ တင်ထားသော ပစ္စည်းများ</h3>
         <div id="admin-products-list">Loading...</div>
       </section>
 
@@ -107,7 +272,7 @@
         </div>
       </section>
 
-      <!-- Tab 4: Report Management (NEW) -->
+      <!-- Tab 4: Report Management -->
       <section id="tab-sec-report" class="view-card hidden">
         <h2 style="font-size:1rem; font-weight:800; color:#e11d48; margin-bottom:15px;">🚨 Customer Reports စာရင်း</h2>
         <div id="admin-reports-list">Loading...</div>
@@ -131,7 +296,21 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // ADMIN LOGIN LOGIC
+    const natureItems = ['🌸', '🍃', '🌺', '🌿', '🌷', '🍀', '🌼', '✨'];
+    window.addEventListener('pointerdown', (e) => {
+      const el = document.createElement('div');
+      el.className = 'flower-particle';
+      el.innerText = natureItems[Math.floor(Math.random() * natureItems.length)];
+      const vx = (Math.random() - 0.5) * 160;
+      const vy = (Math.random() - 0.7) * 120;
+      el.style.left = `${e.clientX}px`;
+      el.style.top = `${e.clientY}px`;
+      el.style.setProperty('--vx', `${vx}px`);
+      el.style.setProperty('--vy', `${vy}px`);
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1200);
+    });
+
     document.getElementById("btn-admin-login").onclick = () => {
       const pass = document.getElementById("admin-passcode-input").value.trim();
       if(pass === "254007") {
@@ -145,7 +324,6 @@
       }
     };
 
-    // TAB SWITCHING LOGIC (4 TABS)
     const tabOrdersBtn = document.getElementById("tab-btn-orders");
     const tabStockBtn = document.getElementById("tab-btn-stock");
     const tabDriveBtn = document.getElementById("tab-btn-drive");
@@ -156,25 +334,16 @@
     const secDrive = document.getElementById("tab-sec-drive");
     const secReport = document.getElementById("tab-sec-report");
 
-    tabOrdersBtn.onclick = () => {
-      resetTabActive(); tabOrdersBtn.classList.add("active"); secOrders.classList.remove("hidden");
-    };
-    tabStockBtn.onclick = () => {
-      resetTabActive(); tabStockBtn.classList.add("active"); secStock.classList.remove("hidden");
-    };
-    tabDriveBtn.onclick = () => {
-      resetTabActive(); tabDriveBtn.classList.add("active"); secDrive.classList.remove("hidden");
-    };
-    tabReportBtn.onclick = () => {
-      resetTabActive(); tabReportBtn.classList.add("active"); secReport.classList.remove("hidden");
-    };
+    tabOrdersBtn.onclick = () => { resetTabActive(); tabOrdersBtn.classList.add("active"); secOrders.classList.remove("hidden"); };
+    tabStockBtn.onclick = () => { resetTabActive(); tabStockBtn.classList.add("active"); secStock.classList.remove("hidden"); };
+    tabDriveBtn.onclick = () => { resetTabActive(); tabDriveBtn.classList.add("active"); secDrive.classList.remove("hidden"); };
+    tabReportBtn.onclick = () => { resetTabActive(); tabReportBtn.classList.add("active"); secReport.classList.remove("hidden"); };
 
     function resetTabActive() {
       [tabOrdersBtn, tabStockBtn, tabDriveBtn, tabReportBtn].forEach(b => b.classList.remove("active"));
       [secOrders, secStock, secDrive, secReport].forEach(s => s.classList.add("hidden"));
     }
 
-    // 1. ORDERS LOGIC
     async function loadAdminOrders() {
       const container = document.getElementById("admin-orders-list");
       container.innerHTML = "Loading...";
@@ -197,16 +366,26 @@
         card.style.marginBottom = "12px";
         card.style.border = "1px solid #e9d5ff";
         
+        let itemsHTML = "";
+        if (order.items && Array.isArray(order.items)) {
+          itemsHTML = order.items.map(i => `• ${i.name} (${i.qty}ခု) - ${i.price * i.qty} Ks`).join("<br>");
+        } else {
+          itemsHTML = `${order.item || 'ပစ္စည်း'} (${order.qty || 1}ခု)`;
+        }
+
         card.innerHTML = `
           <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-            <b style="color:var(--purple-primary);">${order.orderCode}</b>
+            <b style="color:var(--primary-dark);">${order.orderCode}</b>
             <button class="btn-danger" id="del-ord-${docId}">🗑️ ဖျက်မည်</button>
           </div>
           <p style="font-size:0.85rem;"><b>အမည်:</b> ${order.customerName} | <b>ဖုန်း:</b> ${order.phone || 'N/A'}</p>
-          <p style="font-size:0.85rem;"><b>ပစ္စည်း:</b> ${order.item} (${order.qty || 1}ခု) | <b>ကျသင့်ငွေ:</b> ${order.totalAmount || 0} Ks</p>
-          <p style="font-size:0.85rem;"><b>Note:</b> ${order.note || 'မရှိပါ'}</p>
-          <p style="font-size:0.85rem; margin-bottom:8px;"><b>Pay Slip:</b> ${order.paymentScreenshot && order.paymentScreenshot !== 'N/A' ? `<a href="${order.paymentScreenshot}" target="_blank">ကြည့်ရန်</a>` : 'မရှိပါ'}</p>
+          <p style="font-size:0.85rem;"><b>Device:</b> ${order.selectedDevice || 'N/A'}</p>
+          <p style="font-size:0.85rem; margin:4px 0;"><b>ပစ္စည်းများ:</b><br>${itemsHTML}</p>
+          <p style="font-size:0.85rem;"><b>စုစုပေါင်း:</b> ${order.totalAmount || 0} Ks</p>
           
+          <label style="font-size:0.8rem; font-weight:bold; margin-top:8px; display:block;">Admin Note (Customer ချက်ချင်းမြင်ရမည့် မှတ်ချက်):</label>
+          <input type="text" id="admin-ord-note-${docId}" class="input-modern" style="padding:6px; font-size:0.85rem; margin-top:2px;" value="${order.adminNote || ''}" placeholder="Order နှင့် ပတ်သက်၍ မှာကြားရန်...">
+
           <select id="status-sel-${docId}" class="input-modern" style="padding:8px; font-size:0.85rem; margin-bottom:6px;">
             <option value="order စစ်ဆေးနေဆဲ" ${order.status === "order စစ်ဆေးနေဆဲ" ? "selected" : ""}>order စစ်ဆေးနေဆဲ</option>
             <option value="order လုပ်ဆောင်နေပါသည်" ${order.status === "order လုပ်ဆောင်နေပါသည်" ? "selected" : ""}>order လုပ်ဆောင်နေပါသည်</option>
@@ -214,14 +393,15 @@
             <option value="order completed" ${order.status === "order completed" ? "selected" : ""}>order completed</option>
             <option value="order ပို့ဆောင်နေပါသည်" ${order.status === "order ပို့ဆောင်နေပါသည်" ? "selected" : ""}>order ပို့ဆောင်နေပါသည်</option>
           </select>
-          <button class="btn-primary" style="padding:10px; font-size:0.85rem;" id="save-ord-${docId}">Status ပြင်ဆင်ချက် သိမ်းမည်</button>
+          <button class="btn-primary" style="padding:10px; font-size:0.85rem;" id="save-ord-${docId}">Status & Note သိမ်းမည်</button>
         `;
         container.appendChild(card);
 
         document.getElementById(`save-ord-${docId}`).onclick = async () => {
           const selValue = document.getElementById(`status-sel-${docId}`).value;
-          await updateDoc(doc(db, "orders", docId), { status: selValue });
-          alert("Status ပြင်ဆင်ပြီးပါပြီ!");
+          const noteVal = document.getElementById(`admin-ord-note-${docId}`).value.trim();
+          await updateDoc(doc(db, "orders", docId), { status: selValue, adminNote: noteVal });
+          alert("Order ပြင်ဆင်ချက် သိမ်းဆည်းပြီးပါပြီ!");
         };
 
         document.getElementById(`del-ord-${docId}`).onclick = async () => {
@@ -245,7 +425,6 @@
       }
     };
 
-    // 2. STOCK LOGIC
     async function loadAdminProducts() {
       const container = document.getElementById("admin-products-list");
       container.innerHTML = "Loading...";
@@ -276,12 +455,12 @@
             <img src="${p.showPhoto}" style="width:45px; height:45px; border-radius:10px; object-fit:cover;">
             <div>
               <b style="font-size:0.9rem;">${p.name}</b>
-              <p style="font-size:0.8rem; color:var(--purple-primary); font-weight:700;">${p.price} Ks</p>
+              <p style="font-size:0.8rem; color:var(--primary-dark); font-weight:700;">${p.price} Ks</p>
             </div>
           </div>
           <div style="display:flex; gap:6px;">
             <button class="btn-warning" id="edit-prod-${docId}">✏️ Edit</button>
-            <button class="btn-danger" id="del-prod-${docId}">🗑️ ဖျက်မည်</button>
+            <button class="btn-danger" id="del-prod-${docId}">🗑️ ဖျက်</button>
           </div>
         `;
         container.appendChild(card);
@@ -292,6 +471,7 @@
           document.getElementById("p-price").value = p.price;
           document.getElementById("p-show-img").value = p.showPhoto;
           document.getElementById("p-detail-imgs").value = (p.detailPhotos||[]).join(',');
+          document.getElementById("p-admin-note").value = p.adminNote || "";
           document.getElementById("btn-save-product").innerText = "✨ ပြင်ဆင်ချက်အား သိမ်းမည် ➔";
           document.getElementById("btn-cancel-edit").classList.remove("hidden");
           window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -309,18 +489,19 @@
 
     document.getElementById("btn-save-product").onclick = async () => {
       const editId = document.getElementById("p-edit-id").value;
-      const name = document.getElementById("p-name").value;
+      const name = document.getElementById("p-name").value.trim();
       const price = Number(document.getElementById("p-price").value);
-      const showPhoto = document.getElementById("p-show-img").value;
-      const detailPhotos = document.getElementById("p-detail-imgs").value.split(",");
+      const showPhoto = document.getElementById("p-show-img").value.trim();
+      const detailPhotos = document.getElementById("p-detail-imgs").value.split(",").map(s => s.trim()).filter(s => s);
+      const adminNote = document.getElementById("p-admin-note").value.trim();
 
       if(!name || !price || !showPhoto) return alert("အချက်အလက် အပြည့်အစုံ ဖြည့်ပါ။");
 
       if(editId) {
-        await updateDoc(doc(db, "products", editId), { name, price, showPhoto, detailPhotos });
+        await updateDoc(doc(db, "products", editId), { name, price, showPhoto, detailPhotos, adminNote });
         alert("ပစ္စည်း ပြင်ဆင်ပြီးပါပြီ!");
       } else {
-        await addDoc(collection(db, "products"), { name, price, showPhoto, detailPhotos });
+        await addDoc(collection(db, "products"), { name, price, showPhoto, detailPhotos, adminNote });
         alert("ပစ္စည်းအသစ် တင်ပြီးပါပြီ!");
       }
 
@@ -334,6 +515,7 @@
       document.getElementById("p-price").value = "";
       document.getElementById("p-show-img").value = "";
       document.getElementById("p-detail-imgs").value = "";
+      document.getElementById("p-admin-note").value = "";
       document.getElementById("btn-save-product").innerText = "ပစ္စည်း တင်မည် / သိမ်းဆည်းမည် ➔";
       document.getElementById("btn-cancel-edit").classList.add("hidden");
     }
@@ -351,7 +533,6 @@
       }
     };
 
-    // 3. GOOGLE DRIVE CHANGER LOGIC
     function convertDriveLink(url) {
       if (!url) return "";
       const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
@@ -368,7 +549,6 @@
       const d3Raw = document.getElementById("drive-detail-3").value;
 
       const showDirect = convertDriveLink(showRaw);
-      
       const detailDirects = [];
       if (d1Raw) detailDirects.push(convertDriveLink(d1Raw));
       if (d2Raw) detailDirects.push(convertDriveLink(d2Raw));
@@ -376,7 +556,6 @@
 
       document.getElementById("out-show-link").value = showDirect;
       document.getElementById("out-detail-links").value = detailDirects.join(",");
-
       document.getElementById("drive-output-sec").classList.remove("hidden");
     };
 
@@ -391,10 +570,9 @@
       const input = document.getElementById("out-detail-links");
       input.select();
       navigator.clipboard.writeText(input.value);
-      alert("📋 Detail Photo Links (Comma ခံလျက်) ကို Copy ကူးပြီးပါပြီ!");
+      alert("📋 Detail Photo Links ကို Copy ကူးပြီးပါပြီ!");
     };
 
-    // 4. REPORTS LOGIC (NEW)
     async function loadAdminReports() {
       const container = document.getElementById("admin-reports-list");
       container.innerHTML = "Loading...";
@@ -415,7 +593,7 @@
         card.innerHTML = `
           <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
             <b style="color:#e11d48;">${r.reportCode || 'RP-0000'}</b>
-            <button class="btn-danger" id="del-rep-${docId}">🗑️ ဖျက်မည်</button>
+            <button class="btn-danger" id="del-rep-${docId}">🗑️ ဖျက်</button>
           </div>
           <p style="font-size:0.85rem; margin-bottom:6px;"><b>အကြောင်းအရာ:</b> ${r.message || 'မရှိပါ'}</p>
           <select id="rep-status-${docId}" class="input-modern" style="padding:8px; font-size:0.85rem; margin-bottom:6px;">
