@@ -128,16 +128,49 @@
       75% { transform: scale(1.02) rotate(1deg); }
     }
 
-    /* Audio Player Styling */
-    .audio-player-container {
+    /* AUDIO MUSIC FLOATING BUBBLE STYLING */
+    .music-bubble-wrapper {
       margin-top: 15px;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
-    audio {
-      width: 100%;
-      height: 38px;
-      border-radius: 20px;
-      outline: none;
+    .music-bubble-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      color: white;
+      font-size: 1.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px rgba(217, 70, 239, 0.4);
+      cursor: pointer;
+      border: 3px solid #fff;
+      transition: all 0.3s ease;
+      position: relative;
+      animation: musicPulse 2s infinite ease-in-out;
+    }
+    .music-bubble-btn.playing {
+      animation: musicRotate 4s linear infinite;
+      box-shadow: 0 0 25px rgba(217, 70, 239, 0.8);
+      border-color: #f0abfc;
+    }
+    .music-bubble-label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      color: var(--primary-dark);
+      margin-top: 6px;
+    }
+    @keyframes musicPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+    @keyframes musicRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     /* LANDING PAGE OPTIONS */
@@ -415,12 +448,16 @@
           📍 No.460, Su Pyae Yadanar (2) St, 56 ward, South Dagon, Yangon<br>📞 Ph: 09898948790
         </div>
 
-        <!-- Embedded Audio Player -->
-        <div class="audio-player-container">
-          <audio controls>
+        <!-- FLOATING BUBBLE MUSIC PLAYER -->
+        <div class="music-bubble-wrapper">
+          <audio id="bg-audio" preload="metadata">
+            <source src="https://docs.google.com/uc?export=open&id=15OiyEq23-58nWzvqpJfsq72328-vtBxf" type="audio/mpeg">
             <source src="https://lh3.googleusercontent.com/d/15OiyEq23-58nWzvqpJfsq72328-vtBxf" type="audio/mp4">
-            Your browser does not support the audio element.
           </audio>
+          <div id="music-bubble" class="music-bubble-btn" onclick="toggleMusic()">
+            🎵
+          </div>
+          <span id="music-status" class="music-bubble-label">သီချင်းဖွင့်ရန် နှိပ်ပါ</span>
         </div>
       </header>
 
@@ -557,6 +594,29 @@
 
     let cart = [];
     let selectedProduct = null;
+
+    // FLOATING MUSIC BUBBLE TOGGLE LOGIC
+    window.toggleMusic = function() {
+      const audio = document.getElementById('bg-audio');
+      const bubble = document.getElementById('music-bubble');
+      const label = document.getElementById('music-status');
+
+      if (audio.paused) {
+        audio.play().then(() => {
+          bubble.classList.add('playing');
+          bubble.innerHTML = "🎶";
+          label.innerText = "သီချင်း ပိတ်ရန် နှိပ်ပါ";
+        }).catch(err => {
+          console.error("Audio Play Error:", err);
+          alert("သီချင်းဖွင့်၍မရပါ။ Google Drive Share Permission ကို စစ်ဆေးပေးပါဗျ။");
+        });
+      } else {
+        audio.pause();
+        bubble.classList.remove('playing');
+        bubble.innerHTML = "🎵";
+        label.innerText = "သီချင်း ဖွင့်ရန် နှိပ်ပါ";
+      }
+    };
 
     // LIGHT / DARK MODE TOGGLE LOGIC
     window.toggleTheme = function() {
