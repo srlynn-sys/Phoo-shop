@@ -443,7 +443,7 @@
   <div class="bg-icon" style="top:60%; left:10%; animation-delay: 4s;">🪄</div>
   <div class="bg-icon" style="top:85%; right:6%; animation-delay: 1s;">🎵</div>
 
-  <!-- FIXED MUSIC BUBBLE (SCREEN ၏ ညာဘက်အောက်တွင် အမြဲရှိနေမည်) -->
+  <!-- UPDATED MUSIC BUBBLE WITH YOUR NEW LINK -->
   <div class="music-bubble-fixed">
     <audio id="bg-audio" preload="metadata">
       <source src="https://docs.google.com/uc?export=open&id=1nGoSRhEwQoei_UdYgJAx4_wUcIy1z8FR" type="audio/mpeg">
@@ -614,7 +614,7 @@
           label.innerText = "ပိတ်ရန်";
         }).catch(err => {
           console.error("Audio Play Error:", err);
-          alert("သီချင်းဖွင့်၍မရပါ။ Google Drive Link Share Permission ကို Anyone with the link ဟု ပြောင်းပေးထားကြောင်း စစ်ဆေးပေးပါဗျ။");
+          alert("သီချင်းဖွင့်၍မရပါ။ Google Drive Share Link ကို Anyone with the link ပြောင်းထားကြောင်း စစ်ပေးပါဗျ။");
         });
       } else {
         audio.pause();
