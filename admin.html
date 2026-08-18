@@ -3,65 +3,153 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel - Phoo Shop</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Phoo Shop Admin Panel</title>
+  <style>
+    :root {
+      --primary: #d946ef;
+      --primary-dark: #a21caf;
+      --accent: #8b5cf6;
+      --card-bg: #ffffff;
+      --text-main: #2e1065;
+      --text-sub: #6b21a8;
+      --body-bg: linear-gradient(135deg, #fae8ff 0%, #f3e8ff 50%, #e9d5ff 100%);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif; }
+
+    body {
+      background: var(--body-bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 20px 15px 60px;
+    }
+
+    .admin-card {
+      max-width: 500px;
+      margin: 0 auto;
+      background: var(--card-bg);
+      padding: 25px;
+      border-radius: 20px;
+      border: 3px solid #f0abfc;
+      box-shadow: 0 10px 25px rgba(217, 70, 239, 0.2);
+    }
+
+    h2 { color: var(--primary-dark); text-align: center; margin-bottom: 20px; font-weight: 900; }
+    
+    label { font-weight: 800; font-size: 0.85rem; color: var(--text-sub); display: block; margin-top: 12px; }
+
+    .input-field {
+      width: 100%; padding: 10px 12px; border-radius: 12px; border: 2px solid #e9d5ff;
+      margin-top: 5px; outline: none; background: #faf5ff; font-size: 0.9rem; color: var(--text-main);
+    }
+    .input-field:focus { border-color: var(--primary); background: #fff; }
+
+    .btn-submit {
+      width: 100%; background: linear-gradient(135deg, var(--primary), var(--accent)); color: white;
+      border: none; padding: 12px; border-radius: 14px; font-weight: 800;
+      margin-top: 20px; cursor: pointer; box-shadow: 0 4px 15px rgba(217, 70, 239, 0.4); font-size: 0.95rem;
+    }
+    .btn-submit:disabled { background: #ccc; cursor: not-allowed; box-shadow: none; }
+
+    .btn-drive-tool {
+      width: 100%; background: linear-gradient(135deg, #059669, #10b981); color: white;
+      border: none; padding: 10px; border-radius: 12px; font-weight: 800;
+      margin-top: 15px; cursor: pointer; font-size: 0.85rem; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .status-msg { text-align: center; margin-top: 15px; font-weight: bold; font-size: 0.9rem; }
+
+    /* GOOGLE DRIVE CHANGER MODAL STYLING */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(46, 16, 101, 0.7); backdrop-filter: blur(5px);
+      display: none; justify-content: center; align-items: center; z-index: 500;
+      padding: 15px;
+    }
+    .modal-overlay.active { display: flex; }
+
+    .drive-modal-box {
+      background: #fff; max-width: 480px; width: 100%; border-radius: 20px;
+      padding: 20px; border: 3px solid #10b981; box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+      position: relative; max-height: 90vh; overflow-y: auto;
+    }
+
+    .btn-copy {
+      background: #8b5cf6; color: white; border: none; padding: 8px 12px;
+      border-radius: 8px; font-size: 0.8rem; font-weight: 800; cursor: pointer;
+      margin-top: 6px; width: 100%; display: block;
+    }
+    .btn-copy-comma { background: #059669; }
+
+    .close-btn {
+      position: absolute; right: 15px; top: 15px; background: none; border: none;
+      font-size: 1.2rem; cursor: pointer; color: #666;
+    }
+  </style>
 </head>
 <body>
 
-  <div class="app-container">
-    <header class="site-header">
-      <h1 class="shop-title">⚙️ Admin Control Panel</h1>
-      <p class="address">Phoo K-pop & Thai-pop Shop</p>
-    </header>
+  <div class="admin-card">
+    <h2>🛠️ Phoo Shop Admin Panel</h2>
+    
+    <button class="btn-drive-tool" onclick="openDriveChanger()">🔄 Google Drive Changer သို့သွားရန်</button>
+    <hr style="margin-top:15px; border:0; border-top:1px dashed #f0abfc;">
 
-    <!-- Passcode Login Section -->
-    <section id="admin-login-sec" class="view-card">
-      <h2 style="font-size:1.1rem; font-weight:800; margin-bottom:10px; text-align:center;">🔐 Admin Passcode ထည့်ပါ</h2>
-      <input type="password" id="admin-passcode-input" class="input-modern" placeholder="Passcode ရိုက်ထည့်ပါ..." style="text-align:center; font-size:1.2rem;">
-      <button id="btn-admin-login" class="btn-primary">Dashboard သို့ဝင်မည် ➔</button>
-    </section>
+    <label>Admin Password ရိုက်ထည့်ပါ:</label>
+    <input type="password" id="admin-pass" class="input-field" placeholder="🔑 Admin Password">
 
-    <!-- Main Dashboard -->
-    <main id="admin-dashboard-sec" class="hidden">
-      <div class="admin-tab-bar">
-        <button id="tab-btn-orders" class="admin-tab-btn active">📦 Order Code Editing</button>
-        <button id="tab-btn-stock" class="admin-tab-btn">🏷️ Stock Editing</button>
+    <label>ပစ္စည်းအမည်:</label>
+    <input type="text" id="p-name" class="input-field" placeholder="ဥပမာ - Album / Lightstick">
+
+    <label>စျေးနှုန်း (ကျပ်):</label>
+    <input type="number" id="p-price" class="input-field" placeholder="ဥပမာ - 15000">
+
+    <label>🖼️ ပင်မပုံ (Show Photo) တိုက်ရိုက်တင်ရန်:</label>
+    <input type="file" id="p-show-file" class="input-field" accept="image/*">
+
+    <label>📸 အသေးစိတ်ပုံများ (Detail Photos) တိုက်ရိုက်တင်ရန်:</label>
+    <input type="file" id="p-detail-files" class="input-field" accept="image/*" multiple>
+
+    <button id="btn-save" class="btn-submit" onclick="uploadAndSaveProduct()">✨ ပစ္စည်းသိမ်းဆည်းမည်</button>
+    
+    <div id="status" class="status-msg"></div>
+  </div>
+
+  <!-- GOOGLE DRIVE CHANGER MODAL -->
+  <div id="drive-modal" class="modal-overlay">
+    <div class="drive-modal-box">
+      <button class="close-btn" onclick="closeDriveChanger()">❌</button>
+      <h3 style="color:#059669; text-align:center; font-weight:900; margin-bottom:15px;">🔄 Google Drive Changer</h3>
+
+      <label>1. Show Photo Drive Link ထည့်ရန်:</label>
+      <input type="text" id="drive-show-input" class="input-field" placeholder="Google Drive Link ကူးထည့်ပါ...">
+
+      <label>2. Detail Photo 1 Drive Link:</label>
+      <input type="text" id="drive-detail-1" class="input-field" placeholder="Google Drive Link ကူးထည့်ပါ...">
+
+      <label>3. Detail Photo 2 Drive Link:</label>
+      <input type="text" id="drive-detail-2" class="input-field" placeholder="Google Drive Link ကူးထည့်ပါ...">
+
+      <label>4. Detail Photo 3 Drive Link:</label>
+      <input type="text" id="drive-detail-3" class="input-field" placeholder="Google Drive Link ကူးထည့်ပါ...">
+
+      <button class="btn-submit" style="background:linear-gradient(135deg, #059669, #10b981);" onclick="generateDriveLinks()">⚙️ Generate Links</button>
+
+      <div id="drive-output-section" style="display:none; margin-top:15px; background:#f0fdf4; padding:12px; border-radius:12px; border:1px solid #a7f3d0;">
+        <label style="color:#065f46;">Direct Show Photo Link:</label>
+        <input type="text" id="out-show-link" class="input-field" readonly>
+        <button class="btn-copy" onclick="copyToClipboard('out-show-link')">📋 Show Photo Link Copy ရယူရန်</button>
+
+        <label style="color:#065f46; margin-top:10px;">Direct Detail Photos (Comma ခံထားသည်):</label>
+        <textarea id="out-detail-links" class="input-field" style="height:60px; resize:none;" readonly></textarea>
+        <button class="btn-copy btn-copy-comma" onclick="copyToClipboard('out-detail-links')">📋 Detail Links (Comma ခံလျက်) Copy ရယူရန်</button>
       </div>
-
-      <!-- Tab 1: Order Editing -->
-      <section id="tab-sec-orders" class="view-card">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-          <h2 style="font-size:1rem; font-weight:800;">📦 Orders စာရင်း & Status ပြင်ရန်</h2>
-          <button id="btn-reset-all-orders" class="btn-danger">⚠️ Reset All Orders</button>
-        </div>
-        <div id="admin-orders-list">Loading...</div>
-      </section>
-
-      <!-- Tab 2: Stock Editing -->
-      <section id="tab-sec-stock" class="view-card hidden">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-          <h2 style="font-size:1rem; font-weight:800;">➕ ပစ္စည်းအသစ် တင်ရန် / Edit လုပ်ရန်</h2>
-          <button id="btn-reset-all-stock" class="btn-danger">⚠️ Reset All Stock</button>
-        </div>
-
-        <input type="hidden" id="p-edit-id">
-        <input type="text" id="p-name" class="input-modern" placeholder="ပစ္စည်းအမည်">
-        <input type="number" id="p-price" class="input-modern" placeholder="ဈေးနှုန်း (Ks)">
-        <input type="text" id="p-show-img" class="input-modern" placeholder="Show Photo Direct URL">
-        <input type="text" id="p-detail-imgs" class="input-modern" placeholder="Detail Photo Links (ကော်မာ ၊ ခြားရေးပါ)">
-        
-        <button id="btn-save-product" class="btn-primary">ပစ္စည်း တင်မည် / သိမ်းဆည်းမည် ➔</button>
-        <button id="btn-cancel-edit" class="btn-secondary hidden">Cancel Edit</button>
-
-        <h3 style="font-size:1rem; font-weight:800; margin:20px 0 10px 0;">🏷️ လက်ရှိ တင်ထားသော ပစ္စည်းများ</h3>
-        <div id="admin-products-list">Loading...</div>
-      </section>
-    </main>
+    </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCkT8J7ttr9w-ZJJmbyu6aT9qLCUmauXcA",
@@ -74,206 +162,124 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const IMGBB_API_KEY = "3b4f610a7b489ffca3387ebdbd6d332d";
 
-    document.getElementById("btn-admin-login").onclick = () => {
-      const pass = document.getElementById("admin-passcode-input").value.trim();
-      if(pass === "254007") {
-        document.getElementById("admin-login-sec").classList.add("hidden");
-        document.getElementById("admin-dashboard-sec").classList.remove("hidden");
-        loadAdminOrders();
-        loadAdminProducts();
-      } else {
-        alert("Passcode မှားယွင်းနေပါသည်။ (Password: 254007)");
-      }
-    };
+    const ADMIN_PASSWORD_HASH = "phoo1234";
 
-    document.getElementById("tab-btn-orders").onclick = () => {
-      document.getElementById("tab-btn-orders").classList.add("active");
-      document.getElementById("tab-btn-stock").classList.remove("active");
-      document.getElementById("tab-sec-orders").classList.remove("hidden");
-      document.getElementById("tab-sec-stock").classList.add("hidden");
-    };
-
-    document.getElementById("tab-btn-stock").onclick = () => {
-      document.getElementById("tab-btn-stock").classList.add("active");
-      document.getElementById("tab-btn-orders").classList.remove("active");
-      document.getElementById("tab-sec-stock").classList.remove("hidden");
-      document.getElementById("tab-sec-orders").classList.add("hidden");
-    };
-
-    async function loadAdminOrders() {
-      const container = document.getElementById("admin-orders-list");
-      container.innerHTML = "Loading...";
-      const snapshot = await getDocs(collection(db, "orders"));
-      container.innerHTML = "";
-
-      if(snapshot.empty) {
-        container.innerHTML = "<p style='color:var(--text-sub); text-align:center;'>Order မရှိသေးပါ။</p>";
-        return;
-      }
-
-      snapshot.forEach(docSnap => {
-        const order = docSnap.data();
-        const docId = docSnap.id;
-
-        const card = document.createElement("div");
-        card.style.background = "#faf5ff";
-        card.style.padding = "14px";
-        card.style.borderRadius = "16px";
-        card.style.marginBottom = "12px";
-        card.style.border = "1px solid #e9d5ff";
-        
-        card.innerHTML = `
-          <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
-            <b style="color:var(--purple-primary);">${order.orderCode}</b>
-            <button class="btn-danger" id="del-ord-${docId}">🗑️ ဖျက်မည်</button>
-          </div>
-          <p style="font-size:0.85rem;"><b>အမည်:</b> ${order.customerName} | <b>ဖုန်း:</b> ${order.phone || 'N/A'}</p>
-          <p style="font-size:0.85rem;"><b>ပစ္စည်း:</b> ${order.item} (${order.qty}ခု) | <b>ကျသင့်ငွေ:</b> ${order.totalAmount} Ks</p>
-          <p style="font-size:0.85rem;"><b>Note:</b> ${order.note || 'မရှိပါ'}</p>
-          <p style="font-size:0.85rem; margin-bottom:8px;"><b>Pay Slip:</b> ${order.paymentScreenshot !== 'N/A' ? `<a href="${order.paymentScreenshot}" target="_blank">ကြည့်ရန်</a>` : 'မရှိပါ'}</p>
-          
-          <select id="status-sel-${docId}" class="input-modern" style="padding:8px; font-size:0.85rem; margin-bottom:6px;">
-            <option value="order စစ်ဆေးနေဆဲ" ${order.status === "order စစ်ဆေးနေဆဲ" ? "selected" : ""}>order စစ်ဆေးနေဆဲ</option>
-            <option value="order လုပ်ဆောင်နေပါသည်" ${order.status === "order လုပ်ဆောင်နေပါသည်" ? "selected" : ""}>order လုပ်ဆောင်နေပါသည်</option>
-            <option value="order rejected" ${order.status === "order rejected" ? "selected" : ""}>order rejected</option>
-            <option value="order completed" ${order.status === "order completed" ? "selected" : ""}>order completed</option>
-            <option value="order ပို့ဆောင်နေပါသည်" ${order.status === "order ပို့ဆောင်နေပါသည်" ? "selected" : ""}>order ပို့ဆောင်နေပါသည်</option>
-          </select>
-          <button class="btn-primary" style="padding:10px; font-size:0.85rem;" id="save-ord-${docId}">Status ပြင်ဆင်ချက် သိမ်းမည်</button>
-        `;
-        container.appendChild(card);
-
-        document.getElementById(`save-ord-${docId}`).onclick = async () => {
-          const selValue = document.getElementById(`status-sel-${docId}`).value;
-          await updateDoc(doc(db, "orders", docId), { status: selValue });
-          alert("Status ပြင်ဆင်ပြီးပါပြီ!");
-        };
-
-        document.getElementById(`del-ord-${docId}`).onclick = async () => {
-          if(confirm("ဤ Order ကို ဖျက်ရန် သေချာပါသလား?")) {
-            await deleteDoc(doc(db, "orders", docId));
-            alert("Order ဖျက်ပြီးပါပြီ!");
-            loadAdminOrders();
-          }
-        };
+    async function uploadToImgBB(file) {
+      const formData = new FormData();
+      formData.append("image", file);
+      const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+        method: "POST",
+        body: formData
       });
+      const data = await res.json();
+      return data.data.url;
     }
 
-    document.getElementById("btn-reset-all-orders").onclick = async () => {
-      if(confirm("⚠️ Order များ အားလုံးကို အပြီးတိုင် ဖျက်ပစ်ပါမည်။ သေချာပါသလား?")) {
-        const snapshot = await getDocs(collection(db, "orders"));
-        snapshot.forEach(async (docSnap) => {
-          await deleteDoc(doc(db, "orders", docSnap.id));
+    window.uploadAndSaveProduct = async function() {
+      const pass = document.getElementById("admin-pass").value.trim();
+      const name = document.getElementById("p-name").value.trim();
+      const price = document.getElementById("p-price").value.trim();
+      const showFileInput = document.getElementById("p-show-file");
+      const detailFilesInput = document.getElementById("p-detail-files");
+      const status = document.getElementById("status");
+      const btn = document.getElementById("btn-save");
+
+      // PASSWORD SECURITY FIX: Password မှားပါက Password ကြီး ပြန်မပြတော့ပါ
+      if (pass !== ADMIN_PASSWORD_HASH) {
+        return alert("❌ Admin စကားဝှက် မှားယွင်းနေပါသည်။");
+      }
+
+      if (!name || !price || !showFileInput.files[0]) {
+        return alert("ကျေးဇူးပြု၍ အမည်၊ စျေးနှုန်း နှင့် ပင်မပုံ ရွေးချယ်ပေးပါ!");
+      }
+
+      try {
+        btn.disabled = true;
+        status.style.color = "#8b5cf6";
+        status.innerText = "⏳ ပုံများကို Upload တင်နေပါသည်...";
+
+        const showPhotoUrl = await uploadToImgBB(showFileInput.files[0]);
+
+        const detailUrls = [];
+        const detailFiles = detailFilesInput.files;
+        for (let i = 0; i < detailFiles.length; i++) {
+          const url = await uploadToImgBB(detailFiles[i]);
+          detailUrls.push(url);
+        }
+
+        status.innerText = "⏳ Database သို့ အချက်အလက် သိမ်းဆည်းနေပါသည်...";
+
+        await addDoc(collection(db, "products"), {
+          name: name,
+          price: parseInt(price),
+          showPhoto: showPhotoUrl,
+          detailPhotos: detailUrls,
+          createdAt: new Date()
         });
-        alert("Order များ အားလုံး Reset ချပြီးပါပြီ!");
-        loadAdminOrders();
+
+        status.style.color = "green";
+        status.innerText = "✅ ပစ္စည်းသစ် အောင်မြင်စွာ ထည့်သွင်းပြီးပါပြီ!";
+
+        document.getElementById("p-name").value = "";
+        document.getElementById("p-price").value = "";
+        document.getElementById("admin-pass").value = "";
+        showFileInput.value = "";
+        detailFilesInput.value = "";
+
+      } catch (err) {
+        console.error(err);
+        status.style.color = "red";
+        status.innerText = "❌ Upload တင်ရာတွင် အမှားအယွင်း ရှိနေပါသည်။";
+      } finally {
+        btn.disabled = false;
       }
     };
 
-    async function loadAdminProducts() {
-      const container = document.getElementById("admin-products-list");
-      container.innerHTML = "Loading...";
-      const snapshot = await getDocs(collection(db, "products"));
-      container.innerHTML = "";
-
-      if(snapshot.empty) {
-        container.innerHTML = "<p style='color:var(--text-sub); text-align:center;'>Stock မရှိသေးပါ။</p>";
-        return;
-      }
-
-      snapshot.forEach(docSnap => {
-        const p = docSnap.data();
-        const docId = docSnap.id;
-
-        const card = document.createElement("div");
-        card.style.display = "flex";
-        card.style.alignItems = "center";
-        card.style.justifyContent = "space-between";
-        card.style.background = "#faf5ff";
-        card.style.padding = "10px 14px";
-        card.style.borderRadius = "16px";
-        card.style.marginBottom = "10px";
-        card.style.border = "1px solid #e9d5ff";
-
-        card.innerHTML = `
-          <div style="display:flex; align-items:center; gap:10px;">
-            <img src="${p.showPhoto}" style="width:45px; height:45px; border-radius:10px; object-fit:cover;">
-            <div>
-              <b style="font-size:0.9rem;">${p.name}</b>
-              <p style="font-size:0.8rem; color:var(--purple-primary); font-weight:700;">${p.price} Ks</p>
-            </div>
-          </div>
-          <div style="display:flex; gap:6px;">
-            <button class="btn-warning" id="edit-prod-${docId}">✏️ Edit</button>
-            <button class="btn-danger" id="del-prod-${docId}">🗑️ ဖျက်မည်</button>
-          </div>
-        `;
-        container.appendChild(card);
-
-        document.getElementById(`edit-prod-${docId}`).onclick = () => {
-          document.getElementById("p-edit-id").value = docId;
-          document.getElementById("p-name").value = p.name;
-          document.getElementById("p-price").value = p.price;
-          document.getElementById("p-show-img").value = p.showPhoto;
-          document.getElementById("p-detail-imgs").value = (p.detailPhotos||[]).join(',');
-          document.getElementById("btn-save-product").innerText = "✨ ပြင်ဆင်ချက်အား သိမ်းမည် ➔";
-          document.getElementById("btn-cancel-edit").classList.remove("hidden");
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-
-        document.getElementById(`del-prod-${docId}`).onclick = async () => {
-          if(confirm("ဤ ပစ္စည်းကို Stock ထဲမှ ဖျက်ရန် သေချာပါသလား?")) {
-            await deleteDoc(doc(db, "products", docId));
-            alert("ပစ္စည်း ဖျက်ပြီးပါပြီ!");
-            loadAdminProducts();
-          }
-        };
-      });
-    }
-
-    document.getElementById("btn-save-product").onclick = async () => {
-      const editId = document.getElementById("p-edit-id").value;
-      const name = document.getElementById("p-name").value;
-      const price = Number(document.getElementById("p-price").value);
-      const showPhoto = document.getElementById("p-show-img").value;
-      const detailPhotos = document.getElementById("p-detail-imgs").value.split(",");
-
-      if(!name || !price || !showPhoto) return alert("အချက်အလက် အပြည့်အစုံ ဖြည့်ပါ။");
-
-      if(editId) {
-        await updateDoc(doc(db, "products", editId), { name, price, showPhoto, detailPhotos });
-        alert("ပစ္စည်း ပြင်ဆင်ပြီးပါပြီ!");
-      } else {
-        await addDoc(collection(db, "products"), { name, price, showPhoto, detailPhotos });
-        alert("ပစ္စည်းအသစ် တင်ပြီးပါပြီ!");
-      }
-
-      resetProductForm();
-      loadAdminProducts();
+    // GOOGLE DRIVE CHANGER FUNCTIONS
+    window.openDriveChanger = function() {
+      document.getElementById("drive-modal").classList.add("active");
     };
 
-    function resetProductForm() {
-      document.getElementById("p-edit-id").value = "";
-      document.getElementById("p-name").value = "";
-      document.getElementById("p-price").value = "";
-      document.getElementById("p-show-img").value = "";
-      document.getElementById("p-detail-imgs").value = "";
-      document.getElementById("btn-save-product").innerText = "ပစ္စည်း တင်မည် / သိမ်းဆည်းမည် ➔";
-      document.getElementById("btn-cancel-edit").classList.add("hidden");
+    window.closeDriveChanger = function() {
+      document.getElementById("drive-modal").classList.remove("active");
+    };
+
+    function convertDriveLink(url) {
+      if (!url) return "";
+      const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+      if (match && match[1]) {
+        return `https://lh3.googleusercontent.com/d/${match[1]}`;
+      }
+      return url.trim();
     }
 
-    document.getElementById("btn-cancel-edit").onclick = resetProductForm;
+    window.generateDriveLinks = function() {
+      const showRaw = document.getElementById("drive-show-input").value;
+      const d1Raw = document.getElementById("drive-detail-1").value;
+      const d2Raw = document.getElementById("drive-detail-2").value;
+      const d3Raw = document.getElementById("drive-detail-3").value;
 
-    document.getElementById("btn-reset-all-stock").onclick = async () => {
-      if(confirm("⚠️ Stock ထဲမှ ပစ္စည်းများ အားလုံးကို အပြီးတိုင် ဖျက်ပစ်ပါမည်။ သေချာပါသလား?")) {
-        const snapshot = await getDocs(collection(db, "products"));
-        snapshot.forEach(async (docSnap) => {
-          await deleteDoc(doc(db, "products", docSnap.id));
-        });
-        alert("Stock အားလုံး Reset ချပြီးပါပြီ!");
-        loadAdminProducts();
-      }
+      const showDirect = convertDriveLink(showRaw);
+      
+      const detailDirects = [];
+      if (d1Raw) detailDirects.push(convertDriveLink(d1Raw));
+      if (d2Raw) detailDirects.push(convertDriveLink(d2Raw));
+      if (d3Raw) detailDirects.push(convertDriveLink(d3Raw));
+
+      document.getElementById("out-show-link").value = showDirect;
+      document.getElementById("out-detail-links").value = detailDirects.join(",");
+
+      document.getElementById("drive-output-section").style.display = "block";
+    };
+
+    window.copyToClipboard = function(elementId) {
+      const inputEl = document.getElementById(elementId);
+      inputEl.select();
+      inputEl.setSelectionRange(0, 99999);
+      navigator.clipboard.writeText(inputEl.value);
+      alert("📋 Copy ကူးယူပြီးပါပြီ!");
     };
   </script>
 </body>
