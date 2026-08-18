@@ -77,7 +77,7 @@
       gap: 8px;
     }
     .theme-toggle-btn, .lang-toggle-btn {
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.85);
       border: 2px solid #f0abfc;
       padding: 6px 12px;
       border-radius: 20px;
@@ -86,9 +86,10 @@
       color: var(--text-main);
       cursor: pointer;
       backdrop-filter: blur(5px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     }
     body.dark-mode .theme-toggle-btn, body.dark-mode .lang-toggle-btn {
-      background: rgba(30, 27, 75, 0.8);
+      background: rgba(30, 27, 75, 0.85);
       border-color: #a855f7;
     }
 
@@ -247,7 +248,7 @@
       gap: 5px;
     }
 
-    /* ANIMATED PRODUCT CARDS IN SHOP CENTER */
+    /* PRODUCT CARDS */
     .product-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -367,46 +368,55 @@
     }
     .modal-overlay.active { display: flex; }
 
-    /* DETAIL PHOTOS (UP TO 10 PHOTOS) GRID & ROTATION */
+    /* DETAIL BUBBLE PHOTOS & FLOATING ANIMATION */
     .detail-gallery-container {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      max-height: 220px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      max-height: 240px;
       overflow-y: auto;
-      margin: 10px 0;
-      padding: 5px;
+      margin: 12px 0;
+      padding: 8px;
     }
     .detail-img-box {
       display: flex;
       flex-direction: column;
       align-items: center;
-      background: rgba(0,0,0,0.05);
-      border-radius: 10px;
-      padding: 5px;
     }
     .detail-bubble-img {
-      width: 70px;
-      height: 70px;
-      border-radius: 10px;
+      width: 75px;
+      height: 75px;
+      border-radius: 50%; /* Pure Bubble Shape */
       object-fit: cover;
       cursor: pointer;
-      transition: transform 0.3s ease;
-      border: 2px solid #f0abfc;
+      border: 3px solid #f0abfc;
+      box-shadow: 0 6px 15px rgba(217, 70, 239, 0.3);
+      animation: bubbleFloat 3s ease-in-out infinite alternate;
     }
-    .rotate-mini-btn {
-      background: var(--primary);
-      color: white;
-      border: none;
-      font-size: 0.65rem;
-      padding: 3px 6px;
-      border-radius: 6px;
-      margin-top: 4px;
-      cursor: pointer;
-      font-weight: bold;
+    .detail-img-box:nth-child(even) .detail-bubble-img {
+      animation-duration: 3.8s;
+      animation-delay: 0.4s;
+    }
+    .detail-img-box:nth-child(3n) .detail-bubble-img {
+      animation-duration: 2.5s;
+      animation-delay: 0.8s;
     }
 
-    /* FULLSCREEN LIGHTBOX */
+    /* BUBBLE FLOATING ANIMATION (NON-DEGREE ROTATION) */
+    @keyframes bubbleFloat {
+      0% {
+        transform: translateY(0px) scale(1);
+      }
+      50% {
+        transform: translateY(-6px) scale(1.05);
+        box-shadow: 0 10px 20px rgba(217, 70, 239, 0.5);
+      }
+      100% {
+        transform: translateY(3px) scale(0.98);
+      }
+    }
+
     .fullscreen-modal {
       display: none;
       position: fixed;
@@ -420,14 +430,13 @@
       max-width: 90%;
       max-height: 90%;
       border-radius: 12px;
-      transition: transform 0.3s ease;
       cursor: pointer;
     }
 
     .qty-modal-box {
       background: var(--box-bg);
       width: 90%;
-      max-width: 380px;
+      max-width: 400px;
       border-radius: 24px;
       padding: 22px;
       text-align: center;
@@ -464,14 +473,18 @@
     }
 
     .cart-item {
+      background: var(--card-bg);
+      padding: 12px;
+      border-radius: 14px;
+      margin-bottom: 10px;
+      border: 1px solid #f0abfc;
+      text-align: left;
+    }
+    .cart-item-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: var(--card-bg);
-      padding: 10px 14px;
-      border-radius: 12px;
-      margin-bottom: 8px;
-      border: 1px solid #f0abfc;
+      margin-bottom: 6px;
     }
 
     .admin-note-box {
@@ -554,7 +567,7 @@
       <header class="site-header">
         <img src="https://lh3.googleusercontent.com/d/14WBlxcwpCYj9gqkONoxRkhRrgwvBJSRH" class="logo" alt="Shop Logo">
         <h1 class="shop-title">Phoo K-pop & Thai-pop Shop</h1>
-        <div class="address-animated" data-mm="📍 No.460, Su Pyae Yadanar (2) St, 56 ward, South Dagon, Yangon<br>📞 Ph: 09898948790" data-en="📍 No.460, Su Pyae Yadanar (2) St, 56 ward, South Dagon, Yangon<br>📞 Ph: 09898948790">
+        <div class="address-animated">
           📍 No.460, Su Pyae Yadanar (2) St, 56 ward, South Dagon, Yangon<br>📞 Ph: 09898948790
         </div>
       </header>
@@ -588,7 +601,7 @@
     <div id="page-checker" class="page-view">
       <button class="nav-back-btn" onclick="navigateTo('page-landing')" data-mm="⬅️ ပင်မစာမျက်နှာသို့" data-en="⬅️ Back to Home">⬅️ ပင်မစာမျက်နှာသို့</button>
       <h2 style="font-size:1.1rem; font-weight:900; color:var(--text-sub); margin-bottom:12px;" data-mm="🔍 Order Status စစ်ဆေးရန်" data-en="🔍 Check Order Status">🔍 Order Status စစ်ဆေးရန်</h2>
-      <input type="text" id="check-code-input" class="input-field" placeholder="Order Code ရိုက်ထည့်ပါ (ဥပမာ- ORD-1234)">
+      <input type="text" id="check-code-input" class="input-field" placeholder="Order Code ရိုက်ထည့်ပါ (ဥပမာ- ORD-1234)" data-mm-ph="Order Code ရိုက်ထည့်ပါ (ဥပမာ- ORD-1234)" data-en-ph="Enter Order Code (e.g., ORD-1234)">
       <button class="btn-action" onclick="checkOrderStatus()" data-mm="စစ်ဆေးမည်" data-en="Check Status">စစ်ဆေးမည်</button>
       <div id="check-result-box" style="margin-top:15px;"></div>
     </div>
@@ -606,12 +619,12 @@
         </div>
 
         <div id="sec-rep-sub-form">
-          <textarea id="rep-text-input" class="input-field" placeholder="ကြုံတွေ့ရသော အခက်အခဲ/တိုင်ကြားစာ ရေးသားပါ..." style="height:80px; resize:none;"></textarea>
+          <textarea id="rep-text-input" class="input-field" placeholder="ကြုံတွေ့ရသော အခက်အခဲ/တိုင်ကြားစာ ရေးသားပါ..." data-mm-ph="ကြုံတွေ့ရသော အခက်အခဲ/တိုင်ကြားစာ ရေးသားပါ..." data-en-ph="Describe your complaint/issue here..." style="height:80px; resize:none;"></textarea>
           <button class="btn-action" style="background:#e11d48;" onclick="submitReport()" data-mm="Report ပေးပို့မည် ➔" data-en="Send Report ➔">Report ပေးပို့မည် ➔</button>
         </div>
 
         <div id="sec-rep-chk-form" style="display:none;">
-          <input type="text" id="rep-code-search" class="input-field" placeholder="Report Code ရိုက်ထည့်ပါ (ဥပမာ - RP-1234)">
+          <input type="text" id="rep-code-search" class="input-field" placeholder="Report Code ရိုက်ထည့်ပါ (ဥပမာ - RP-1234)" data-mm-ph="Report Code ရိုက်ထည့်ပါ (ဥပမာ - RP-1234)" data-en-ph="Enter Report Code (e.g., RP-1234)">
           <button class="btn-action" style="background:#059669;" onclick="checkReportStatus()" data-mm="Status စစ်မည်" data-en="Check Status">Status စစ်မည်</button>
           <div id="rep-status-output" style="margin-top:12px; font-weight:bold; text-align:center;"></div>
         </div>
@@ -632,9 +645,8 @@
         </div>
 
         <h4 style="font-size:0.9rem; margin-top:10px; font-weight:800;" data-mm="အချက်အလက် ဖြည့်ပါ:" data-en="Fill Information:">အချက်အလက် ဖြည့်ပါ:</h4>
-        <input type="text" id="cust-name" class="input-field" placeholder="လူကြီးမင်း နာမည်..." required>
+        <input type="text" id="cust-name" class="input-field" placeholder="လူကြီးမင်း နာမည်..." data-mm-ph="လူကြီးမင်း နာမည်..." data-en-ph="Your Name..." required>
         
-        <!-- Device Changer Limit (Up to 10 Devices Selection) -->
         <label style="font-size:0.8rem; font-weight:800;" data-mm="📱 Device Changer (၁၀ ခုအထိ ရွေးချယ်နိုင်သည်):" data-en="📱 Device Changer (Up to 10 Devices):">📱 Device Changer (၁၀ ခုအထိ ရွေးချယ်နိုင်သည်):</label>
         <select id="device-changer-select" class="input-field">
           <option value="Device 1 (Main Mobile)">Device 1 (Main Mobile)</option>
@@ -655,8 +667,8 @@
         </select>
 
         <div id="delivery-box" style="display:none;">
-          <input type="text" id="cust-address" class="input-field" placeholder="နေရပ်လိပ်စာ အပြည့်အစုံ">
-          <input type="tel" id="cust-phone" class="input-field" placeholder="ဖုန်းနံပါတ်">
+          <input type="text" id="cust-address" class="input-field" placeholder="နေရပ်လိပ်စာ အပြည့်အစုံ" data-mm-ph="နေရပ်လိပ်စာ အပြည့်အစုံ" data-en-ph="Full Address">
+          <input type="tel" id="cust-phone" class="input-field" placeholder="ဖုန်းနံပါတ်" data-mm-ph="ဖုန်းနံပါတ်" data-en-ph="Phone Number">
         </div>
 
         <select id="payment-type" class="input-field" onchange="togglePaymentBox(this.value)">
@@ -670,9 +682,6 @@
           <p style="margin-top:6px; color:var(--primary-dark); font-weight:700;" data-mm="💳 ပြေစာ Slip ပုံ တိုက်ရိုက် တင်ပါ:" data-en="💳 Upload Payment Slip:">💳 ပြေစာ Slip ပုံ တိုက်ရိုက် တင်ပါ:</p>
           <input type="file" id="slip-file-input" accept="image/*" class="input-field" style="padding:8px;">
         </div>
-
-        <!-- Buyer / Customer Note Field -->
-        <textarea id="customer-order-note" class="input-field" placeholder="ဝယ်ယူသူသီးသန့် မှတ်ချက် (Customer Note)..." style="height:60px; resize:none;"></textarea>
 
         <button class="btn-action" onclick="submitOrderToTelegram()" data-mm="✨ Order အတည်ပြုမည်" data-en="✨ Confirm Order">✨ Order အတည်ပြုမည်</button>
       </div>
@@ -699,18 +708,18 @@
     <span id="cart-badge" class="cart-count-badge">0</span>
   </div>
 
-  <!-- PRODUCT DETAIL MODAL (WITH 10 PHOTOS & ROTATION) -->
+  <!-- PRODUCT DETAIL MODAL (BUBBLE PHOTOS & ADMIN NOTE) -->
   <div id="detail-modal" class="modal-overlay">
     <div class="qty-modal-box">
       <button onclick="closeModal()" style="position:absolute; right:12px; top:12px; background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text-main);">❌</button>
       <h3 id="modal-title" style="font-weight:900; color:var(--primary-dark); margin-top:5px;"></h3>
       <p id="modal-price" style="font-size:1.1rem; font-weight:800; color:var(--accent); margin-bottom:8px;"></p>
 
-      <!-- Admin Stock Detail Note (Conditional Rendering - Shows only if available) -->
+      <!-- Admin Stock Note Display (Conditional) -->
       <div id="modal-admin-note" class="admin-note-box" style="display:none;"></div>
 
-      <!-- Up to 10 Detail Images Container with Clockwise Rotation -->
-      <p style="font-size:0.75rem; font-weight:bold; color:var(--text-sub);" data-mm="🖼️ Detail ပုံများ (၁၀ ပုံအထိ) - နှိပ်ပါက ပုံကြီးကြည့်နိုင်သည်" data-en="🖼️ Detail Images (Up to 10) - Click to Fullscreen">🖼️ Detail ပုံများ (၁၀ ပုံအထိ) - နှိပ်ပါက ပုံကြီးကြည့်နိုင်သည်</p>
+      <!-- Detail Bubble Photos with Floating Animation -->
+      <p style="font-size:0.75rem; font-weight:bold; color:var(--text-sub);" data-mm="🖼️ Detail Bubble ပုံများ - နှိပ်ပါက ပုံကြီးကြည့်နိုင်သည်" data-en="🖼️ Detail Bubble Images - Click for Fullscreen">🖼️ Detail Bubble ပုံများ - နှိပ်ပါက ပုံကြီးကြည့်နိုင်သည်</p>
       <div id="modal-gallery-grid" class="detail-gallery-container"></div>
 
       <label style="font-size:0.85rem; font-weight:800; color:var(--text-sub);" data-mm="ဝယ်ယူမည့် အရေအတွက် ရွေးပါ:" data-en="Select Quantity:">ဝယ်ယူမည့် အရေအတွက် ရွေးပါ:</label>
@@ -747,8 +756,7 @@
 
     let cart = [];
     let selectedProduct = null;
-    let currentLang = 'MM'; // Default Myanmar Language
-    let imageRotations = {}; // Store image rotation degrees
+    let currentLang = 'MM'; 
 
     /* FLOWER & LEAF TOUCH SPARKLE LOGIC */
     const natureItems = ['🌸', '🍃', '🌺', '🌿', '🌷', '🍀', '🌼', '✨'];
@@ -769,7 +777,6 @@
         el.style.setProperty('--vy', `${vy}px`);
 
         document.body.appendChild(el);
-
         setTimeout(() => { el.remove(); }, 1200);
       }
     }
@@ -778,18 +785,20 @@
       createFlowerBurst(e.clientX, e.clientY);
     });
 
-    /* MULTI-LANGUAGE TOGGLE LOGIC */
+    /* MULTI-LANGUAGE TOGGLE LOGIC (MM / EN) */
     window.toggleLanguage = function() {
       currentLang = currentLang === 'MM' ? 'EN' : 'MM';
       document.getElementById('lang-btn').innerText = currentLang === 'MM' ? '🇲🇲 MM' : '🇬🇧 EN';
 
       document.querySelectorAll('[data-mm]').forEach(el => {
-        if (currentLang === 'MM') {
-          el.innerHTML = el.getAttribute('data-mm');
-        } else {
-          el.innerHTML = el.getAttribute('data-en');
-        }
+        el.innerHTML = currentLang === 'MM' ? el.getAttribute('data-mm') : el.getAttribute('data-en');
       });
+
+      document.querySelectorAll('[data-mm-ph]').forEach(el => {
+        el.placeholder = currentLang === 'MM' ? el.getAttribute('data-mm-ph') : el.getAttribute('data-en-ph');
+      });
+
+      updateCartUI();
     };
 
     /* MUSIC PLAYER LOGIC */
@@ -803,9 +812,8 @@
           bubble.classList.add('playing');
           bubble.innerHTML = "🎶";
           label.innerText = currentLang === 'MM' ? "ပိတ်ရန်" : "Pause";
-        }).catch(err => {
-          console.log("Audio play error:", err);
-          alert("သီချင်းဖွင့်၍ မရသေးပါ။ တစ်ချက်ထပ်နှိပ်ပေးပါခင်ဗျာ။");
+        }).catch(() => {
+          alert(currentLang === 'MM' ? "သီချင်းဖွင့်၍ မရသေးပါ။ တစ်ချက်ထပ်နှိပ်ပေးပါခင်ဗျာ။" : "Could not play audio. Please tap again.");
         });
       } else {
         audio.pause();
@@ -820,11 +828,7 @@
       const body = document.body;
       const btn = document.getElementById('theme-btn');
       body.classList.toggle('dark-mode');
-      if (body.classList.contains('dark-mode')) {
-        btn.innerText = "☀️ Light Mode";
-      } else {
-        btn.innerText = "🌙 Dark Mode";
-      }
+      btn.innerText = body.classList.contains('dark-mode') ? "☀️ Light Mode" : "🌙 Dark Mode";
     };
 
     /* NAVIGATION LOGIC */
@@ -861,15 +865,14 @@
       });
     }
 
-    /* OPEN PRODUCT DETAIL MODAL (Supports Up to 10 Photos, Rotation & Conditional Admin Note) */
+    /* OPEN PRODUCT DETAIL MODAL (Bubble Photos & Admin Note Display) */
     function openBubbleModal(p) {
       selectedProduct = p;
-      imageRotations = {};
       document.getElementById("modal-title").innerText = p.name;
       document.getElementById("modal-price").innerText = `${p.price} Ks`;
       document.getElementById("modal-qty").value = 1;
       
-      // Admin Stock Note - Conditional Rendering (Only shows if non-empty)
+      // Admin Stock Note (Shows if non-empty)
       const adminNoteEl = document.getElementById("modal-admin-note");
       if (p.adminNote && p.adminNote.trim() !== "") {
         adminNoteEl.style.display = "block";
@@ -878,7 +881,7 @@
         adminNoteEl.style.display = "none";
       }
 
-      // Collect Main Photo + Up to 10 Detail Photos
+      // Collect Main Photo + Detail Photos
       const gallery = document.getElementById("modal-gallery-grid");
       gallery.innerHTML = "";
       
@@ -889,40 +892,22 @@
           if (url && url.trim()) allPhotos.push(url.trim());
         });
       }
-      
-      // Limit up to 10 photos
-      allPhotos = allPhotos.slice(0, 10);
 
-      allPhotos.forEach((url, i) => {
-        imageRotations[i] = 0;
+      allPhotos.forEach((url) => {
         const box = document.createElement("div");
         box.className = "detail-img-box";
-        box.innerHTML = `
-          <img id="detail-img-${i}" src="${url}" class="detail-bubble-img" onclick="openFullscreenModal('${url}', ${i})">
-          <button class="rotate-mini-btn" onclick="rotateDetailImg(${i})">🔄 90°</button>
-        `;
+        box.innerHTML = `<img src="${url}" class="detail-bubble-img" onclick="openFullscreenModal('${url}')">`;
         gallery.appendChild(box);
       });
 
       document.getElementById("detail-modal").classList.add("active");
     }
 
-    /* CLOCKWISE ROTATION (90, 180, 270, 0) */
-    window.rotateDetailImg = function(index) {
-      imageRotations[index] = (imageRotations[index] + 90) % 360;
-      const img = document.getElementById(`detail-img-${index}`);
-      if (img) {
-        img.style.transform = `rotate(${imageRotations[index]}deg)`;
-      }
-    };
-
     /* FULLSCREEN LIGHTBOX VIEW */
-    window.openFullscreenModal = function(url, index) {
+    window.openFullscreenModal = function(url) {
       const fsModal = document.getElementById("fullscreen-modal");
       const fsImg = document.getElementById("fullscreen-img");
       fsImg.src = url;
-      const rot = imageRotations[index] || 0;
-      fsImg.style.transform = `rotate(${rot}deg)`;
       fsModal.style.display = "flex";
     };
 
@@ -944,7 +929,8 @@
         cart.push({
           name: selectedProduct.name,
           price: selectedProduct.price,
-          qty: qty
+          qty: qty,
+          itemNote: "" // Item-specific note field
         });
       }
 
@@ -969,13 +955,21 @@
           const itemTotal = item.price * item.qty;
           total += itemTotal;
           totalCount += item.qty;
+
+          const phText = currentLang === 'MM' ? 'ဒီ stock အတွက် မှတ်ချက်ရေးပါ...' : 'Note for this item...';
+
           container.innerHTML += `
             <div class="cart-item">
-              <div>
-                <b>${item.name}</b><br>
-                <small>${item.price} Ks x ${item.qty} = ${itemTotal} Ks</small>
+              <div class="cart-item-header">
+                <div>
+                  <b>${item.name}</b><br>
+                  <small style="color:var(--primary-dark); font-weight:bold;">${item.price} Ks x ${item.qty} = ${itemTotal} Ks</small>
+                </div>
+                <button onclick="removeFromCart(${index})" style="background:none; border:none; color:red; font-size:1.1rem; cursor:pointer;">🗑️</button>
               </div>
-              <button onclick="removeFromCart(${index})" style="background:none; border:none; color:red; font-size:1.1rem; cursor:pointer;">🗑️</button>
+              <!-- Individual Stock Note Input -->
+              <input type="text" class="input-field" style="margin:4px 0 0; padding:6px 10px; font-size:0.8rem;" 
+                placeholder="${phText}" value="${item.itemNote || ''}" onchange="updateItemNote(${index}, this.value)">
             </div>
           `;
         });
@@ -986,6 +980,13 @@
 
       document.getElementById("cart-total-price").innerText = `${total} Ks`;
     }
+
+    /* UPDATE INDIVIDUAL ITEM NOTE */
+    window.updateItemNote = function(index, val) {
+      if(cart[index]) {
+        cart[index].itemNote = val.trim();
+      }
+    };
 
     window.removeFromCart = function(index) {
       cart.splice(index, 1);
@@ -1003,7 +1004,7 @@
       document.getElementById("online-pay-box").style.display = (val === 'online') ? 'block' : 'none';
     };
 
-    /* SUBMIT ORDER TO TELEGRAM (With Device Changer & Customer Note) */
+    /* SUBMIT ORDER TO TELEGRAM (With Item Notes & Multi-Language Alert) */
     window.submitOrderToTelegram = async function() {
       if(cart.length === 0) return alert(currentLang === 'MM' ? "ခြင်းတောင်းထဲတွင် ပစ္စည်းထည့်ပါဦး!" : "Add items to cart first!");
       
@@ -1015,7 +1016,6 @@
       const address = document.getElementById("cust-address").value;
       const phone = document.getElementById("cust-phone").value;
       const payType = document.getElementById("payment-type").value;
-      const customerNote = document.getElementById("customer-order-note").value.trim();
       const slipFile = document.getElementById("slip-file-input").files[0];
 
       if(delType === 'delivery' && (!address || !phone)) {
@@ -1023,7 +1023,13 @@
       }
 
       const orderCode = "ORD-" + Math.floor(1000 + Math.random() * 9000);
-      let itemsSummary = cart.map(i => `• ${i.name} (${i.qty}ခု) = ${i.price * i.qty}Ks`).join("\n");
+      
+      // Items Summary with Individual Item Notes
+      let itemsSummary = cart.map(i => {
+        let noteTxt = i.itemNote ? ` [Note: ${i.itemNote}]` : '';
+        return `• ${i.name} (${i.qty}ခု)${noteTxt} = ${i.price * i.qty}Ks`;
+      }).join("\n");
+
       let totalAmount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
 
       let msg = `🛍️ **NEW ORDER (${orderCode})**\n\n`;
@@ -1036,12 +1042,11 @@
         msg += `📍 လိပ်စာ: ${address}\n📞 ဖုန်း: ${phone}\n`;
       }
       msg += `💳 ငွေရှင်းစနစ်: ${payType}\n`;
-      if(customerNote) msg += `📝 Customer Note: ${customerNote}\n`;
 
       await addDoc(collection(db, "orders"), {
         orderCode, customerName: name, selectedDevice, items: cart, totalAmount,
         deliveryType: delType, address: address || "N/A", phone: phone || "N/A",
-        paymentType: payType, customerNote: customerNote || "N/A", adminNote: "", status: "order စစ်ဆေးနေဆဲ", createdAt: new Date()
+        paymentType: payType, adminNote: "", status: "order စစ်ဆေးနေဆဲ", createdAt: new Date()
       });
 
       try {
@@ -1068,7 +1073,7 @@
       navigateTo('page-success');
     };
 
-    /* ORDER CHECKER LOGIC (With Admin Note Display) */
+    /* ORDER CHECKER LOGIC */
     window.checkOrderStatus = async function() {
       const code = document.getElementById("check-code-input").value.trim();
       if(!code) return alert(currentLang === 'MM' ? "Order Code ရိုက်ထည့်ပါ" : "Enter Order Code");
@@ -1120,27 +1125,27 @@
         reportCode: rpCode, message: msg, status: "စစ်ဆေးနေဆဲ", createdAt: new Date()
       });
 
-      alert(`Report ပေးပို့ပြီးပါပြီ!\nသင့် Report Code မှာ [ ${rpCode} ] ဖြစ်ပါသည်။`);
+      alert(currentLang === 'MM' ? `Report ပေးပို့ပြီးပါပြီ!\nသင့် Report Code မှာ [ ${rpCode} ] ဖြစ်ပါသည်။` : `Report Submitted!\nYour Report Code is [ ${rpCode} ].`);
       document.getElementById("rep-text-input").value = "";
     };
 
     window.checkReportStatus = async function() {
       const code = document.getElementById("rep-code-search").value.trim();
       const outEl = document.getElementById("rep-status-output");
-      if(!code) return alert("Report Code ရိုက်ထည့်ပါ။");
+      if(!code) return alert(currentLang === 'MM' ? "Report Code ရိုက်ထည့်ပါ။" : "Enter Report Code.");
 
-      outEl.innerText = "⏳ စစ်ဆေးနေပါသည်...";
+      outEl.innerText = currentLang === 'MM' ? "⏳ စစ်ဆေးနေပါသည်..." : "⏳ Checking...";
       const q = query(collection(db, "reports"), where("reportCode", "==", code));
       const snapshot = await getDocs(q);
 
       if(snapshot.empty) {
-        outEl.innerText = "❌ Report Code ရှာမတွေ့ပါ။";
+        outEl.innerText = currentLang === 'MM' ? "❌ Report Code ရှာမတွေ့ပါ။" : "❌ Report Code Not Found.";
         return;
       }
 
       snapshot.forEach(docSnap => {
         const r = docSnap.data();
-        outEl.innerHTML = `အခြေအနေ: <span style="color:var(--primary-dark);">${r.status}</span>`;
+        outEl.innerHTML = `${currentLang === 'MM' ? 'အခြေအနေ' : 'Status'}: <span style="color:var(--primary-dark);">${r.status}</span>`;
       });
     };
 
