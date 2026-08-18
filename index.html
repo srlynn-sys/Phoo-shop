@@ -4,143 +4,383 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Phoo K-pop & Thai-pop Shop</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --primary: #d946ef;
+      --primary-dark: #a21caf;
+      --accent: #8b5cf6;
+      --bg-lavender: #f7f0ff;
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --text-main: #2e1065;
+      --text-sub: #6b21a8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+    body {
+      background: linear-gradient(135deg, #fae8ff 0%, #f3e8ff 50%, #e9d5ff 100%);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* K-pop Animated Background Floating Icons */
+    .bg-icon {
+      position: fixed;
+      font-size: 2rem;
+      opacity: 0.25;
+      animation: float 8s infinite ease-in-out;
+      pointer-events: none;
+      z-index: 0;
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-25px) rotate(15deg); }
+    }
+
+    /* Container */
+    .app-container {
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      z-index: 1;
+      padding-bottom: 80px;
+    }
+
+    /* Header & Animated Address */
+    .site-header {
+      text-align: center;
+      padding: 20px 15px;
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(10px);
+      border-bottom: 2px solid #f0abfc;
+      margin-bottom: 15px;
+    }
+    .logo {
+      width: 85px;
+      height: 85px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 0 15px rgba(217, 70, 239, 0.4);
+      border: 3px solid #fff;
+    }
+    .shop-title {
+      font-size: 1.3rem;
+      font-weight: 900;
+      color: var(--primary-dark);
+      margin-top: 8px;
+    }
+
+    /* Wiggle/Pulse Animated Address */
+    .address-animated {
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      margin-top: 6px;
+      font-weight: 600;
+      display: inline-block;
+      animation: pulseWiggle 3s infinite ease-in-out;
+    }
+    @keyframes pulseWiggle {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      25% { transform: scale(1.02) rotate(-1deg); }
+      75% { transform: scale(1.02) rotate(1deg); }
+    }
+
+    /* Bottom Navigation Bar (Page Switcher) */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      display: flex;
+      justify-content: space-around;
+      padding: 10px 0;
+      border-top: 2px solid #f0abfc;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+      z-index: 100;
+    }
+    .nav-btn {
+      background: none;
+      border: none;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #9333ea;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      position: relative;
+    }
+    .nav-btn.active { color: var(--primary); transform: scale(1.1); }
+    .cart-badge {
+      position: absolute;
+      top: -4px;
+      right: 12px;
+      background: #ef4444;
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 10px;
+    }
+
+    /* Page Views */
+    .page-view { display: none; padding: 15px; }
+    .page-view.active { display: block; }
+
+    /* Product Grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+    
+    /* Lavender K-pop Background Card */
+    .product-card {
+      background: var(--card-bg);
+      background-image: radial-gradient(#e9d5ff 15%, transparent 16%);
+      background-size: 16px 16px;
+      border-radius: 18px;
+      padding: 12px;
+      border: 2px solid #f5d0fe;
+      box-shadow: 0 8px 18px rgba(147, 51, 234, 0.1);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+    .product-card:hover { transform: translateY(-5px) scale(1.02); }
+    
+    .product-img {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 14px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+    .product-title {
+      font-weight: 800;
+      font-size: 0.9rem;
+      margin: 8px 0 4px;
+      color: var(--text-main);
+    }
+    .product-price {
+      font-weight: 900;
+      color: var(--primary-dark);
+      font-size: 0.95rem;
+    }
+
+    /* Clockwise Bubble Pop Modal (Details) */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(46, 16, 101, 0.6);
+      backdrop-filter: blur(5px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 200;
+    }
+    .modal-overlay.active { display: flex; }
+
+    .bubble-modal {
+      background: #fff;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 24px;
+      padding: 20px;
+      animation: bubblePop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+    @keyframes bubblePop {
+      0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    /* Clockwise Detail Images Bubble Layout */
+    .detail-bubble-gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin: 15px 0;
+    }
+    .bubble-img {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #f0abfc;
+      box-shadow: 0 4px 12px rgba(217, 70, 239, 0.3);
+      animation: clockwiseSpin 0.6s ease-out forwards;
+    }
+    @keyframes clockwiseSpin {
+      0% { transform: rotate(-90deg) scale(0.3); opacity: 0; }
+      100% { transform: rotate(0deg) scale(1); opacity: 1; }
+    }
+
+    /* Modern Inputs & Buttons */
+    .input-field {
+      width: 100%;
+      padding: 12px 15px;
+      border-radius: 12px;
+      border: 2px solid #e9d5ff;
+      margin-top: 8px;
+      margin-bottom: 12px;
+      outline: none;
+      font-size: 0.9rem;
+    }
+    .input-field:focus { border-color: var(--primary); }
+
+    .btn-action {
+      width: 100%;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 14px;
+      font-weight: 800;
+      font-size: 0.95rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(217, 70, 239, 0.4);
+    }
+    .btn-action:active { transform: scale(0.97); }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px 14px;
+      border-radius: 14px;
+      margin-bottom: 8px;
+      border: 1px solid #f0abfc;
+    }
+  </style>
 </head>
 <body>
 
-  <div class="kpop-bg-icon" style="top:10%; left:5%;">🌸</div>
-  <div class="kpop-bg-icon" style="top:25%; right:8%; animation-delay: 2s;">🎤</div>
-  <div class="kpop-bg-icon" style="top:50%; left:8%; animation-delay: 4s;">🪄</div>
-  <div class="kpop-bg-icon" style="top:70%; right:6%; animation-delay: 1s;">🎵</div>
-  <div class="kpop-bg-icon" style="top:85%; left:12%; animation-delay: 3s;">🪻</div>
+  <!-- Background Floating K-pop Icons -->
+  <div class="bg-icon" style="top:10%; left:5%;">🌸</div>
+  <div class="bg-icon" style="top:30%; right:8%; animation-delay: 2s;">🎤</div>
+  <div class="bg-icon" style="top:60%; left:10%; animation-delay: 4s;">🪄</div>
+  <div class="bg-icon" style="top:85%; right:6%; animation-delay: 1s;">🎵</div>
 
   <div class="app-container">
 
+    <!-- Header -->
     <header class="site-header">
-      <img src="https://lh3.googleusercontent.com/d/14WBlxcwpCYj9gqkONoxRkhRrgwvBJSRH" alt="Shop Logo" class="logo">
+      <img src="https://lh3.googleusercontent.com/d/14WBlxcwpCYj9gqkONoxRkhRrgwvBJSRH" class="logo" alt="Shop Logo">
       <h1 class="shop-title">Phoo K-pop & Thai-pop Shop</h1>
-      <p class="address">No.460, Su Pyae Yadanar (2) St, 56 ward, South Dagon, Yangon<br>Ph: 09898948790</p>
+      <div class="address-animated">
+        📍 No.460, Su Pyae Yadanar (2) St, 56 ward, South Dagon, Yangon<br>📞 Ph: 09898948790
+      </div>
     </header>
 
-    <div class="nav-pills">
-      <button id="nav-shop" class="nav-pill active">🛍️ Shop Center</button>
-      <button id="nav-checker" class="nav-pill">🔍 Order Checker</button>
+    <!-- PAGE 1: SHOP CENTER -->
+    <div id="page-shop" class="page-view active">
+      <h2 style="font-size:1.1rem; font-weight:800; color:var(--text-sub); margin-bottom:12px;">🏷️ ပစ္စည်းများ</h2>
+      <div id="product-grid" class="product-grid"></div>
     </div>
 
-    <main id="shop-flow">
-
-      <!-- STEP 1 -->
-      <section id="page-step-name" class="view-card">
-        <h2 style="font-size:1.1rem; margin-bottom:12px; font-weight:800;">✨ မင်္ဂလာပါ၊ နာမည်လေး ရိုက်ထည့်ပေးပါ</h2>
-        <input type="text" id="cust-name-input" class="input-modern" placeholder="လူကြီးမင်း နာမည်..." required>
-        <button id="btn-to-catalog" class="btn-primary">ဈေးဝယ်ရန် ရှေ့ဆက်မည် ➔</button>
-      </section>
-
-      <!-- STEP 2 -->
-      <section id="page-catalog" class="view-card hidden">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-          <p style="font-size:0.9rem; color:var(--text-sub);">မင်္ဂလာပါ <b id="display-cust-name" style="color:var(--purple-dark);"></b> 👋</p>
-          <button id="btn-change-name" style="background:none; border:none; color:var(--purple-primary); font-size:0.8rem; cursor:pointer;">(နာမည်ပြင်ရန်)</button>
+    <!-- PAGE 2: CART (ခြင်းတောင်း) -->
+    <div id="page-cart" class="page-view">
+      <h2 style="font-size:1.1rem; font-weight:800; color:var(--text-sub); margin-bottom:12px;">🛒 ခြင်းတောင်းထဲမှ ပစ္စည်းများ</h2>
+      <div id="cart-items-container"></div>
+      
+      <div style="background:white; padding:15px; border-radius:16px; margin-top:15px; border:2px solid #f5d0fe;">
+        <div style="display:flex; justify-content:space-between; font-weight:800; font-size:1.1rem; margin-bottom:15px;">
+          <span>စုစုပေါင်း ကျသင့်ငွေ:</span>
+          <span id="cart-total-price" style="color:var(--primary-dark);">0 Ks</span>
         </div>
-        <h2 style="font-size:1.1rem; font-weight:800; margin-bottom:10px;">🏷️ ပစ္စည်းများ</h2>
-        <div id="product-grid" class="product-grid"></div>
-      </section>
 
-      <!-- STEP 3 -->
-      <section id="page-detail" class="view-card hidden">
-        <button id="btn-back-to-catalog" class="btn-secondary" style="margin-bottom:15px;">⬅️ ပစ္စည်းစာရင်းသို့ ပြန်သွားမည်</button>
-        <div id="detail-images"></div>
-        <h2 id="detail-title" style="margin:12px 0 6px 0; font-weight:800;"></h2>
-        <p id="detail-price" style="font-size:1.2rem; font-weight:800; color:var(--purple-primary); margin-bottom:15px;"></p>
+        <h3 style="font-size:0.95rem; margin-bottom:6px;">အချက်အလက် ဖြည့်ပါ:</h3>
+        <input type="text" id="cust-name" class="input-field" placeholder="လူကြီးမင်း နာမည်..." required>
         
-        <div style="margin-bottom:15px;">
-          <label style="font-size:0.85rem; font-weight:700; color:var(--text-sub);">အရေအတွက်:</label>
-          <input type="number" id="detail-qty" class="input-modern" value="1" min="1" style="margin-top:6px;">
+        <select id="delivery-type" class="input-field" onchange="toggleDeliveryBox(this.value)">
+          <option value="pickup">🏠 ကိုယ်တိုင် Pick-up လာယူမည်</option>
+          <option value="delivery">🚚 Delivery ပို့ပေးပါ</option>
+        </select>
+
+        <div id="delivery-box" style="display:none;">
+          <input type="text" id="cust-address" class="input-field" placeholder="နေရပ်လိပ်စာ အပြည့်အစုံ">
+          <input type="tel" id="cust-phone" class="input-field" placeholder="ဖုန်းနံပါတ်">
         </div>
 
-        <button id="btn-to-checkout" class="btn-primary">ဝယ်ယူရန် Checkout သို့သွားမည် ➔</button>
-      </section>
+        <select id="payment-type" class="input-field" onchange="togglePaymentBox(this.value)">
+          <option value="cod">💵 Cash on Delivery / Pick-up</option>
+          <option value="online">📱 Online Payment (KPay / WavePay)</option>
+        </select>
 
-      <!-- STEP 4 -->
-      <section id="page-checkout" class="view-card hidden">
-        <button id="btn-back-to-detail" class="btn-secondary" style="margin-bottom:15px;">⬅️ နောက်သို့</button>
-        <h2 style="font-size:1.2rem; font-weight:800; margin-bottom:15px;">💳 Order အချက်အလက်နှင့် ငွေရှင်းရန်</h2>
-
-        <div style="margin-bottom:12px;">
-          <label style="font-size:0.85rem; font-weight:700; color:var(--text-sub);">ပို့ဆောင်ရေး ပုံစံ:</label>
-          <select id="select-delivery" class="input-modern" style="margin-top:6px;">
-            <option value="pickup">🏠 ကိုယ်တိုင် Pick-up လာယူမည်</option>
-            <option value="delivery">🚚 Delivery ပို့ပေးပါ</option>
-          </select>
-        </div>
-
-        <div id="delivery-info-box" class="hidden">
-          <input type="text" id="del-address" class="input-modern" placeholder="နေရပ်လိပ်စာ အပြည့်အစုံ">
-          <input type="tel" id="del-phone" class="input-modern" placeholder="ဖုန်းနံပါတ်">
-        </div>
-
-        <div style="margin-bottom:12px;">
-          <label style="font-size:0.85rem; font-weight:700; color:var(--text-sub);">ငွေရှင်းစနစ်:</label>
-          <select id="select-payment" class="input-modern" style="margin-top:6px;">
-            <option value="cod">💵 Cash on Delivery / Pick-up ရှင်းမည်</option>
-            <option value="online">📱 Online Payment (KPay / WavePay)</option>
-          </select>
-        </div>
-
-        <div id="online-pay-info" class="hidden" style="background:#f3e8ff; padding:12px; border-radius:14px; margin-bottom:12px; font-size:0.85rem;">
+        <div id="online-pay-box" style="display:none; background:#f3e8ff; padding:12px; border-radius:12px; margin-bottom:12px; font-size:0.85rem;">
           <p><b>Wave Pay:</b> 09898948790 (Khin Saw Htwe)</p>
           <p><b>KPay:</b> 09422725283 (Moe Pyae Pyae Zaw)</p>
-          <input type="text" id="pay-screenshot-link" class="input-modern" placeholder="ပြေစာ Image Direct Link ထည့်ပါ" style="margin-top:8px;">
+          <p style="margin-top:6px; color:var(--primary-dark); font-weight:700;">💳 ပြေစာ Slip ပုံ တိုက်ရိုက် တင်ပါ:</p>
+          <input type="file" id="slip-file-input" accept="image/*" class="input-field" style="background:white; padding:8px;">
         </div>
 
-        <div style="margin-bottom:12px;">
-          <label style="font-size:0.85rem; font-weight:700; color:var(--text-sub);">📝 Order Note:</label>
-          <textarea id="order-note-input" class="input-modern" style="height:70px; margin-top:6px; resize:none;" placeholder="မှာကြားလိုသည်များ ရေးရန်..."></textarea>
-        </div>
+        <textarea id="order-note" class="input-field" placeholder="Order Note (မှာကြားလိုသည်များရေးရန်)..." style="height:60px; resize:none;"></textarea>
 
-        <div class="summary-box">
-          <div class="summary-row"><span>ကျသင့်ငွေ:</span><span id="sum-subtotal">0 Ks</span></div>
-          <div class="summary-row"><span>Discount လျှော့ဈေး:</span><span id="sum-discount">-0 Ks</span></div>
-          <div class="summary-total"><span>စုစုပေါင်း ကျသင့်ငွေ:</span><span id="sum-total">0 Ks</span></div>
-        </div>
-
-        <button id="btn-confirm-order" class="btn-primary">✨ Order အတည်ပြုမည်</button>
-      </section>
-
-      <!-- STEP 5 -->
-      <section id="page-success" class="view-card hidden" style="text-align:center;">
-        <div style="font-size:3rem; margin-bottom:10px;">🎉</div>
-        <h2 style="font-size:1.3rem; font-weight:800; color:var(--purple-dark); margin-bottom:8px;">Order တင်ခြင်း အောင်မြင်ပါသည်။</h2>
-        <p style="font-size:0.85rem; color:var(--text-sub); margin-bottom:15px;">ကျေးဇူးတင်ရှိပါသည်!</p>
-
-        <div class="summary-box" style="text-align:left;">
-          <p style="font-size:0.95rem; margin-bottom:6px;"><b>Order Code:</b> <span id="suc-code" style="color:var(--purple-primary); font-weight:800;"></span></p>
-          <p style="font-size:0.85rem; margin-bottom:4px;"><b>မှာယူသူ:</b> <span id="suc-name"></span></p>
-          <p style="font-size:0.85rem; margin-bottom:4px;"><b>ပစ္စည်း:</b> <span id="suc-item"></span></p>
-          <p style="font-size:0.85rem; margin-bottom:4px;"><b>ကျသင့်ငွေ:</b> <span id="suc-total"></span> Ks</p>
-          <p style="font-size:0.85rem; color:var(--text-sub);" id="suc-note-container"></p>
-        </div>
-
-        <button id="btn-success-done" class="btn-primary">ဈေးဝယ်စင်တာသို့ ပြန်သွားမည် 🛍️</button>
-      </section>
-
-    </main>
-
-    <!-- Checker -->
-    <section id="page-checker" class="view-card hidden">
-      <h2 style="font-size:1.1rem; font-weight:800; margin-bottom:12px;">🔍 Order Code စစ်ဆေးရန်</h2>
-      <input type="text" id="checker-code-input" class="input-modern" placeholder="Order Code (ဥပမာ- ORD-8921)">
-      <button id="btn-check-status" class="btn-primary">စစ်ဆေးမည်</button>
-
-      <div id="checker-result" class="hidden" style="margin-top:20px; background:#faf5ff; border:1px solid #e9d5ff; border-radius:16px; padding:16px;">
-        <p style="font-size:0.9rem; margin-bottom:8px;">Order Code: <b id="res-code"></b></p>
-        <p style="font-size:0.9rem; margin-bottom:8px;">Status: <span id="res-status-badge" class="badge"></span></p>
-        <div id="res-details" style="font-size:0.85rem; color:var(--text-sub); border-top:1px solid #e9d5ff; padding-top:8px; margin-top:8px;"></div>
+        <button class="btn-action" onclick="submitOrderToTelegram()">✨ Order အတည်ပြုမည် (Telegram သို့ပို့မည်)</button>
       </div>
-    </section>
+    </div>
+
+    <!-- PAGE 3: CHECKER -->
+    <div id="page-checker" class="page-view">
+      <h2 style="font-size:1.1rem; font-weight:800; color:var(--text-sub); margin-bottom:12px;">🔍 Order Status စစ်ဆေးရန်</h2>
+      <input type="text" id="check-code-input" class="input-field" placeholder="Order Code ရိုက်ထည့်ပါ (ဥပမာ- ORD-1234)">
+      <button class="btn-action" onclick="checkOrderStatus()">စစ်ဆေးမည်</button>
+      <div id="check-result-box" style="margin-top:15px;"></div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <nav class="bottom-nav">
+      <button class="nav-btn active" onclick="switchTab('page-shop', this)">
+        <span>🛍️</span>
+        <span>Shop Center</span>
+      </button>
+      <button class="nav-btn" onclick="switchTab('page-cart', this)">
+        <span>🛒</span>
+        <span>ခြင်းတောင်း</span>
+        <span id="cart-badge-count" class="cart-badge" style="display:none;">0</span>
+      </button>
+      <button class="nav-btn" onclick="switchTab('page-checker', this)">
+        <span>🔍</span>
+        <span>Order Checker</span>
+      </button>
+    </nav>
 
   </div>
 
+  <!-- CLOCKWISE BUBBLE POP MODAL -->
+  <div id="detail-modal" class="modal-overlay">
+    <div class="bubble-modal">
+      <button onclick="closeModal()" style="position:absolute; right:15px; top:15px; background:none; border:none; font-size:1.4rem; cursor:pointer;">❌</button>
+      <h3 id="modal-title" style="font-weight:900; color:var(--primary-dark);"></h3>
+      <p id="modal-price" style="font-size:1.1rem; font-weight:800; color:var(--accent); margin:5px 0;"></p>
+
+      <!-- Clockwise Bubble Images -->
+      <div id="modal-gallery" class="detail-bubble-gallery"></div>
+
+      <label style="font-size:0.85rem; font-weight:700;">အရေအတွက်:</label>
+      <input type="number" id="modal-qty" class="input-field" value="1" min="1" style="margin-top:4px;">
+
+      <button class="btn-action" onclick="addToCartFromModal()">🛒 ခြင်းတောင်းထဲထည့်မည်</button>
+    </div>
+  </div>
+
+  <!-- FIREBASE & SCRIPT -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -157,189 +397,224 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    let currentCustomerName = "";
+    // TELEGRAM BOT CONFIG
+    const TELEGRAM_BOT_TOKEN = "8997594636:AAGGXMgiTnbufcUozWn2yBW7XdfLnbLP4R8"; 
+    const TELEGRAM_CHAT_ID = "5050699658";
+
+    let cart = [];
     let selectedProduct = null;
 
-    function getStatusBadgeClass(status) {
-      switch (status) {
-        case "order စစ်ဆေးနေဆဲ": return "status-yellow";
-        case "order လုပ်ဆောင်နေပါသည်": return "status-purple";
-        case "order rejected": return "status-red";
-        case "order completed": return "status-green";
-        case "order ပို့ဆောင်နေပါသည်": return "status-blue";
-        default: return "status-yellow";
-      }
-    }
-
-    function showPage(pageId) {
-      ["page-step-name", "page-catalog", "page-detail", "page-checkout", "page-success"].forEach(id => {
-        const el = document.getElementById(id);
-        if(el) el.classList.add("hidden");
-      });
-      const target = document.getElementById(pageId);
-      if(target) target.classList.remove("hidden");
-    }
-
-    document.getElementById("nav-shop").onclick = () => {
-      document.getElementById("nav-shop").classList.add("active");
-      document.getElementById("nav-checker").classList.remove("active");
-      document.getElementById("shop-flow").classList.remove("hidden");
-      document.getElementById("page-checker").classList.add("hidden");
+    window.switchTab = function(pageId, btnEl) {
+      document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+      btnEl.classList.add('active');
     };
 
-    document.getElementById("nav-checker").onclick = () => {
-      document.getElementById("nav-checker").classList.add("active");
-      document.getElementById("nav-shop").classList.remove("active");
-      document.getElementById("page-checker").classList.remove("hidden");
-      document.getElementById("shop-flow").classList.add("hidden");
-    };
-
-    document.getElementById("btn-to-catalog").onclick = () => {
-      const name = document.getElementById("cust-name-input").value.trim();
-      if(!name) return alert("နာမည် ရိုက်ထည့်ပေးပါ။");
-      currentCustomerName = name;
-      document.getElementById("display-cust-name").innerText = currentCustomerName;
-      showPage("page-catalog");
-      loadProducts();
-    };
-
-    document.getElementById("btn-change-name").onclick = () => showPage("page-step-name");
-
-    async function loadProducts() {
+    async function loadShopProducts() {
       const grid = document.getElementById("product-grid");
-      grid.innerHTML = "Loading...";
+      grid.innerHTML = "<p style='grid-column:span 2; text-align:center;'>Loading...</p>";
       const snapshot = await getDocs(collection(db, "products"));
       grid.innerHTML = "";
-      
+
       if(snapshot.empty) {
-        grid.innerHTML = "<p style='grid-column: span 2; text-align:center; color:var(--text-sub);'>ပစ္စည်းများ မရှိသေးပါ။ Admin မှာ ပစ္စည်းစတင်ထည့်ပေးပါဗျ။</p>";
+        grid.innerHTML = "<p style='grid-column:span 2; text-align:center;'>ပစ္စည်းများ မရှိသေးပါ။</p>";
         return;
       }
 
       snapshot.forEach(docSnap => {
         const p = docSnap.data();
-        const item = document.createElement("div");
-        item.className = "product-card";
-        item.innerHTML = `
-          <img src="${p.showPhoto}" class="product-img" onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
+        const card = document.createElement("div");
+        card.className = "product-card";
+        card.innerHTML = `
+          <img src="${p.showPhoto}" class="product-img" onerror="this.src='https://via.placeholder.com/150'">
           <div class="product-title">${p.name}</div>
           <div class="product-price">${p.price} Ks</div>
         `;
-        item.onclick = () => openDetailPage(p);
-        grid.appendChild(item);
+        card.onclick = () => openBubbleModal(p);
+        grid.appendChild(card);
       });
     }
 
-    function openDetailPage(p) {
+    function openBubbleModal(p) {
       selectedProduct = p;
-      document.getElementById("detail-title").innerText = p.name;
-      document.getElementById("detail-price").innerText = `${p.price} Ks`;
+      document.getElementById("modal-title").innerText = p.name;
+      document.getElementById("modal-price").innerText = `${p.price} Ks`;
       
-      const imgsDiv = document.getElementById("detail-images");
-      imgsDiv.innerHTML = `<img src="${p.showPhoto}" style="width:100%; height:220px; object-fit:cover; border-radius:18px;">`;
-      if(p.detailPhotos && p.detailPhotos.length > 0) {
-        p.detailPhotos.forEach(url => {
-          if(url.trim()) imgsDiv.innerHTML += `<img src="${url.trim()}" style="width:100%; height:220px; object-fit:cover; border-radius:18px; margin-top:8px;">`;
+      const gallery = document.getElementById("modal-gallery");
+      gallery.innerHTML = `<img src="${p.showPhoto}" class="bubble-img" style="animation-delay: 0.1s;">`;
+      
+      if(p.detailPhotos) {
+        p.detailPhotos.forEach((url, i) => {
+          if(url.trim()) {
+            gallery.innerHTML += `<img src="${url.trim()}" class="bubble-img" style="animation-delay: ${(i+2)*0.15}s;">`;
+          }
         });
       }
-      showPage("page-detail");
+
+      document.getElementById("detail-modal").classList.add("active");
     }
 
-    document.getElementById("btn-back-to-catalog").onclick = () => showPage("page-catalog");
-
-    document.getElementById("btn-to-checkout").onclick = () => {
-      showPage("page-checkout");
-      updateInvoiceSummary();
+    window.closeModal = function() {
+      document.getElementById("detail-modal").classList.remove("active");
     };
 
-    document.getElementById("btn-back-to-detail").onclick = () => showPage("page-detail");
-
-    document.getElementById("select-delivery").onchange = (e) => {
-      if(e.target.value === "delivery") document.getElementById("delivery-info-box").classList.remove("hidden");
-      else document.getElementById("delivery-info-box").classList.add("hidden");
-    };
-
-    document.getElementById("select-payment").onchange = (e) => {
-      if(e.target.value === "online") document.getElementById("online-pay-info").classList.remove("hidden");
-      else document.getElementById("online-pay-info").classList.add("hidden");
-    };
-
-    function updateInvoiceSummary() {
-      const qty = Number(document.getElementById("detail-qty").value) || 1;
-      const subtotal = selectedProduct.price * qty;
-      let discount = 0;
-      if(subtotal >= 10000) discount = Math.floor(subtotal / 10000) * 500;
-      const total = subtotal - discount;
-
-      document.getElementById("sum-subtotal").innerText = `${subtotal} Ks`;
-      document.getElementById("sum-discount").innerText = `-${discount} Ks`;
-      document.getElementById("sum-total").innerText = `${total} Ks`;
-    }
-
-    document.getElementById("btn-confirm-order").onclick = async () => {
-      const delType = document.getElementById("select-delivery").value;
-      const payType = document.getElementById("select-payment").value;
-      const address = document.getElementById("del-address").value;
-      const phone = document.getElementById("del-phone").value;
-      const payLink = document.getElementById("pay-screenshot-link").value;
-      const note = document.getElementById("order-note-input").value;
-
-      if(delType === "delivery" && (!address || !phone)) {
-        return alert("Delivery ပို့ရန် လိပ်စာ နှင့် ဖုန်းနံပါတ် ဖြည့်ပေးပါ။");
+    window.addToCartFromModal = function() {
+      const qty = parseInt(document.getElementById("modal-qty").value) || 1;
+      const existing = cart.find(item => item.name === selectedProduct.name);
+      
+      if(existing) {
+        existing.qty += qty;
+      } else {
+        cart.push({
+          name: selectedProduct.name,
+          price: selectedProduct.price,
+          qty: qty
+        });
       }
 
-      const qty = Number(document.getElementById("detail-qty").value) || 1;
-      const subtotal = selectedProduct.price * qty;
-      let discount = 0;
-      if(subtotal >= 10000) discount = Math.floor(subtotal / 10000) * 500;
-      const totalAmount = subtotal - discount;
-      const orderCode = "ORD-" + Math.floor(1000 + Math.random() * 9000);
-
-      const newOrder = {
-        orderCode, customerName: currentCustomerName, item: selectedProduct.name, qty, subtotal, discount, totalAmount,
-        deliveryType: delType, address: delType === "delivery" ? address : "Pick-up လာယူမည်",
-        phone: delType === "delivery" ? phone : "N/A", paymentType: payType, paymentScreenshot: payLink || "N/A",
-        note: note || "မရှိပါ", status: "order စစ်ဆေးနေဆဲ", createdAt: new Date()
-      };
-
-      await addDoc(collection(db, "orders"), newOrder);
-
-      document.getElementById("suc-code").innerText = orderCode;
-      document.getElementById("suc-name").innerText = currentCustomerName;
-      document.getElementById("suc-item").innerText = `${selectedProduct.name} (${qty} ခု)`;
-      document.getElementById("suc-total").innerText = totalAmount;
-      document.getElementById("suc-note-container").innerHTML = note ? `<b>Note:</b> ${note}` : '';
-
-      showPage("page-success");
+      updateCartUI();
+      closeModal();
+      alert("🛒 ခြင်းတောင်းထဲသို့ ထည့်သွင်းပြီးပါပြီ!");
     };
 
-    document.getElementById("btn-success-done").onclick = () => showPage("page-catalog");
+    function updateCartUI() {
+      const container = document.getElementById("cart-items-container");
+      const badge = document.getElementById("cart-badge-count");
+      container.innerHTML = "";
+      
+      let total = 0;
+      let totalItems = 0;
 
-    document.getElementById("btn-check-status").onclick = async () => {
-      const code = document.getElementById("checker-code-input").value.trim();
+      if(cart.length === 0) {
+        container.innerHTML = "<p style='text-align:center; color:var(--text-sub);'>ခြင်းတောင်းထဲတွင် ပစ္စည်းမရှိသေးပါ။</p>";
+        badge.style.display = "none";
+      } else {
+        cart.forEach((item, index) => {
+          const itemTotal = item.price * item.qty;
+          total += itemTotal;
+          totalItems += item.qty;
+          container.innerHTML += `
+            <div class="cart-item">
+              <div>
+                <b>${item.name}</b><br>
+                <small>${item.price} Ks x ${item.qty} = ${itemTotal} Ks</small>
+              </div>
+              <button onclick="removeFromCart(${index})" style="background:none; border:none; color:red; font-size:1.1rem; cursor:pointer;">🗑️</button>
+            </div>
+          `;
+        });
+        badge.innerText = totalItems;
+        badge.style.display = "inline-block";
+      }
+
+      document.getElementById("cart-total-price").innerText = `${total} Ks`;
+    }
+
+    window.removeFromCart = function(index) {
+      cart.splice(index, 1);
+      updateCartUI();
+    };
+
+    window.toggleDeliveryBox = function(val) {
+      document.getElementById("delivery-box").style.display = (val === 'delivery') ? 'block' : 'none';
+    };
+
+    window.togglePaymentBox = function(val) {
+      document.getElementById("online-pay-box").style.display = (val === 'online') ? 'block' : 'none';
+    };
+
+    window.submitOrderToTelegram = async function() {
+      if(cart.length === 0) return alert("ခြင်းတောင်းထဲတွင် ပစ္စည်းထည့်ပါဦး!");
+      
+      const name = document.getElementById("cust-name").value.trim();
+      if(!name) return alert("နာမည် ရိုက်ထည့်ပေးပါ!");
+
+      const delType = document.getElementById("delivery-type").value;
+      const address = document.getElementById("cust-address").value;
+      const phone = document.getElementById("cust-phone").value;
+      const payType = document.getElementById("payment-type").value;
+      const note = document.getElementById("order-note").value;
+      const slipFile = document.getElementById("slip-file-input").files[0];
+
+      if(delType === 'delivery' && (!address || !phone)) {
+        return alert("Delivery ပို့ရန် လိပ်စာနှင့် ဖုန်းနံပါတ် ဖြည့်ပေးပါ!");
+      }
+
+      const orderCode = "ORD-" + Math.floor(1000 + Math.random() * 9000);
+      let itemsSummary = cart.map(i => `• ${i.name} (${i.qty}ခု) = ${i.price * i.qty}Ks`).join("\n");
+      let totalAmount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+
+      // Telegram Message Format
+      let msg = `🛍️ **NEW ORDER (${orderCode})**\n\n`;
+      msg += `👤 ဝယ်ယူသူ: ${name}\n`;
+      msg += `📦 ပစ္စည်းများ:\n${itemsSummary}\n`;
+      msg += `💰 စုစုပေါင်း: ${totalAmount} Ks\n`;
+      msg += `🚚 ပို့ဆောင်ရေး: ${delType === 'delivery' ? 'Delivery' : 'Pick-up'}\n`;
+      if(delType === 'delivery') {
+        msg += `📍 လိပ်စာ: ${address}\n📞 ဖုန်း: ${phone}\n`;
+      }
+      msg += `💳 ငွေရှင်းစနစ်: ${payType}\n`;
+      if(note) msg += `📝 Note: ${note}\n`;
+
+      // Save to Firestore Database
+      await addDoc(collection(db, "orders"), {
+        orderCode, customerName: name, items: cart, totalAmount,
+        deliveryType: delType, address: address || "N/A", phone: phone || "N/A",
+        paymentType: payType, note: note || "N/A", status: "order စစ်ဆေးနေဆဲ", createdAt: new Date()
+      });
+
+      // Send Order & Payment Slip to Telegram
+      try {
+        if(slipFile && payType === 'online') {
+          const formData = new FormData();
+          formData.append("chat_id", TELEGRAM_CHAT_ID);
+          formData.append("photo", slipFile);
+          formData.append("caption", msg);
+          await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, { method: "POST", body: formData });
+        } else {
+          await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: msg })
+          });
+        }
+      } catch (e) {
+        console.error("Telegram Sending Error:", e);
+      }
+
+      alert(`🎉 Order တင်ခြင်း အောင်မြင်ပါသည်။\nOrder Code: ${orderCode}`);
+      cart = [];
+      updateCartUI();
+      switchTab('page-shop', document.querySelectorAll('.nav-btn')[0]);
+    };
+
+    window.checkOrderStatus = async function() {
+      const code = document.getElementById("check-code-input").value.trim();
       if(!code) return alert("Order Code ရိုက်ထည့်ပါ");
 
       const q = query(collection(db, "orders"), where("orderCode", "==", code));
       const snapshot = await getDocs(q);
+      const resBox = document.getElementById("check-result-box");
 
-      if(snapshot.empty) return alert("Order Code မတွေ့ရှိပါ။");
+      if(snapshot.empty) {
+        resBox.innerHTML = "<p style='color:red;'>Order Code မတွေ့ရှိပါ။</p>";
+        return;
+      }
 
       snapshot.forEach(docSnap => {
-        const data = docSnap.data();
-        document.getElementById("checker-result").classList.remove("hidden");
-        document.getElementById("res-code").innerText = data.orderCode;
-        
-        const badge = document.getElementById("res-status-badge");
-        badge.innerText = data.status;
-        badge.className = `badge ${getStatusBadgeClass(data.status)}`;
-
-        document.getElementById("res-details").innerHTML = `
-          <p style="margin-bottom:4px;"><b>ဝယ်ယူသည့် ပစ္စည်း:</b> ${data.item} (${data.qty} ခု)</p>
-          <p style="margin-bottom:4px;"><b>ကျသင့်ငွေ:</b> ${data.totalAmount} Ks</p>
-          <p><b>Note:</b> ${data.note || 'မရှိပါ'}</p>
+        const d = docSnap.data();
+        resBox.innerHTML = `
+          <div style="background:white; padding:15px; border-radius:14px; border:2px solid #f0abfc;">
+            <p>Order Code: <b>${d.orderCode}</b></p>
+            <p>Status: <b style="color:var(--primary-dark);">${d.status}</b></p>
+            <p>စုစုပေါင်း: ${d.totalAmount} Ks</p>
+          </div>
         `;
       });
     };
+
+    loadShopProducts();
   </script>
 </body>
 </html>
