@@ -17,7 +17,6 @@
       --box-bg: #ffffff;
     }
 
-    /* Dark Mode Theme Variables */
     body.dark-mode {
       --primary: #e879f9;
       --primary-dark: #f0abfc;
@@ -39,7 +38,6 @@
       transition: background 0.3s ease, color 0.3s ease;
     }
 
-    /* Theme Toggle Switch Box */
     .theme-toggle-wrapper {
       position: absolute;
       top: 15px;
@@ -62,7 +60,6 @@
       border-color: #a855f7;
     }
 
-    /* Animated K-pop Background Icons */
     .bg-icon {
       position: fixed;
       font-size: 2rem;
@@ -85,11 +82,9 @@
       padding: 15px 15px 40px;
     }
 
-    /* Page Views */
     .page-view { display: none; }
     .page-view.active { display: block; }
 
-    /* LANDING PAGE HEADER */
     .site-header {
       text-align: center;
       padding: 15px;
@@ -128,7 +123,7 @@
       75% { transform: scale(1.02) rotate(1deg); }
     }
 
-    /* FIXED FLOATING MUSIC BUBBLE STYLING */
+    /* MUSIC BUBBLE STYLING */
     .music-bubble-fixed {
       position: fixed;
       bottom: 25px;
@@ -179,7 +174,6 @@
       100% { transform: rotate(360deg); }
     }
 
-    /* LANDING PAGE OPTIONS */
     .landing-options {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -203,7 +197,6 @@
     .option-icon { font-size: 2.8rem; margin-bottom: 8px; display: block; }
     .option-title { font-weight: 900; color: var(--primary-dark); font-size: 1rem; }
 
-    /* Back Navigation Button */
     .nav-back-btn {
       background: var(--card-bg);
       border: 2px solid #f0abfc;
@@ -218,7 +211,6 @@
       gap: 5px;
     }
 
-    /* PRODUCT GRID */
     .product-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -275,7 +267,6 @@
       box-shadow: 0 4px 10px rgba(192, 132, 252, 0.4);
     }
 
-    /* FLOATING CART BUTTON */
     .floating-cart-btn {
       position: fixed;
       bottom: 25px;
@@ -311,7 +302,6 @@
       border: 2px solid white;
     }
 
-    /* FLOATING BUBBLE MODAL FOR SHOW PHOTO DETAILS */
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -362,7 +352,6 @@
       border: 3px solid #f0abfc;
     }
 
-    /* Inputs & Buttons */
     .input-field {
       width: 100%;
       padding: 12px;
@@ -401,7 +390,6 @@
       border: 1px solid #f0abfc;
     }
 
-    /* ORDER SUCCESS PAGE STYLING */
     .success-card {
       background: var(--box-bg);
       border-radius: 24px;
@@ -432,22 +420,19 @@
 </head>
 <body>
 
-  <!-- Theme Light/Dark Mode Switcher -->
   <div class="theme-toggle-wrapper">
     <button id="theme-btn" class="theme-toggle-btn" onclick="toggleTheme()">🌙 Dark Mode</button>
   </div>
 
-  <!-- Floating Background Elements -->
   <div class="bg-icon" style="top:10%; left:5%;">🌸</div>
   <div class="bg-icon" style="top:30%; right:8%; animation-delay: 2s;">🎤</div>
   <div class="bg-icon" style="top:60%; left:10%; animation-delay: 4s;">🪄</div>
   <div class="bg-icon" style="top:85%; right:6%; animation-delay: 1s;">🎵</div>
 
-  <!-- UPDATED MUSIC BUBBLE WITH YOUR NEW LINK -->
+  <!-- UPDATED CATBOX AUDIO SOURCE LINK -->
   <div class="music-bubble-fixed">
     <audio id="bg-audio" preload="metadata">
-      <source src="https://docs.google.com/uc?export=open&id=1nGoSRhEwQoei_UdYgJAx4_wUcIy1z8FR" type="audio/mpeg">
-      <source src="https://lh3.googleusercontent.com/d/1nGoSRhEwQoei_UdYgJAx4_wUcIy1z8FR" type="audio/mp4">
+      <source src="https://files.catbox.moe/fi2yff.m4a" type="audio/mp4">
     </audio>
     <div id="music-bubble" class="music-bubble-btn" onclick="toggleMusic()">
       🎵
@@ -556,13 +541,11 @@
 
   </div>
 
-  <!-- FLOATING CART ICON -->
   <div id="floating-cart-btn" class="floating-cart-btn" onclick="navigateTo('page-cart')">
     🛒
     <span id="cart-badge" class="cart-count-badge">0</span>
   </div>
 
-  <!-- SHOW PHOTO FLOATING BUBBLE MODAL -->
   <div id="detail-modal" class="modal-overlay">
     <div id="modal-floating-gallery" class="floating-bubbles-container"></div>
     <div class="qty-modal-box">
@@ -577,7 +560,6 @@
     </div>
   </div>
 
-  <!-- FIREBASE & SCRIPT -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -594,14 +576,12 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // TELEGRAM BOT CONFIG
     const TELEGRAM_BOT_TOKEN = "8997594636:AAGGXMgiTnbufcUozWn2yBW7XdfLnbLP4R8"; 
     const TELEGRAM_CHAT_ID = "5050699658";
 
     let cart = [];
     let selectedProduct = null;
 
-    // FLOATING MUSIC BUBBLE TOGGLE LOGIC
     window.toggleMusic = function() {
       const audio = document.getElementById('bg-audio');
       const bubble = document.getElementById('music-bubble');
@@ -614,7 +594,6 @@
           label.innerText = "ပိတ်ရန်";
         }).catch(err => {
           console.error("Audio Play Error:", err);
-          alert("သီချင်းဖွင့်၍မရပါ။ Google Drive Share Link ကို Anyone with the link ပြောင်းထားကြောင်း စစ်ပေးပါဗျ။");
         });
       } else {
         audio.pause();
@@ -624,7 +603,6 @@
       }
     };
 
-    // LIGHT / DARK MODE TOGGLE LOGIC
     window.toggleTheme = function() {
       const body = document.body;
       const btn = document.getElementById('theme-btn');
@@ -782,7 +760,6 @@
       let itemsSummary = cart.map(i => `• ${i.name} (${i.qty}ခု) = ${i.price * i.qty}Ks`).join("\n");
       let totalAmount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
 
-      // Telegram Message Format
       let msg = `🛍️ **NEW ORDER (${orderCode})**\n\n`;
       msg += `👤 ဝယ်ယူသူ: ${name}\n`;
       msg += `📦 ပစ္စည်းများ:\n${itemsSummary}\n`;
@@ -794,14 +771,12 @@
       msg += `💳 ငွေရှင်းစနစ်: ${payType}\n`;
       if(note) msg += `📝 Note: ${note}\n`;
 
-      // Save to Firestore Database
       await addDoc(collection(db, "orders"), {
         orderCode, customerName: name, items: cart, totalAmount,
         deliveryType: delType, address: address || "N/A", phone: phone || "N/A",
         paymentType: payType, note: note || "N/A", status: "order စစ်ဆေးနေဆဲ", createdAt: new Date()
       });
 
-      // Send to Telegram Bot
       try {
         if(slipFile && payType === 'online') {
           const formData = new FormData();
@@ -820,7 +795,6 @@
         console.error("Telegram Sending Error:", e);
       }
 
-      // Show Order Success Page
       document.getElementById("success-order-code").innerText = orderCode;
       cart = [];
       updateCartUI();
