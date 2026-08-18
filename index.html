@@ -219,11 +219,12 @@
       border-radius: 20px;
       padding: 15px;
       width: 260px;
+      max-height: 280px;
+      overflow-y: auto;
       box-shadow: 0 10px 30px rgba(217, 70, 239, 0.3);
       z-index: 201;
       display: none;
       backdrop-filter: blur(10px);
-      animation: modalWiggle 3.5s infinite ease-in-out;
     }
     .music-playlist-modal.active { display: block; }
     .playlist-title {
@@ -259,7 +260,6 @@
       margin-top: 20px;
     }
     
-    /* ALL BOXES & CARDS CONTINUOUS FLOATING / ANIMATION */
     .option-card {
       background: var(--box-bg);
       border: 3px solid #f0abfc;
@@ -299,7 +299,6 @@
       animation: buttonFloat 3s infinite ease-in-out;
     }
 
-    /* PRODUCT CARDS ANIMATION */
     .product-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -416,7 +415,6 @@
     }
     .modal-overlay.active { display: flex; }
 
-    /* DETAIL BUBBLES ANIMATION */
     .detail-gallery-container {
       display: flex;
       flex-wrap: wrap;
@@ -442,9 +440,6 @@
       box-shadow: 0 6px 15px rgba(217, 70, 239, 0.3);
       animation: bubbleFloat 3s ease-in-out infinite alternate;
     }
-    .detail-img-box:nth-child(even) .detail-bubble-img { animation-duration: 3.8s; animation-delay: 0.4s; }
-    .detail-img-box:nth-child(3n) .detail-bubble-img { animation-duration: 2.5s; animation-delay: 0.8s; }
-
     @keyframes bubbleFloat {
       0% { transform: translateY(0px) scale(1); }
       50% { transform: translateY(-7px) scale(1.05); box-shadow: 0 10px 20px rgba(217, 70, 239, 0.5); }
@@ -477,11 +472,6 @@
       position: relative;
       box-shadow: 0 15px 30px rgba(0,0,0,0.3);
       border: 3px solid #f0abfc;
-      animation: modalWiggle 4s infinite ease-in-out;
-    }
-    @keyframes modalWiggle {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-4px); }
     }
 
     .input-field {
@@ -509,7 +499,6 @@
       font-size: 0.95rem;
       cursor: pointer;
       box-shadow: 0 4px 15px rgba(217, 70, 239, 0.4);
-      animation: buttonFloat 3s infinite ease-in-out;
     }
 
     .cart-item {
@@ -546,11 +535,6 @@
       text-align: center;
       border: 3px solid #f0abfc;
       box-shadow: 0 15px 35px rgba(217, 70, 239, 0.25);
-      animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-    @keyframes popIn {
-      0% { transform: scale(0.7); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
     }
     .success-icon { font-size: 4rem; margin-bottom: 15px; display: block; }
     .success-title { font-size: 1.3rem; font-weight: 900; color: #16a34a; margin-bottom: 10px; }
@@ -572,13 +556,11 @@
       border-radius: 22px;
       padding: 20px;
       box-shadow: 0 10px 25px rgba(217, 70, 239, 0.15);
-      animation: cardWiggle 3.8s infinite ease-in-out;
     }
   </style>
 </head>
 <body>
 
-  <!-- THEME & LANGUAGE SWITCHER -->
   <div class="theme-toggle-wrapper">
     <button id="lang-btn" class="lang-toggle-btn" onclick="toggleLanguage()">🇲🇲 MM</button>
     <button id="theme-btn" class="theme-toggle-btn" onclick="toggleTheme()">🌙 Dark Mode</button>
@@ -589,26 +571,22 @@
   <div class="bg-icon" style="top:60%; left:10%; animation-delay: 4s;">🪄</div>
   <div class="bg-icon" style="top:85%; right:6%; animation-delay: 1s;">🎵</div>
 
-  <!-- AUDIO ELEMENT -->
   <audio id="bg-audio" preload="auto" crossorigin="anonymous"></audio>
 
-  <!-- MUSIC BUBBLE & PLAYLIST MODAL -->
   <div class="music-bubble-fixed">
     <div id="music-bubble" class="music-bubble-btn" onclick="togglePlaylistModal()">🎵</div>
     <span id="music-status" class="music-bubble-label" data-mm="သီချင်းရွေးရန်" data-en="Select Song">သီချင်းရွေးရန်</span>
   </div>
 
   <div id="music-playlist-modal" class="music-playlist-modal">
-    <div class="playlist-title" data-mm="🎶 သီချင်းစာရင်း (၄ ပုဒ်)" data-mm="🎶 Song Playlist">🎶 သီချင်းစာရင်း (၄ ပုဒ်)</div>
-    <div class="playlist-item" onclick="playSong(0, '🎵 သီချင်း ၁')">1. K-Pop / Thai Song 1</div>
-    <div class="playlist-item" onclick="playSong(1, '🎵 သီချင်း ၂')">2. K-Pop / Thai Song 2</div>
-    <div class="playlist-item" onclick="playSong(2, '🎵 သီချင်း ၃')">3. K-Pop / Thai Song 3</div>
-    <div class="playlist-item" onclick="playSong(3, '🎵 သီချင်း ၄')">4. K-Pop / Thai Song 4</div>
+    <div class="playlist-title" data-mm="🎶 သီချင်းစာရင်း" data-en="🎶 Song Playlist">🎶 သီချင်းစာရင်း</div>
+    <div id="shop-playlist-container">
+      <div style="text-align:center; font-size:0.8rem; color:var(--text-sub);">သီချင်းများ Loading...</div>
+    </div>
   </div>
 
   <div class="app-container">
 
-    <!-- PAGE 1: LANDING -->
     <div id="page-landing" class="page-view active">
       <header class="site-header">
         <img src="https://lh3.googleusercontent.com/d/14WBlxcwpCYj9gqkONoxRkhRrgwvBJSRH" class="logo" alt="Shop Logo">
@@ -636,14 +614,12 @@
       </div>
     </div>
 
-    <!-- PAGE 2: SHOP CENTER -->
     <div id="page-shop" class="page-view">
       <button class="nav-back-btn" onclick="navigateTo('page-landing')" data-mm="⬅️ ပင်မစာမျက်နှာသို့" data-en="⬅️ Back to Home">⬅️ ပင်မစာမျက်နှာသို့</button>
       <h2 style="font-size:1.2rem; font-weight:900; color:var(--text-sub); margin-bottom:15px;">🛍️ Shop Center</h2>
       <div id="product-grid" class="product-grid"></div>
     </div>
 
-    <!-- PAGE 3: ORDER CHECKER -->
     <div id="page-checker" class="page-view">
       <button class="nav-back-btn" onclick="navigateTo('page-landing')" data-mm="⬅️ ပင်မစာမျက်နှာသို့" data-en="⬅️ Back to Home">⬅️ ပင်မစာမျက်နှာသို့</button>
       <h2 style="font-size:1.1rem; font-weight:900; color:var(--text-sub); margin-bottom:12px;" data-mm="🔍 Order Status စစ်ဆေးရန်" data-en="🔍 Check Order Status">🔍 Order Status စစ်ဆေးရန်</h2>
@@ -652,7 +628,6 @@
       <div id="check-result-box" style="margin-top:15px;"></div>
     </div>
 
-    <!-- PAGE 4: REPORT CENTER -->
     <div id="page-report" class="page-view">
       <button class="nav-back-btn" onclick="navigateTo('page-landing')" data-mm="⬅️ ပင်မစာမျက်နှာသို့" data-en="⬅️ Back to Home">⬅️ ပင်မစာမျက်နှာသို့</button>
       
@@ -677,11 +652,10 @@
       </div>
     </div>
 
-    <!-- PAGE 5: CART CHECKOUT -->
     <div id="page-cart" class="page-view">
       <button class="nav-back-btn" onclick="navigateTo('page-shop')" data-mm="⬅️ ပစ္စည်းများထပ်ရွေးမည်" data-en="⬅️ Add More Items">⬅️ ပစ္စည်းများထပ်ရွေးမည်</button>
       
-      <div style="background:var(--box-bg); border-radius:22px; padding:20px; border:3px solid #f0abfc; box-shadow:0 10px 25px rgba(217,70,239,0.15); animation: cardWiggle 4s infinite ease-in-out;">
+      <div style="background:var(--box-bg); border-radius:22px; padding:20px; border:3px solid #f0abfc; box-shadow:0 10px 25px rgba(217,70,239,0.15);">
         <h3 style="font-size:1.1rem; font-weight:900; color:var(--primary-dark); margin-bottom:12px;" data-mm="🛒 ခြင်းတောင်းထဲမှ ပစ္စည်းများ" data-en="🛒 Items in Cart">🛒 ခြင်းတောင်းထဲမှ ပစ္စည်းများ</h3>
         <div id="cart-items-container"></div>
         
@@ -708,474 +682,3 @@
         </select>
 
         <div id="delivery-box" style="display:none;">
-          <input type="text" id="cust-address" class="input-field" placeholder="နေရပ်လိပ်စာ အပြည့်အစုံ" data-mm-ph="နေရပ်လိပ်စာ အပြည့်အစုံ" data-en-ph="Full Address">
-          <input type="tel" id="cust-phone" class="input-field" placeholder="ဖုန်းနံပါတ်" data-mm-ph="ဖုန်းနံပါတ်" data-en-ph="Phone Number">
-        </div>
-
-        <select id="payment-type" class="input-field" onchange="togglePaymentBox(this.value)">
-          <option value="cod">💵 Cash on Delivery / Pick-up</option>
-          <option value="online">📱 Online Payment (KPay / WavePay)</option>
-        </select>
-
-        <div id="online-pay-box" style="display:none; background:var(--card-bg); padding:12px; border-radius:12px; margin-bottom:12px; font-size:0.85rem;">
-          <p><b>Wave Pay:</b> 09898948790 (Khin Saw Htwe)</p>
-          <p><b>KPay:</b> 09422725283 (Moe Pyae Pyae Zaw)</p>
-          <p style="margin-top:6px; color:var(--primary-dark); font-weight:700;" data-mm="💳 ပြေစာ Slip ပုံ တိုက်ရိုက် တင်ပါ:" data-en="💳 Upload Payment Slip:">💳 ပြေစာ Slip ပုံ တိုက်ရိုက် တင်ပါ:</p>
-          <input type="file" id="slip-file-input" accept="image/*" class="input-field" style="padding:8px;">
-        </div>
-
-        <button class="btn-action" onclick="submitOrderToTelegram()" data-mm="✨ Order အတည်ပြုမည်" data-en="✨ Confirm Order">✨ Order အတည်ပြုမည်</button>
-      </div>
-    </div>
-
-    <!-- PAGE 6: SUCCESS -->
-    <div id="page-success" class="page-view">
-      <div class="success-card">
-        <span class="success-icon">🎉</span>
-        <div class="success-title" data-mm="ဂုဏ်ယူပါတယ် order တင်ခြင်းအောင်မြင်ပါသည်" data-en="Congratulations! Order Placed Successfully">ဂုဏ်ယူပါတယ် order တင်ခြင်းအောင်မြင်ပါသည်</div>
-        <div class="thanks-msg" data-mm="ဝယ်ယူအားပေးမှုအတွက် ကျေးဇူးအထူးတင်ပါသည်။" data-en="Thank you for shopping with us!">ဝယ်ယူအားပေးမှုအတွက် ကျေးဇူးအထူးတင်ပါသည်။</div>
-        
-        <p style="font-size:0.85rem; color:var(--text-sub); margin-bottom:6px;" data-mm="လူကြီးမင်း၏ Order Code လေးဖြစ်ပါတယ်:" data-en="Your Order Code is:">လူကြီးမင်း၏ Order Code လေးဖြစ်ပါတယ်:</p>
-        <div class="code-box" id="success-order-code">ORD-XXXX</div>
-
-        <button class="btn-action" onclick="navigateTo('page-landing')" data-mm="🏠 ပင်မစာမျက်နှာသို့ ပြန်သွားမည်" data-en="🏠 Back to Home Page">🏠 ပင်မစာမျက်နှာသို့ ပြန်သွားမည်</button>
-      </div>
-    </div>
-
-  </div>
-
-  <div id="floating-cart-btn" class="floating-cart-btn" onclick="navigateTo('page-cart')">
-    🛒
-    <span id="cart-badge" class="cart-count-badge">0</span>
-  </div>
-
-  <!-- DETAIL MODAL -->
-  <div id="detail-modal" class="modal-overlay">
-    <div class="qty-modal-box">
-      <button onclick="closeModal()" style="position:absolute; right:12px; top:12px; background:none; border:none; font-size:1.2rem; cursor:pointer; color:var(--text-main);">❌</button>
-      <h3 id="modal-title" style="font-weight:900; color:var(--primary-dark); margin-top:5px;"></h3>
-      <p id="modal-price" style="font-size:1.1rem; font-weight:800; color:var(--accent); margin-bottom:8px;"></p>
-
-      <div id="modal-admin-note" class="admin-note-box" style="display:none;"></div>
-
-      <p style="font-size:0.75rem; font-weight:bold; color:var(--text-sub);" data-mm="🖼️ Detail Bubble ပုံများ (သီးသန့် Layer)" data-en="🖼️ Detail Bubble Images">🖼️ Detail Bubble ပုံများ (သီးသန့် Layer)</p>
-      <div id="modal-gallery-grid" class="detail-gallery-container"></div>
-
-      <label style="font-size:0.85rem; font-weight:800; color:var(--text-sub);" data-mm="ဝယ်ယူမည့် အရေအတွက် ရွေးပါ:" data-en="Select Quantity:">ဝယ်ယူမည့် အရေအတွက် ရွေးပါ:</label>
-      <input type="number" id="modal-qty" class="input-field" value="1" min="1" style="text-align:center; font-weight:800;">
-
-      <button class="btn-action" onclick="addToCartFromModal()" data-mm="🛒 ခြင်းတောင်းထဲထည့်မည်" data-en="🛒 Add to Cart">🛒 ခြင်းတောင်းထဲထည့်မည်</button>
-    </div>
-  </div>
-
-  <!-- FULLSCREEN LIGHTBOX -->
-  <div id="fullscreen-modal" class="fullscreen-modal" onclick="closeFullscreenModal()">
-    <span style="position:absolute; top:20px; right:25px; color:white; font-size:30px; cursor:pointer;">&times;</span>
-    <img id="fullscreen-img" src="" alt="Fullscreen View">
-  </div>
-
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCkT8J7ttr9w-ZJJmbyu6aT9qLCUmauXcA",
-      authDomain: "my-k-pop-shop.firebaseapp.com",
-      projectId: "my-k-pop-shop",
-      storageBucket: "my-k-pop-shop.firebasestorage.app",
-      messagingSenderId: "697172084426",
-      appId: "1:697172084426:web:6fb0b4cf2cc1f57e291633"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    const TELEGRAM_BOT_TOKEN = "8997594636:AAGGXMgiTnbufcUozWn2yBW7XdfLnbLP4R8"; 
-    const TELEGRAM_CHAT_ID = "5050699658";
-
-    let cart = [];
-    let selectedProduct = null;
-    let currentLang = 'MM'; 
-
-    // SONG PLAYLIST ARRAY
-    const playlist = [
-      "https://files.catbox.moe/fi2yff.m4a",
-      "https://files.catbox.moe/bwrnae.m4a",
-      "https://files.catbox.moe/2uqw9x.m4a",
-      "https://files.catbox.moe/1o778h.m4a"
-    ];
-
-    const natureItems = ['🌸', '🍃', '🌺', '🌿', '🌷', '🍀', '🌼', '✨'];
-
-    function createFlowerBurst(x, y) {
-      const count = 9;
-      for (let i = 0; i < count; i++) {
-        const el = document.createElement('div');
-        el.className = 'flower-particle';
-        el.innerText = natureItems[Math.floor(Math.random() * natureItems.length)];
-        const vx = (Math.random() - 0.5) * 160; 
-        const vy = (Math.random() - 0.7) * 120;  
-        el.style.left = `${x}px`;
-        el.style.top = `${y}px`;
-        el.style.setProperty('--vx', `${vx}px`);
-        el.style.setProperty('--vy', `${vy}px`);
-        document.body.appendChild(el);
-        setTimeout(() => { el.remove(); }, 1200);
-      }
-    }
-
-    window.addEventListener('pointerdown', (e) => {
-      createFlowerBurst(e.clientX, e.clientY);
-    });
-
-    window.toggleLanguage = function() {
-      currentLang = currentLang === 'MM' ? 'EN' : 'MM';
-      document.getElementById('lang-btn').innerText = currentLang === 'MM' ? '🇲🇲 MM' : '🇬🇧 EN';
-
-      document.querySelectorAll('[data-mm]').forEach(el => {
-        el.innerHTML = currentLang === 'MM' ? el.getAttribute('data-mm') : el.getAttribute('data-en');
-      });
-
-      document.querySelectorAll('[data-mm-ph]').forEach(el => {
-        el.placeholder = currentLang === 'MM' ? el.getAttribute('data-mm-ph') : el.getAttribute('data-en-ph');
-      });
-
-      updateCartUI();
-    };
-
-    window.togglePlaylistModal = function() {
-      const modal = document.getElementById('music-playlist-modal');
-      modal.classList.toggle('active');
-    };
-
-    window.playSong = function(index, title) {
-      const audio = document.getElementById('bg-audio');
-      const bubble = document.getElementById('music-bubble');
-      const label = document.getElementById('music-status');
-
-      audio.src = playlist[index];
-      audio.play().then(() => {
-        bubble.classList.add('playing');
-        bubble.innerHTML = "🎶";
-        label.innerText = title;
-        document.getElementById('music-playlist-modal').classList.remove('active');
-      }).catch(e => {
-        console.error(e);
-        alert("သီချင်းဖွင့်၍ မရသေးပါ။ တစ်ချက်ထပ်နှိပ်ပေးပါ။");
-      });
-    };
-
-    window.toggleTheme = function() {
-      const body = document.body;
-      const btn = document.getElementById('theme-btn');
-      body.classList.toggle('dark-mode');
-      btn.innerText = body.classList.contains('dark-mode') ? "☀️ Light Mode" : "🌙 Dark Mode";
-    };
-
-    window.navigateTo = function(pageId) {
-      document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
-      document.getElementById(pageId).classList.add('active');
-      window.scrollTo(0,0);
-    };
-
-    async function loadShopProducts() {
-      const grid = document.getElementById("product-grid");
-      grid.innerHTML = "<p style='grid-column:span 2; text-align:center;'>Loading...</p>";
-      const snapshot = await getDocs(collection(db, "products"));
-      grid.innerHTML = "";
-
-      if(snapshot.empty) {
-        grid.innerHTML = "<p style='grid-column:span 2; text-align:center;'>ပစ္စည်းများ မရှိသေးပါ။</p>";
-        return;
-      }
-
-      snapshot.forEach(docSnap => {
-        const p = docSnap.data();
-        const card = document.createElement("div");
-        card.className = "product-card";
-        card.innerHTML = `
-          <img src="${p.showPhoto}" class="product-img" onerror="this.src='https://via.placeholder.com/150'">
-          <div class="product-title">${p.name}</div>
-          <div class="product-price">${p.price} Ks</div>
-          <button class="btn-show-photo">🖼️ Show Photo Stock</button>
-        `;
-        card.querySelector('.btn-show-photo').onclick = () => openBubbleModal(p);
-        grid.appendChild(card);
-      });
-    }
-
-    function openBubbleModal(p) {
-      selectedProduct = p;
-      document.getElementById("modal-title").innerText = p.name;
-      document.getElementById("modal-price").innerText = `${p.price} Ks`;
-      document.getElementById("modal-qty").value = 1;
-      
-      const adminNoteEl = document.getElementById("modal-admin-note");
-      if (p.adminNote && p.adminNote.trim() !== "") {
-        adminNoteEl.style.display = "block";
-        adminNoteEl.innerHTML = `<b>📢 Admin Stock Note:</b> ${p.adminNote}`;
-      } else {
-        adminNoteEl.style.display = "none";
-      }
-
-      const gallery = document.getElementById("modal-gallery-grid");
-      gallery.innerHTML = "";
-      
-      let allPhotos = [];
-      if (p.showPhoto) allPhotos.push(p.showPhoto);
-      if (p.detailPhotos && Array.isArray(p.detailPhotos)) {
-        p.detailPhotos.forEach(url => {
-          if (url && url.trim()) allPhotos.push(url.trim());
-        });
-      }
-
-      allPhotos.forEach((url) => {
-        const box = document.createElement("div");
-        box.className = "detail-img-box";
-        box.innerHTML = `<img src="${url}" class="detail-bubble-img" onclick="openFullscreenModal('${url}')">`;
-        gallery.appendChild(box);
-      });
-
-      document.getElementById("detail-modal").classList.add("active");
-    }
-
-    window.openFullscreenModal = function(url) {
-      const fsModal = document.getElementById("fullscreen-modal");
-      const fsImg = document.getElementById("fullscreen-img");
-      fsImg.src = url;
-      fsModal.style.display = "flex";
-    };
-
-    window.closeFullscreenModal = function() {
-      document.getElementById("fullscreen-modal").style.display = "none";
-    };
-
-    window.closeModal = function() {
-      document.getElementById("detail-modal").classList.remove("active");
-    };
-
-    window.addToCartFromModal = function() {
-      const qty = parseInt(document.getElementById("modal-qty").value) || 1;
-      const existing = cart.find(item => item.name === selectedProduct.name);
-      
-      if(existing) {
-        existing.qty += qty;
-      } else {
-        cart.push({
-          name: selectedProduct.name,
-          price: selectedProduct.price,
-          qty: qty,
-          itemNote: ""
-        });
-      }
-
-      updateCartUI();
-      closeModal();
-    };
-
-    function updateCartUI() {
-      const container = document.getElementById("cart-items-container");
-      const floatingBtn = document.getElementById("floating-cart-btn");
-      const badge = document.getElementById("cart-badge");
-      
-      container.innerHTML = "";
-      let total = 0;
-      let totalCount = 0;
-
-      if(cart.length === 0) {
-        container.innerHTML = `<p style='text-align:center; color:var(--text-sub); font-size:0.9rem;'>${currentLang === 'MM' ? 'ခြင်းတောင်းထဲတွင် ပစ္စည်းမရှိသေးပါ။' : 'Cart is empty.'}</p>`;
-        floatingBtn.style.display = "none";
-      } else {
-        cart.forEach((item, index) => {
-          const itemTotal = item.price * item.qty;
-          total += itemTotal;
-          totalCount += item.qty;
-
-          const phText = currentLang === 'MM' ? 'ဒီ stock အတွက် မှတ်ချက်ရေးပါ...' : 'Note for this item...';
-
-          container.innerHTML += `
-            <div class="cart-item">
-              <div class="cart-item-header">
-                <div>
-                  <b>${item.name}</b><br>
-                  <small style="color:var(--primary-dark); font-weight:bold;">${item.price} Ks x ${item.qty} = ${itemTotal} Ks</small>
-                </div>
-                <button onclick="removeFromCart(${index})" style="background:none; border:none; color:red; font-size:1.1rem; cursor:pointer;">🗑️</button>
-              </div>
-              <input type="text" class="input-field" style="margin:4px 0 0; padding:6px 10px; font-size:0.8rem;" 
-                placeholder="${phText}" value="${item.itemNote || ''}" onchange="updateItemNote(${index}, this.value)">
-            </div>
-          `;
-        });
-
-        badge.innerText = totalCount;
-        floatingBtn.style.display = "flex";
-      }
-
-      document.getElementById("cart-total-price").innerText = `${total} Ks`;
-    }
-
-    window.updateItemNote = function(index, val) {
-      if(cart[index]) cart[index].itemNote = val.trim();
-    };
-
-    window.removeFromCart = function(index) {
-      cart.splice(index, 1);
-      updateCartUI();
-      if(cart.length === 0) navigateTo('page-shop');
-    };
-
-    window.toggleDeliveryBox = function(val) {
-      document.getElementById("delivery-box").style.display = (val === 'delivery') ? 'block' : 'none';
-    };
-
-    window.togglePaymentBox = function(val) {
-      document.getElementById("online-pay-box").style.display = (val === 'online') ? 'block' : 'none';
-    };
-
-    window.submitOrderToTelegram = async function() {
-      if(cart.length === 0) return alert(currentLang === 'MM' ? "ခြင်းတောင်းထဲတွင် ပစ္စည်းထည့်ပါဦး!" : "Add items to cart!");
-      
-      const name = document.getElementById("cust-name").value.trim();
-      if(!name) return alert(currentLang === 'MM' ? "နာမည် ရိုက်ထည့်ပေးပါ!" : "Please enter your name!");
-
-      const selectedDevice = document.getElementById("device-changer-select").value;
-      const delType = document.getElementById("delivery-type").value;
-      const address = document.getElementById("cust-address").value;
-      const phone = document.getElementById("cust-phone").value;
-      const payType = document.getElementById("payment-type").value;
-      const slipFile = document.getElementById("slip-file-input").files[0];
-
-      if(delType === 'delivery' && (!address || !phone)) {
-        return alert(currentLang === 'MM' ? "Delivery ပို့ရန် လိပ်စာနှင့် ဖုန်းနံပါတ် ဖြည့်ပေးပါ!" : "Provide address and phone!");
-      }
-
-      const orderCode = "ORD-" + Math.floor(1000 + Math.random() * 9000);
-      
-      let itemsSummary = cart.map(i => {
-        let noteTxt = i.itemNote ? ` [Note: ${i.itemNote}]` : '';
-        return `• ${i.name} (${i.qty}ခု)${noteTxt} = ${i.price * i.qty}Ks`;
-      }).join("\n");
-
-      let totalAmount = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
-
-      let msg = `🛍️ **NEW ORDER (${orderCode})**\n\n`;
-      msg += `👤 ဝယ်ယူသူ: ${name}\n`;
-      msg += `📱 Device: ${selectedDevice}\n`;
-      msg += `📦 ပစ္စည်းများ:\n${itemsSummary}\n`;
-      msg += `💰 စုစုပေါင်း: ${totalAmount} Ks\n`;
-      msg += `🚚 ပို့ဆောင်ရေး: ${delType === 'delivery' ? 'Delivery' : 'Pick-up'}\n`;
-      if(delType === 'delivery') {
-        msg += `📍 လိပ်စာ: ${address}\n📞 ဖုန်း: ${phone}\n`;
-      }
-      msg += `💳 ငွေရှင်းစနစ်: ${payType}\n`;
-
-      await addDoc(collection(db, "orders"), {
-        orderCode, customerName: name, selectedDevice, items: cart, totalAmount,
-        deliveryType: delType, address: address || "N/A", phone: phone || "N/A",
-        paymentType: payType, adminNote: "", status: "order စစ်ဆေးနေဆဲ", createdAt: new Date()
-      });
-
-      try {
-        if(slipFile && payType === 'online') {
-          const formData = new FormData();
-          formData.append("chat_id", TELEGRAM_CHAT_ID);
-          formData.append("photo", slipFile);
-          formData.append("caption", msg);
-          await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendPhoto`, { method: "POST", body: formData });
-        } else {
-          await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: msg })
-          });
-        }
-      } catch (e) {
-        console.error("Telegram Error:", e);
-      }
-
-      document.getElementById("success-order-code").innerText = orderCode;
-      cart = [];
-      updateCartUI();
-      navigateTo('page-success');
-    };
-
-    window.checkOrderStatus = async function() {
-      const code = document.getElementById("check-code-input").value.trim();
-      if(!code) return alert(currentLang === 'MM' ? "Order Code ရိုက်ထည့်ပါ" : "Enter Order Code");
-
-      const q = query(collection(db, "orders"), where("orderCode", "==", code));
-      const snapshot = await getDocs(q);
-      const resBox = document.getElementById("check-result-box");
-
-      if(snapshot.empty) {
-        resBox.innerHTML = `<p style='color:red;'>${currentLang === 'MM' ? 'Order Code မတွေ့ရှိပါ။' : 'Order Code Not Found.'}</p>`;
-        return;
-      }
-
-      snapshot.forEach(docSnap => {
-        const d = docSnap.data();
-        let adminNoteHTML = "";
-        if (d.adminNote && d.adminNote.trim() !== "") {
-          adminNoteHTML = `<div class="admin-note-box"><b>📢 Admin Order Note:</b> ${d.adminNote}</div>`;
-        }
-
-        resBox.innerHTML = `
-          <div style="background:var(--box-bg); padding:15px; border-radius:14px; border:2px solid #f0abfc;">
-            <p>Order Code: <b>${d.orderCode}</b></p>
-            <p>Status: <b style="color:var(--primary-dark);">${d.status}</b></p>
-            <p>စုစုပေါင်း: ${d.totalAmount} Ks</p>
-            ${adminNoteHTML}
-          </div>
-        `;
-      });
-    };
-
-    window.switchReportTab = function(type) {
-      if(type === 'sub') {
-        document.getElementById("sec-rep-sub-form").style.display = "block";
-        document.getElementById("sec-rep-chk-form").style.display = "none";
-      } else {
-        document.getElementById("sec-rep-chk-form").style.display = "block";
-        document.getElementById("sec-rep-sub-form").style.display = "none";
-      }
-    };
-
-    window.submitReport = async function() {
-      const msg = document.getElementById("rep-text-input").value.trim();
-      if(!msg) return alert(currentLang === 'MM' ? "Report အကြောင်းအရာ ရိုက်ထည့်ပါ။" : "Please enter report content.");
-
-      const rpCode = "RP-" + Math.floor(1000 + Math.random() * 9000);
-      await addDoc(collection(db, "reports"), {
-        reportCode: rpCode, message: msg, status: "စစ်ဆေးနေဆဲ", createdAt: new Date()
-      });
-
-      alert(currentLang === 'MM' ? `Report ပေးပို့ပြီးပါပြီ!\nသင့် Report Code မှာ [ ${rpCode} ] ဖြစ်ပါသည်။` : `Report Submitted! Code: [ ${rpCode} ]`);
-      document.getElementById("rep-text-input").value = "";
-    };
-
-    window.checkReportStatus = async function() {
-      const code = document.getElementById("rep-code-search").value.trim();
-      const outEl = document.getElementById("rep-status-output");
-      if(!code) return alert(currentLang === 'MM' ? "Report Code ရိုက်ထည့်ပါ။" : "Enter Report Code.");
-
-      outEl.innerText = currentLang === 'MM' ? "⏳ စစ်ဆေးနေပါသည်..." : "⏳ Checking...";
-      const q = query(collection(db, "reports"), where("reportCode", "==", code));
-      const snapshot = await getDocs(q);
-
-      if(snapshot.empty) {
-        outEl.innerText = currentLang === 'MM' ? "❌ Report Code ရှာမတွေ့ပါ။" : "❌ Not Found.";
-        return;
-      }
-
-      snapshot.forEach(docSnap => {
-        const r = docSnap.data();
-        outEl.innerHTML = `${currentLang === 'MM' ? 'အခြေအနေ' : 'Status'}: <span style="color:var(--primary-dark);">${r.status}</span>`;
-      });
-    };
-
-    loadShopProducts();
-    updateCartUI();
-  </script>
-</body>
-</html>
